@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="lib"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="lib" path="C:/Users/Tketa/workspace/Practical JXTA/lib/bcprov-jdk15-145.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Tketa/workspace/Practical JXTA/lib/derby-10.5.1.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Tketa/workspace/Practical JXTA/lib/felix.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Tketa/workspace/Practical JXTA/lib/h2-1.2.127.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Tketa/workspace/Practical JXTA/lib/javax.servlet.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Tketa/workspace/Practical JXTA/lib/jxse-2.6.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Tketa/workspace/Practical JXTA/lib/netty-3.1.5.GA.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Tketa/workspace/Practical JXTA/lib/org.mortbay.jetty.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
