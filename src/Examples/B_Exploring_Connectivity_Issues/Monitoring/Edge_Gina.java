@@ -1,13 +1,14 @@
 
 package Examples.B_Exploring_Connectivity_Issues.Monitoring;
 
-import Examples.Z_Tools_And_Others.Tools;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
+
 import javax.swing.JOptionPane;
+
 import net.jxta.exception.PeerGroupException;
 import net.jxta.id.IDFactory;
 import net.jxta.peer.PeerID;
@@ -15,6 +16,7 @@ import net.jxta.peergroup.PeerGroup;
 import net.jxta.peergroup.PeerGroupID;
 import net.jxta.platform.NetworkConfigurator;
 import net.jxta.platform.NetworkManager;
+import Examples.Z_Tools_And_Others.Tools;
 
 /**
  * Simple EDGE peer connecting via the NetPeerGroup.

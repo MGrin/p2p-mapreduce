@@ -38,98 +38,119 @@
  *  
  */
 
-package Examples.B_Exploring_Connectivity_Issues;
+package Examples.C_Peers_And_PeerGroups;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.InetAddress;
+import java.util.Random;
 
-import net.jxta.discovery.DiscoveryService;
+import net.jxta.document.MimeMediaType;
+import net.jxta.document.XMLElement;
 import net.jxta.exception.PeerGroupException;
 import net.jxta.id.IDFactory;
+import net.jxta.impl.content.ContentServiceImpl;
+import net.jxta.impl.peergroup.CompatibilityUtils;
+import net.jxta.impl.peergroup.StdPeerGroup;
+import net.jxta.impl.peergroup.StdPeerGroupParamAdv;
+import net.jxta.membership.MembershipService;
 import net.jxta.peer.PeerID;
 import net.jxta.peergroup.PeerGroup;
 import net.jxta.peergroup.PeerGroupID;
-import net.jxta.platform.NetworkConfigurator;
+import net.jxta.platform.Module;
 import net.jxta.platform.NetworkManager;
-import net.jxta.protocol.PeerAdvertisement;
-import Examples.D_Discovering_Resources.Edge_Maxime_The_Socializer;
+import net.jxta.protocol.ModuleImplAdvertisement;
 import Examples.Z_Tools_And_Others.Tools;
 
-public class Edge_Anna {
+public class Custom_EPFL_Group {
     
-    public static final String Name = "Edge Anna";
-    public static final int TcpPort = 9712;
+    public static final String Name = "EPFL GROUP TEST";
     public static final PeerID PID = IDFactory.newPeerID(PeerGroupID.defaultNetPeerGroupID, Name.getBytes());
     public static final File ConfigurationFile = new File("." + System.getProperty("file.separator") + Name);
+
+    public static final String PeerGroupName = "WE ARE FROM EPFL";
+    public static final PeerGroupID CustPeerGroupID = IDFactory.newPeerGroupID(PeerGroupID.defaultNetPeerGroupID, PeerGroupName.getBytes());
     
     public static void main(String[] args) {
         
         try {
-            
+           
+        	
             // Removing any existing configuration?
             Tools.CheckForExistingConfigurationDeletion(Name, ConfigurationFile);
-            
+
             // Creation of the network manager
             NetworkManager MyNetworkManager = new NetworkManager(NetworkManager.ConfigMode.EDGE,
                     Name, ConfigurationFile.toURI());
 
-            // Retrieving the network configurator
-            NetworkConfigurator MyNetworkConfigurator = MyNetworkManager.getConfigurator();
-            
-            // Checking if RendezVous_Jack should be a seed
-            MyNetworkConfigurator.clearRendezvousSeeds();
-            String TheSeed = "tcp://" + Edge_Maxime_The_Socializer.serverAdress
-            		+ ":" + RendezVous_Jack.TcpPort;
-            Tools.CheckForRendezVousSeedAddition(Name, TheSeed, MyNetworkConfigurator);
+            // Starting the network
+            PeerGroup MyNetPeerGroup = MyNetworkManager.startNetwork();
 
-            // Setting Configuration
-            MyNetworkConfigurator.setTcpPort(TcpPort);
-            MyNetworkConfigurator.setTcpEnabled(true);
-            MyNetworkConfigurator.setTcpIncoming(true);
-            MyNetworkConfigurator.setTcpOutgoing(true);
-           // MyNetworkConfigurator.setUseMulticast(true);
+            // Creating a child group with PSE
+            PeerGroup ChildPeerGroup = MyNetPeerGroup.newGroup(
+                    CustPeerGroupID,
+                    createAllPurposePeerGroupImplAdv(),
+                    PeerGroupName,
+                    "Custom peergroup..."
+                    );
+            
+            
 
-            // Setting the Peer ID
-            Tools.PopInformationMessage(Name, "Setting the peer ID to :\n\n" + PID.toString());
-            MyNetworkConfigurator.setPeerID(PID);
+            if (Module.START_OK != ChildPeerGroup.startApp(new String[0]))
+                System.err.println("Cannot start custom peergroup");
 
-            // Starting the JXTA network
-            Tools.PopInformationMessage(Name, "Start the JXTA network and to wait for a rendezvous\nconnection with "
-                    + RendezVous_Jack.Name + " for maximum 2 minutes");
-            PeerGroup NetPeerGroup = MyNetworkManager.startNetwork();
+           //MyNetPeerGroup.newGroup(ChildPeerGroup.getPeerGroupAdvertisement());
             
-            // Disabling any rendezvous autostart
-            NetPeerGroup.getRendezVousService().setAutoStart(false);
-            
-           
-            if (MyNetworkManager.waitForRendezvousConnection(120000)) {
-                
-                Tools.popConnectedRendezvous(NetPeerGroup.getRendezVousService(),Name);
-                
-            } else {
-                
-                Tools.PopInformationMessage(Name, "Did not connect to a rendezvous");
+            // Checking membership implementation
+            MembershipService ChildGroupMembership = ChildPeerGroup.getMembershipService();
 
-            }
-            
-            
-            
+            Tools.PopInformationMessage(Name
+            		, "Custom group membership implementation:\n"
+                + ChildGroupMembership.getClass().getSimpleName());
+
             // Stopping the network
             Tools.PopInformationMessage(Name, "Stop the JXTA network");
             MyNetworkManager.stopNetwork();
+
+        } catch (PeerGroupException Ex) {
+
+            Tools.PopErrorMessage(Name, Ex.toString());
             
         } catch (IOException Ex) {
             
-            // Raised when access to local file and directories caused an error
-            Tools.PopErrorMessage(Name, Ex.toString());
-            
-        } catch (PeerGroupException Ex) {
-            
-            // Raised when the net peer group could not be created
             Tools.PopErrorMessage(Name, Ex.toString());
             
         }
+
+    }
+
+    public static ModuleImplAdvertisement createAllPurposePeerGroupImplAdv() {
+
+        ModuleImplAdvertisement implAdv = CompatibilityUtils.createModuleImplAdvertisement(
+            PeerGroup.allPurposePeerGroupSpecID, StdPeerGroup.class.getName(),
+            "General Purpose Peer Group");
+
+        // Create the service list for the group.
+        StdPeerGroupParamAdv paramAdv = new StdPeerGroupParamAdv();
+
+        // set the services
+        paramAdv.addService(PeerGroup.endpointClassID, PeerGroup.refEndpointSpecID);
+        paramAdv.addService(PeerGroup.resolverClassID, PeerGroup.refResolverSpecID);
+        paramAdv.addService(PeerGroup.membershipClassID, PeerGroup.refMembershipSpecID);
+        paramAdv.addService(PeerGroup.accessClassID, PeerGroup.refAccessSpecID);
+
+        // standard services
+        paramAdv.addService(PeerGroup.discoveryClassID, PeerGroup.refDiscoverySpecID);
+        paramAdv.addService(PeerGroup.rendezvousClassID, PeerGroup.refRendezvousSpecID);
+        paramAdv.addService(PeerGroup.pipeClassID, PeerGroup.refPipeSpecID);
+        paramAdv.addService(PeerGroup.peerinfoClassID, PeerGroup.refPeerinfoSpecID);
+
+        paramAdv.addService(PeerGroup.contentClassID, ContentServiceImpl.MODULE_SPEC_ID);
+
+        // Insert the newParamAdv in implAdv
+        XMLElement paramElement = (XMLElement) paramAdv.getDocument(MimeMediaType.XMLUTF8);
+        implAdv.setParam(paramElement);
+
+        return implAdv;
 
     }
 

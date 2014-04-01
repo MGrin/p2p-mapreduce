@@ -40,9 +40,9 @@
 
 package Examples.B_Exploring_Connectivity_Issues;
 
-import Examples.Z_Tools_And_Others.Tools;
 import java.io.File;
 import java.io.IOException;
+
 import net.jxta.exception.PeerGroupException;
 import net.jxta.id.IDFactory;
 import net.jxta.peer.PeerID;
@@ -50,6 +50,7 @@ import net.jxta.peergroup.PeerGroup;
 import net.jxta.peergroup.PeerGroupID;
 import net.jxta.platform.NetworkConfigurator;
 import net.jxta.platform.NetworkManager;
+import Examples.Z_Tools_And_Others.Tools;
 
 public class RendezVous_Jack {
     
@@ -77,11 +78,11 @@ public class RendezVous_Jack {
             MyNetworkConfigurator.setTcpEnabled(true);
             MyNetworkConfigurator.setTcpIncoming(true);
             MyNetworkConfigurator.setTcpOutgoing(true);
-            MyNetworkConfigurator.setUseMulticast(false);
+            //MyNetworkConfigurator.setUseMulticast(true);
             
             // Setting the Peer ID
             Tools.PopInformationMessage(Name, "Setting the peer ID to :\n\n" + PID.toString());
-            MyNetworkConfigurator.setPeerID(PID);
+	            MyNetworkConfigurator.setPeerID(PID);
 
             // Starting the JXTA network
             Tools.PopInformationMessage(Name, "Start the JXTA network");

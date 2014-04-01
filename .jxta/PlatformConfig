@@ -2,7 +2,7 @@
 <!DOCTYPE jxta:CP>
 <jxta:CP type="jxta:PlatformConfig" xmlns:jxta="http://jxta.org">
 	<PID>
-		urn:jxta:uuid-59616261646162614E50472050325033EC77A62878A542B5BC528B1248F4DA1003
+		urn:jxta:uuid-59616261646162614E504720503250334578616D706C4520B330B003
 	</PID>
 	<Name>
 		Example 100
@@ -16,7 +16,7 @@
 		</MCID>
 		<Parm>
 			<jxta:TransportAdvertisement xmlns:jxta="http://jxta.org" xml:space="preserve" type="jxta:TCPTransportAdvertisement">
-<Protocol>tcp</Protocol><ConfigMode>auto</ConfigMode><Port>9701</Port>			</jxta:TransportAdvertisement>
+<Protocol>tcp</Protocol><ConfigMode>auto</ConfigMode><Port>9720</Port>			</jxta:TransportAdvertisement>
 		</Parm>
 	</Svc>
 	<Svc>
@@ -41,7 +41,8 @@
 		<MCID>
 			urn:jxta:uuid-DEADBEEFDEAFBABAFEEDBABE0000000605
 		</MCID>
-		<Parm type="jxta:RdvConfig" xmlns:jxta="http://jxta.org" xml:space="preserve" config="client"/>
+		<Parm type="jxta:RdvConfig" xmlns:jxta="http://jxta.org" xml:space="preserve" config="client">
+<seeds><addr>tcp://10.0.0.2:9710</addr></seeds>		</Parm>
 	</Svc>
 	<Svc>
 		<MCID>

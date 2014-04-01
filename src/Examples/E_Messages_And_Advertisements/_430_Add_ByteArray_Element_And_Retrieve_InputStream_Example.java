@@ -40,13 +40,14 @@
 
 package Examples.E_Messages_And_Advertisements;
 
-import Examples.Z_Tools_And_Others.Tools;
 import java.io.IOException;
 import java.io.InputStream;
+
 import net.jxta.document.MimeMediaType;
 import net.jxta.endpoint.ByteArrayMessageElement;
 import net.jxta.endpoint.Message;
 import net.jxta.endpoint.MessageElement;
+import Examples.Z_Tools_And_Others.Tools;
 
 public class _430_Add_ByteArray_Element_And_Retrieve_InputStream_Example {
 

@@ -38,49 +38,75 @@
  *  
  */
 
-package Examples.J_JXTA_Multicast_Socket;
+package Examples.D_Discovering_Resources;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.DatagramPacket;
+import java.net.InetAddress;
+import java.util.Enumeration;
 
-import net.jxta.document.AdvertisementFactory;
+import net.jxta.discovery.DiscoveryEvent;
+import net.jxta.discovery.DiscoveryListener;
+import net.jxta.discovery.DiscoveryService;
+import net.jxta.document.Advertisement;
 import net.jxta.exception.PeerGroupException;
 import net.jxta.id.IDFactory;
 import net.jxta.peer.PeerID;
 import net.jxta.peergroup.PeerGroup;
 import net.jxta.peergroup.PeerGroupID;
-import net.jxta.pipe.PipeID;
-import net.jxta.pipe.PipeService;
 import net.jxta.platform.NetworkConfigurator;
 import net.jxta.platform.NetworkManager;
-import net.jxta.protocol.PipeAdvertisement;
-import net.jxta.socket.JxtaMulticastSocket;
+import net.jxta.protocol.DiscoveryResponseMsg;
+import net.jxta.protocol.PeerAdvertisement;
+import net.jxta.protocol.PeerGroupAdvertisement;
+import Examples.B_Exploring_Connectivity_Issues.RendezVous_Jack;
 import Examples.Z_Tools_And_Others.Tools;
 
-public class RendezVous_Hans_A_Multicast_Participant {
+public class Tebogo_Jazz_Fan implements DiscoveryListener {
     
-    // Static attributes
-    public static final String Name = "RendezVous Hans, a JXTA multicast socket participant";
-    public static final int TcpPort = 9731;
+    public static final String Name = "Tebogo, The Jazz Fan";
+    public static final int TcpPort = 9729;
     public static final PeerID PID = IDFactory.newPeerID(PeerGroupID.defaultNetPeerGroupID, Name.getBytes());
     public static final File ConfigurationFile = new File("." + System.getProperty("file.separator") + Name);
-
-    public static PipeAdvertisement GetPipeAdvertisement() {
+    
+    public void discoveryEvent(DiscoveryEvent TheDiscoveryEvent) {
         
-        // Creating a Pipe Advertisement
-        PipeAdvertisement MyPipeAdvertisement = (PipeAdvertisement) AdvertisementFactory.newAdvertisement(PipeAdvertisement.getAdvertisementType());
-        PipeID MyPipeID = IDFactory.newPipeID(PeerGroupID.defaultNetPeerGroupID, Name.getBytes());
-
-        MyPipeAdvertisement.setPipeID(MyPipeID);
-        MyPipeAdvertisement.setType(PipeService.PropagateType);
-        MyPipeAdvertisement.setName("Test Multicast");
-        MyPipeAdvertisement.setDescription("Created by " + Name);
+        // Who triggered the event?
+        DiscoveryResponseMsg TheDiscoveryResponseMsg = TheDiscoveryEvent.getResponse();
         
-        return MyPipeAdvertisement;
+        if (TheDiscoveryResponseMsg!=null) {
+            
+            Enumeration<Advertisement> TheEnumeration = TheDiscoveryResponseMsg.getAdvertisements();
+            
+            
+            while (TheEnumeration.hasMoreElements()) {
+                
+                try {
+                    
+                    PeerGroupAdvertisement ThePeer = (PeerGroupAdvertisement) TheEnumeration.nextElement();
+                    
+                    System.out.println("PEER GROUP ADVERTISEMENT FROM : " + ThePeer.getName());
+                    
+                    
+                    
+                    
+                    //Tools.PopInformationMessage(Name, "Received advertisement of: " + ThePeer.getName());
+                    
+                } catch (ClassCastException Ex) {
+                    
+                    // We are not dealing with a Peer Advertisement
+                	//System.out.println("Not a PeerAdvertisement! It is a " + Ex.getMessage());
+                    
+                }
+                
+            }
+                        
+        }
         
     }
     
+    
+    public final static String serverAdress = "128.178.150.147";
     public static void main(String[] args) {
         
         try {
@@ -88,60 +114,69 @@ public class RendezVous_Hans_A_Multicast_Participant {
             // Removing any existing configuration?
             Tools.CheckForExistingConfigurationDeletion(Name, ConfigurationFile);
             
-            // Creation of network manager
-            NetworkManager MyNetworkManager = new NetworkManager(NetworkManager.ConfigMode.RENDEZVOUS,
+            // Creation of the network manager
+            NetworkManager MyNetworkManager = new NetworkManager(NetworkManager.ConfigMode.EDGE,
                     Name, ConfigurationFile.toURI());
-            
+
             // Retrieving the network configurator
             NetworkConfigurator MyNetworkConfigurator = MyNetworkManager.getConfigurator();
             
-            // Setting more configuration
+            // Checking if RendezVous_Jack should be a seed
+            MyNetworkConfigurator.clearRendezvousSeeds();
+            String TheSeed = "tcp://" + serverAdress + ":" + RendezVous_Jack.TcpPort;
+            Tools.CheckForRendezVousSeedAddition(Name, TheSeed, MyNetworkConfigurator);
+
+            // Setting Configuration
             MyNetworkConfigurator.setTcpPort(TcpPort);
             MyNetworkConfigurator.setTcpEnabled(true);
             MyNetworkConfigurator.setTcpIncoming(true);
             MyNetworkConfigurator.setTcpOutgoing(true);
-            Tools.CheckForMulticastUsage(Name, MyNetworkConfigurator);
 
             // Setting the Peer ID
             Tools.PopInformationMessage(Name, "Setting the peer ID to :\n\n" + PID.toString());
             MyNetworkConfigurator.setPeerID(PID);
 
             // Starting the JXTA network
-            Tools.PopInformationMessage(Name, "Start the JXTA network");
+            Tools.PopInformationMessage(Name, "Start the JXTA network and to wait for a rendezvous\nconnection with "
+                    + RendezVous_Jack.Name + " for maximum 2 minutes");
             PeerGroup NetPeerGroup = MyNetworkManager.startNetwork();
             
-            // Waiting for other peers to connect to JXTA
-            Tools.PopInformationMessage(Name, "Waiting for other peers to connect to JXTA");
+          
 
-            // Creating the JXTA socket server
-            JxtaMulticastSocket MyMulticastSocket = new JxtaMulticastSocket(NetPeerGroup, GetPipeAdvertisement());
-            Tools.PopInformationMessage(Name, "JXTA multicast socket created");
+          
+            // Disabling any rendezvous autostart
+            if (MyNetworkManager.waitForRendezvousConnection(120000)) {
+                
+                Tools.popConnectedRendezvous(NetPeerGroup.getRendezVousService(),Name);
+                
+            } else {
+                
+                Tools.PopInformationMessage(Name, "Did not connect to a rendezvous");
+
+            }
             
-            // Creating a datagram and sending it
-            String Message = "Hello from " + Name;
-            DatagramPacket MyDatagramPacket = new DatagramPacket(Message.getBytes(), Message.length());
-            Tools.PopInformationMessage(Name, "Multicasting following message:\n\n" + Message);
-            MyMulticastSocket.send(MyDatagramPacket);
+            // Launching query to retrieve peer advertisements
+            Tools.PopInformationMessage(Name, "Start peer discovery and going to sleep for 60 seconds");
+            DiscoveryService TheDiscoveryService = NetPeerGroup.getDiscoveryService();
             
-            // Sleeping a little (10 seconds)
-            Tools.GoToSleep(10000);
-
-            // Closing the JXTA socket
-            MyMulticastSocket.close();
-             
-            // Retrieving connected peers
-            Tools.popConnectedPeers(NetPeerGroup.getRendezVousService(), Name);
-
+            TheDiscoveryService.getRemoteAdvertisements(null, DiscoveryService.GROUP,
+                "Name" , "*" , 5, new Tebogo_Jazz_Fan());
+            
+            // Sleeping for 60 seconds
+            Tools.GoToSleep(60000);
+            
             // Stopping the network
             Tools.PopInformationMessage(Name, "Stop the JXTA network");
             MyNetworkManager.stopNetwork();
             
         } catch (IOException Ex) {
             
+            // Raised when access to local file and directories caused an error
             Tools.PopErrorMessage(Name, Ex.toString());
             
         } catch (PeerGroupException Ex) {
             
+            // Raised when the net peer group could not be created
             Tools.PopErrorMessage(Name, Ex.toString());
             
         }

@@ -40,13 +40,14 @@
 
 package Examples.C_Peers_And_PeerGroups;
 
-import Examples.Z_Tools_And_Others.Tools;
 import java.io.IOException;
+
 import net.jxta.exception.PeerGroupException;
 import net.jxta.id.IDFactory;
 import net.jxta.peer.PeerID;
 import net.jxta.peergroup.PeerGroupID;
 import net.jxta.platform.NetworkManager;
+import Examples.Z_Tools_And_Others.Tools;
 
 public class _210_Creating_A_New_Peer_Example {
     

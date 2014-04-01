@@ -40,10 +40,10 @@
 
 package Examples.H_Bidirectional_Pipe_Communication;
 
-import Examples.Z_Tools_And_Others.Tools;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
+
 import net.jxta.endpoint.Message;
 import net.jxta.endpoint.StringMessageElement;
 import net.jxta.exception.PeerGroupException;
@@ -56,6 +56,7 @@ import net.jxta.pipe.PipeMsgListener;
 import net.jxta.platform.NetworkConfigurator;
 import net.jxta.platform.NetworkManager;
 import net.jxta.util.JxtaBiDiPipe;
+import Examples.Z_Tools_And_Others.Tools;
 
 public class Edge_Quinisela_At_The_Other_End implements PipeMsgListener {
     

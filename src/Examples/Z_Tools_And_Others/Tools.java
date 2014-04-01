@@ -46,7 +46,10 @@ import java.net.URI;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Scanner;
+
 import javax.swing.JOptionPane;
+
 import net.jxta.document.Attributable;
 import net.jxta.document.Attribute;
 import net.jxta.document.Element;
@@ -136,9 +139,17 @@ public class Tools {
 
     };
     
+    public static void pressEnterToContinue() {
+    	System.out.println("Press Enter to continue...");
+    	(new Scanner(System.in)).nextLine();
+    	
+    }
+    
     public static void PopInformationMessage(String Name, String Message) {
         
-        JOptionPane.showMessageDialog(null, Message, Name, JOptionPane.INFORMATION_MESSAGE);
+        //JOptionPane.showMessageDialog(null, Message, Name, JOptionPane.INFORMATION_MESSAGE);
+    	System.out.println("--- Name : " + Name + " , Message : " + Message);
+    	pressEnterToContinue();
         
     }
     
@@ -156,8 +167,13 @@ public class Tools {
     
     public static int PopYesNoQuestion(String Name, String Question) {
         
-        return JOptionPane.showConfirmDialog(null, Question, Name, JOptionPane.YES_NO_OPTION);
+        //return JOptionPane.showConfirmDialog(null, Question, Name, JOptionPane.YES_NO_OPTION);
+        System.out.println("--- Name : " + Name + " , Message : " + Question);
+        System.out.println("(Automatic YES ... LOL)");
+        pressEnterToContinue();
         
+    	//YES
+    	return JOptionPane.YES_OPTION;
     }
     
     public static void CheckForExistingConfigurationDeletion(String Name, File ConfigurationFile) throws IOException {

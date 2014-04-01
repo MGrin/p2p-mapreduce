@@ -40,9 +40,9 @@
 
 package Examples.H_Bidirectional_Pipe_Communication;
 
-import Examples.Z_Tools_And_Others.Tools;
 import java.io.File;
 import java.io.IOException;
+
 import net.jxta.document.AdvertisementFactory;
 import net.jxta.endpoint.Message;
 import net.jxta.endpoint.StringMessageElement;
@@ -60,6 +60,7 @@ import net.jxta.platform.NetworkManager;
 import net.jxta.protocol.PipeAdvertisement;
 import net.jxta.util.JxtaBiDiPipe;
 import net.jxta.util.JxtaServerPipe;
+import Examples.Z_Tools_And_Others.Tools;
 
 public class RendezVous_Adelaide_At_One_End implements PipeMsgListener {
     

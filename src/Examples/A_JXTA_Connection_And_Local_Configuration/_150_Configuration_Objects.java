@@ -40,13 +40,14 @@
 
 package Examples.A_JXTA_Connection_And_Local_Configuration;
 
-import Examples.Z_Tools_And_Others.Tools;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+
 import net.jxse.configuration.JxseHttpTransportConfiguration;
 import net.jxse.configuration.JxsePeerConfiguration;
 import net.jxse.configuration.JxseTcpTransportConfiguration;
+import Examples.Z_Tools_And_Others.Tools;
 
 public class _150_Configuration_Objects {
     

@@ -40,8 +40,8 @@
 
 package Examples.E_Messages_And_Advertisements;
 
-import Examples.Z_Tools_And_Others.Tools;
 import net.jxta.endpoint.Message;
+import Examples.Z_Tools_And_Others.Tools;
 
 public class _400_Creating_An_Empty_Message_Example {
     

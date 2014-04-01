@@ -40,12 +40,11 @@
 
 package Examples.D_Discovering_Resources;
 
-import Examples.B_Exploring_Connectivity_Issues.RendezVous_Jack;
-import Examples.Z_Tools_And_Others.Tools;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Enumeration;
+
 import net.jxta.discovery.DiscoveryEvent;
 import net.jxta.discovery.DiscoveryListener;
 import net.jxta.discovery.DiscoveryService;
@@ -59,6 +58,8 @@ import net.jxta.platform.NetworkConfigurator;
 import net.jxta.platform.NetworkManager;
 import net.jxta.protocol.DiscoveryResponseMsg;
 import net.jxta.protocol.PeerAdvertisement;
+import Examples.B_Exploring_Connectivity_Issues.RendezVous_Jack;
+import Examples.Z_Tools_And_Others.Tools;
 
 public class Edge_Maxime_The_Socializer implements DiscoveryListener {
     
@@ -76,13 +77,15 @@ public class Edge_Maxime_The_Socializer implements DiscoveryListener {
             
             Enumeration<Advertisement> TheEnumeration = TheDiscoveryResponseMsg.getAdvertisements();
             
+            
             while (TheEnumeration.hasMoreElements()) {
                 
                 try {
                     
                     PeerAdvertisement ThePeer = (PeerAdvertisement) TheEnumeration.nextElement();
+                    System.out.println("Advertisement from PEER NAME IS : " + ThePeer.getName() + " ---------------------------------");
                     
-                    Tools.PopInformationMessage(Name, "Received advertisement of: " + ThePeer.getName());
+                    //Tools.PopInformationMessage(Name, "Received advertisement of: " + ThePeer.getName());
                     
                 } catch (ClassCastException Ex) {
                     
@@ -91,10 +94,13 @@ public class Edge_Maxime_The_Socializer implements DiscoveryListener {
                 }
                 
             }
-            
+                        
         }
         
     }
+    
+    
+    public final static String serverAdress = "128.178.150.147";
     
     public static void main(String[] args) {
         
@@ -112,7 +118,7 @@ public class Edge_Maxime_The_Socializer implements DiscoveryListener {
             
             // Checking if RendezVous_Jack should be a seed
             MyNetworkConfigurator.clearRendezvousSeeds();
-            String TheSeed = "tcp://" + InetAddress.getLocalHost().getHostAddress() + ":" + RendezVous_Jack.TcpPort;
+            String TheSeed = "tcp://" + serverAdress + ":" + RendezVous_Jack.TcpPort;
             Tools.CheckForRendezVousSeedAddition(Name, TheSeed, MyNetworkConfigurator);
 
             // Setting Configuration
@@ -120,6 +126,7 @@ public class Edge_Maxime_The_Socializer implements DiscoveryListener {
             MyNetworkConfigurator.setTcpEnabled(true);
             MyNetworkConfigurator.setTcpIncoming(true);
             MyNetworkConfigurator.setTcpOutgoing(true);
+            //MyNetworkConfigurator.setUseMulticast(true);
 
             // Setting the Peer ID
             Tools.PopInformationMessage(Name, "Setting the peer ID to :\n\n" + PID.toString());
@@ -129,7 +136,8 @@ public class Edge_Maxime_The_Socializer implements DiscoveryListener {
             Tools.PopInformationMessage(Name, "Start the JXTA network and to wait for a rendezvous\nconnection with "
                     + RendezVous_Jack.Name + " for maximum 2 minutes");
             PeerGroup NetPeerGroup = MyNetworkManager.startNetwork();
-            
+
+          
             // Disabling any rendezvous autostart
             if (MyNetworkManager.waitForRendezvousConnection(120000)) {
                 
@@ -143,9 +151,11 @@ public class Edge_Maxime_The_Socializer implements DiscoveryListener {
             
             // Launching query to retrieve peer advertisements
             Tools.PopInformationMessage(Name, "Start peer discovery and going to sleep for 60 seconds");
+            
             DiscoveryService TheDiscoveryService = NetPeerGroup.getDiscoveryService();
+            
             TheDiscoveryService.getRemoteAdvertisements(null, DiscoveryService.PEER,
-                null, null, 0, new Edge_Maxime_The_Socializer());
+                "Name", "Anna*", 0, new Edge_Maxime_The_Socializer());
             
             // Sleeping for 60 seconds
             Tools.GoToSleep(60000);

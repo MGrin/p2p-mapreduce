@@ -40,14 +40,16 @@
 
 package Examples.E_Messages_And_Advertisements;
 
-import Examples.Z_Tools_And_Others.Tools;
 import java.io.IOException;
+
+import ch.epfl.p2pmapreduce.DFSPeerAdvertisement;
 import net.jxta.document.MimeMediaType;
 import net.jxta.document.StructuredDocumentFactory;
 import net.jxta.document.XMLDocument;
 import net.jxta.endpoint.Message;
 import net.jxta.endpoint.MessageElement;
 import net.jxta.endpoint.TextDocumentMessageElement;
+import Examples.Z_Tools_And_Others.Tools;
 
 public class _440_Adding_An_Advertisement_In_Message_Example {
 
@@ -56,9 +58,8 @@ public class _440_Adding_An_Advertisement_In_Message_Example {
     public static void main(String[] args) {
             
         // Creating a customized advertisement
-        _500_Customized_Advertisement_Example MyAdvertisement = new _500_Customized_Advertisement_Example();
-        MyAdvertisement.SetName("John");
-        MyAdvertisement.SetAge(33);
+        DFSPeerAdvertisement MyAdvertisement = new DFSPeerAdvertisement();
+        MyAdvertisement.setStorage(64000);
 
         // Creating the message
         Message MyMessage = new Message();
@@ -80,8 +81,8 @@ public class _440_Adding_An_Advertisement_In_Message_Example {
                 MyMessageElement.getMimeType(),
                 MyMessageElement.getStream());
 
-            _500_Customized_Advertisement_Example MyCustomizedAdvertisement =
-                    new _500_Customized_Advertisement_Example(TheDocument.getRoot());
+            DFSPeerAdvertisement MyCustomizedAdvertisement =
+                    new DFSPeerAdvertisement(TheDocument.getRoot());
 
             // Displaying advertisement
             Tools.PopInformationMessage(Name, MyCustomizedAdvertisement.toString());

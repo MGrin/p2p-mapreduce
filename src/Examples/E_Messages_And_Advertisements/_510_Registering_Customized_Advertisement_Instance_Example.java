@@ -40,8 +40,8 @@
 
 package Examples.E_Messages_And_Advertisements;
 
-import Examples.Z_Tools_And_Others.Tools;
 import net.jxta.document.AdvertisementFactory;
+import Examples.Z_Tools_And_Others.Tools;
 
 public class _510_Registering_Customized_Advertisement_Instance_Example {
     

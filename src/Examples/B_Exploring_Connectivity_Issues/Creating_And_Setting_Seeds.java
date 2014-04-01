@@ -40,10 +40,10 @@
 
 package Examples.B_Exploring_Connectivity_Issues;
 
-import Examples.Z_Tools_And_Others.Tools;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+
 import net.jxta.document.AdvertisementFactory;
 import net.jxta.document.MimeMediaType;
 import net.jxta.document.StructuredDocumentFactory;
@@ -56,6 +56,7 @@ import net.jxta.platform.NetworkConfigurator;
 import net.jxta.platform.NetworkManager;
 import net.jxta.protocol.AccessPointAdvertisement;
 import net.jxta.protocol.RouteAdvertisement;
+import Examples.Z_Tools_And_Others.Tools;
 
 public class Creating_And_Setting_Seeds {
     

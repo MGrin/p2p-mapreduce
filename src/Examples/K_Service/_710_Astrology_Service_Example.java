@@ -40,12 +40,13 @@
 
 package Examples.K_Service;
 
-import Examples.Z_Tools_And_Others.Tools;
 import java.io.File;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.net.URI;
+
 import javax.swing.JFileChooser;
+
 import net.jxta.document.Advertisement;
 import net.jxta.document.AdvertisementFactory;
 import net.jxta.endpoint.Message;
@@ -70,6 +71,7 @@ import net.jxta.protocol.PipeAdvertisement;
 import net.jxta.service.Service;
 import net.jxta.util.JxtaBiDiPipe;
 import net.jxta.util.JxtaServerPipe;
+import Examples.Z_Tools_And_Others.Tools;
 
 public class _710_Astrology_Service_Example implements Service, Runnable {
     
