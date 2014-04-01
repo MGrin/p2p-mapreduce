@@ -40,7 +40,6 @@
 
 package Examples.I_JXTA_Socket_And_Socket_Server;
 
-import Examples.Z_Tools_And_Others.Tools;
 import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.DataOutput;
@@ -50,6 +49,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+
 import net.jxta.document.AdvertisementFactory;
 import net.jxta.exception.PeerGroupException;
 import net.jxta.id.IDFactory;
@@ -62,6 +62,7 @@ import net.jxta.platform.NetworkConfigurator;
 import net.jxta.platform.NetworkManager;
 import net.jxta.protocol.PipeAdvertisement;
 import net.jxta.socket.JxtaServerSocket;
+import Examples.Z_Tools_And_Others.Tools;
 
 public class RendezVous_Lidong_The_JXTA_Socket_Server {
     

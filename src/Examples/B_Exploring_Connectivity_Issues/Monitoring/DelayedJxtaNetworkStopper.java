@@ -3,6 +3,7 @@ package Examples.B_Exploring_Connectivity_Issues.Monitoring;
 
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+
 import net.jxta.platform.NetworkManager;
 
 /**

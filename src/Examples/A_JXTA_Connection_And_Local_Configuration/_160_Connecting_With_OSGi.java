@@ -40,8 +40,8 @@
 
 package Examples.A_JXTA_Connection_And_Local_Configuration;
 
-import Examples.Z_Tools_And_Others.Tools;
 import java.io.IOException;
+
 import net.jxse.OSGi.JxseOSGiFramework;
 import net.jxse.OSGi.Services.JxseOSGiNetworkManagerService;
 import net.jxse.configuration.JxsePeerConfiguration;
@@ -51,9 +51,12 @@ import net.jxta.exception.PeerGroupException;
 import net.jxta.id.IDFactory;
 import net.jxta.peergroup.PeerGroupID;
 import net.jxta.platform.NetworkManager;
+
 import org.osgi.framework.BundleException;
 import org.osgi.framework.FrameworkEvent;
 import org.osgi.util.tracker.ServiceTracker;
+
+import Examples.Z_Tools_And_Others.Tools;
 
 public class _160_Connecting_With_OSGi {
     

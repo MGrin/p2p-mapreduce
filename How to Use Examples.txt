@@ -1,0 +1,20 @@
+Lancer "RendezVous_Jack" depuis Eclipse OU via le jar sur team07@icdatasrv2.epfl.ch
+
+Exemple de découverte de PeerAdvertisement :
+
+Lancer Edge_Anna (Si en local, changer "Edge_Maxime_The_Socializer.serverAdress" à la ligne 82 et remplacer par "InetAddress.getLocalHost().getHostAddress()")
+
+Lancer Edge_Maxime_The_Socializer (Même configuration d'adresse que plus haut selon si Jack est en local ou sur le serveur)
+
+
+
+Exemple de découverte de PeerGroupAdvertisement : 
+
+Lancer _220_Creating_A_Custom_PeerGroup_Example OU Custom_EPFL_Group : N'appuyer sur ENTER qu'une seule fois, sinon on ne le voit pas.. Je crois qu'il faut régler le lifetime
+pour corriger ça.
+
+Lancer Tebogo_Jazz_Fan, appuyer sur ENTER jusque la discovery.
+
+
+
+Plus d'informations sur l'utilisation des exemples sur Practical JXTA II.

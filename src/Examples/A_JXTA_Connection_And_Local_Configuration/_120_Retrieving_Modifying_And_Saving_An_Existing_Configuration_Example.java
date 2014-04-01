@@ -40,11 +40,12 @@
 
 package Examples.A_JXTA_Connection_And_Local_Configuration;
 
-import Examples.Z_Tools_And_Others.Tools;
 import java.io.File;
 import java.io.IOException;
+
 import net.jxta.platform.NetworkConfigurator;
 import net.jxta.platform.NetworkManager;
+import Examples.Z_Tools_And_Others.Tools;
 
 public class _120_Retrieving_Modifying_And_Saving_An_Existing_Configuration_Example {
 

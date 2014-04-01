@@ -40,7 +40,6 @@
 
 package Examples.F_Private_Keys_X509_Certificates_And_KeyStores;
 
-import Examples.Z_Tools_And_Others.Tools;
 import java.io.ByteArrayInputStream;
 import java.io.StringReader;
 import java.security.KeyFactory;
@@ -48,7 +47,9 @@ import java.security.PrivateKey;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.security.spec.PKCS8EncodedKeySpec;
+
 import net.jxta.impl.membership.pse.PSEUtils;
+import Examples.Z_Tools_And_Others.Tools;
 
 public class _600_Exporting_And_Importing_Private_Keys_And_X509_Certificates {
     

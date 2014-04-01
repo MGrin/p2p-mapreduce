@@ -68,10 +68,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.DefaultTableModel;
+
 import net.jxta.endpoint.EndpointService;
 import net.jxta.peer.PeerID;
 import net.jxta.peergroup.PeerGroup;

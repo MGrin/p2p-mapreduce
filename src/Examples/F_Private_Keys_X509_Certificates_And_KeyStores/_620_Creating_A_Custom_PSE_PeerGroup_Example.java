@@ -40,7 +40,6 @@
 
 package Examples.F_Private_Keys_X509_Certificates_And_KeyStores;
 
-import Examples.Z_Tools_And_Others.Tools;
 import java.io.File;
 import java.io.IOException;
 import java.security.KeyStore;
@@ -50,6 +49,7 @@ import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.X509Certificate;
+
 import net.jxta.credential.AuthenticationCredential;
 import net.jxta.credential.Credential;
 import net.jxta.document.MimeMediaType;
@@ -74,6 +74,7 @@ import net.jxta.platform.Module;
 import net.jxta.platform.NetworkConfigurator;
 import net.jxta.platform.NetworkManager;
 import net.jxta.protocol.ModuleImplAdvertisement;
+import Examples.Z_Tools_And_Others.Tools;
 
 public class _620_Creating_A_Custom_PSE_PeerGroup_Example {
     

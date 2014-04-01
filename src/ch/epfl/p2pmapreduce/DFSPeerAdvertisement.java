@@ -1,3 +1,5 @@
+package ch.epfl.p2pmapreduce;
+
 /*
  * Copyright (c) 2010 DawningStreams, Inc.  All rights reserved.
  *  
@@ -38,8 +40,6 @@
  *  
  */
 
-package Examples.E_Messages_And_Advertisements;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Enumeration;
@@ -55,31 +55,30 @@ import net.jxta.document.TextElement;
 import net.jxta.id.ID;
 import net.jxta.id.IDFactory;
 
-public class _500_Customized_Advertisement_Example extends Advertisement {
+public class DFSPeerAdvertisement extends Advertisement {
     
-    public static final String Name = "Example 500";
+    public static final String Name = "PeerAdvertisement";
 
     // Advertisement elements, tags and indexables
     public final static String AdvertisementType = "jxta:CustomizedAdvertisement";
     
     private ID AdvertisementID = ID.nullID;
 
-    private String TheName = "";
-    private int TheAge = -1;
+    //in Ko
+    private int availableStorage = -1;
     
     private final static String IDTag = "MyIDTag";
-    private final static String NameTag = "MyNameTag";
-    private final static String AgeTag = "MyAgeTag";
+    private final static String storageTag = "storageTag";
     
-    private final static String[] IndexableFields = { IDTag, NameTag };
+    private final static String[] IndexableFields = { IDTag, storageTag };
 
-    public _500_Customized_Advertisement_Example() {
+    public DFSPeerAdvertisement() {
         
         // Accepting default values
 
     }
 
-    public _500_Customized_Advertisement_Example(Element Root) {
+    public DFSPeerAdvertisement(Element Root) {
         
         // Retrieving the elements
         TextElement MyTextElement = (TextElement) Root;
@@ -123,16 +122,9 @@ public class _500_Customized_Advertisement_Example extends Advertisement {
             
         }
         
-        if (TheElementName.compareTo(NameTag)==0) {
+        if (TheElementName.compareTo(storageTag)==0) {
             
-            TheName = TheTextValue;
-            return;
-            
-        }
-        
-        if (TheElementName.compareTo(AgeTag)==0) {
-            
-            TheAge = Integer.parseInt(TheTextValue);
+            availableStorage = Integer.parseInt(TheTextValue);
             return;
             
         }
@@ -149,10 +141,7 @@ public class _500_Customized_Advertisement_Example extends Advertisement {
         // Adding elements
         Element MyTempElement;
         
-        MyTempElement = TheResult.createElement(NameTag, TheName);
-        TheResult.appendChild(MyTempElement);
-        
-        MyTempElement = TheResult.createElement(AgeTag, Integer.toString(TheAge));
+        MyTempElement = TheResult.createElement(storageTag, Integer.toString(availableStorage));
         TheResult.appendChild(MyTempElement);
         
         return TheResult;
@@ -173,31 +162,22 @@ public class _500_Customized_Advertisement_Example extends Advertisement {
         return IndexableFields;
     }
 
-    public void SetName(String InName) {
-        TheName = InName;
+    public void setStorage(int storage) {
+        availableStorage = storage;
     }
 
-    public void SetAge(int InAge) {
-        TheAge = InAge;
-    }
-    
-    public String GetName() {
-        return TheName;
-    }
-
-    public int GetAge() {
-        return TheAge;
+    public int getStorage() {
+        return availableStorage;
     }
     
     @Override
-    public _500_Customized_Advertisement_Example clone() throws CloneNotSupportedException {
+    public DFSPeerAdvertisement clone() throws CloneNotSupportedException {
         
-        _500_Customized_Advertisement_Example Result =
-                (_500_Customized_Advertisement_Example) super.clone();
+        DFSPeerAdvertisement Result =
+                (DFSPeerAdvertisement) super.clone();
 
         Result.AdvertisementID = this.AdvertisementID;
-        Result.TheName = this.TheName;
-        Result.TheAge = this.TheAge;
+        Result.availableStorage = this.availableStorage;
         
         return Result;
         
@@ -206,7 +186,7 @@ public class _500_Customized_Advertisement_Example extends Advertisement {
     @Override
     public String getAdvType() {
         
-        return _500_Customized_Advertisement_Example.class.getName();
+        return DFSPeerAdvertisement.class.getName();
         
     }
     
@@ -217,15 +197,15 @@ public class _500_Customized_Advertisement_Example extends Advertisement {
     public static class Instantiator implements AdvertisementFactory.Instantiator {
 
         public String getAdvertisementType() {
-            return _500_Customized_Advertisement_Example.getAdvertisementType();
+            return DFSPeerAdvertisement.getAdvertisementType();
         }
 
         public Advertisement newInstance() {
-            return new _500_Customized_Advertisement_Example();
+            return new DFSPeerAdvertisement();
         }
 
         public Advertisement newInstance(net.jxta.document.Element root) {
-            return new _500_Customized_Advertisement_Example(root);
+            return new DFSPeerAdvertisement(root);
         }
         
     }

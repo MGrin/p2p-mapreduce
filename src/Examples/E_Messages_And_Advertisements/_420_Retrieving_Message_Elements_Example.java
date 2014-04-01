@@ -40,9 +40,9 @@
 
 package Examples.E_Messages_And_Advertisements;
 
-import Examples.Z_Tools_And_Others.Tools;
 import net.jxta.endpoint.Message;
 import net.jxta.endpoint.StringMessageElement;
+import Examples.Z_Tools_And_Others.Tools;
 
 public class _420_Retrieving_Message_Elements_Example {
     

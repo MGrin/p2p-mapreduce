@@ -40,9 +40,9 @@
 
 package Examples.K_Service;
 
-import Examples.Z_Tools_And_Others.Tools;
 import java.io.File;
 import java.io.IOException;
+
 import net.jxta.exception.PeerGroupException;
 import net.jxta.exception.ProtocolNotSupportedException;
 import net.jxta.id.IDFactory;
@@ -52,6 +52,7 @@ import net.jxta.peergroup.PeerGroupID;
 import net.jxta.platform.Module;
 import net.jxta.platform.NetworkConfigurator;
 import net.jxta.platform.NetworkManager;
+import Examples.Z_Tools_And_Others.Tools;
 
 public class RendezVous_Joe_The_Astrologer {
     

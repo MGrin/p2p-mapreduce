@@ -40,11 +40,11 @@
 
 package Examples.J_JXTA_Multicast_Socket;
 
-import Examples.Z_Tools_And_Others.Tools;
 import java.io.File;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
+
 import net.jxta.exception.PeerGroupException;
 import net.jxta.id.IDFactory;
 import net.jxta.peer.PeerID;
@@ -53,6 +53,7 @@ import net.jxta.peergroup.PeerGroupID;
 import net.jxta.platform.NetworkConfigurator;
 import net.jxta.platform.NetworkManager;
 import net.jxta.socket.JxtaMulticastSocket;
+import Examples.Z_Tools_And_Others.Tools;
 
 public class Edge_Teyacapan_Another_Multicast_Participant {
     

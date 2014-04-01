@@ -40,7 +40,6 @@
 
 package Examples.F_Private_Keys_X509_Certificates_And_KeyStores;
 
-import Examples.Z_Tools_And_Others.Tools;
 import java.io.File;
 import java.io.IOException;
 import java.security.KeyStore;
@@ -50,11 +49,13 @@ import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.X509Certificate;
+
 import net.jxta.id.IDFactory;
 import net.jxta.impl.membership.pse.FileKeyStoreManager;
 import net.jxta.impl.membership.pse.PSEUtils;
 import net.jxta.peer.PeerID;
 import net.jxta.peergroup.PeerGroupID;
+import Examples.Z_Tools_And_Others.Tools;
 
 public class _610_Working_With_A_Keystore {
     

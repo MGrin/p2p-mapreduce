@@ -40,9 +40,10 @@
 
 package Examples.C_Peers_And_PeerGroups;
 
-import Examples.Z_Tools_And_Others.Tools;
 import java.io.File;
 import java.io.IOException;
+import java.util.Random;
+
 import net.jxta.document.MimeMediaType;
 import net.jxta.document.XMLElement;
 import net.jxta.exception.PeerGroupException;
@@ -58,6 +59,7 @@ import net.jxta.peergroup.PeerGroupID;
 import net.jxta.platform.Module;
 import net.jxta.platform.NetworkManager;
 import net.jxta.protocol.ModuleImplAdvertisement;
+import Examples.Z_Tools_And_Others.Tools;
 
 public class _220_Creating_A_Custom_PeerGroup_Example {
     
@@ -65,13 +67,14 @@ public class _220_Creating_A_Custom_PeerGroup_Example {
     public static final PeerID PID = IDFactory.newPeerID(PeerGroupID.defaultNetPeerGroupID, Name.getBytes());
     public static final File ConfigurationFile = new File("." + System.getProperty("file.separator") + Name);
 
-    public static final String PeerGroupName = "Custom peer group name";
+    public static final String PeerGroupName = "HELLO WORLD";
     public static final PeerGroupID CustPeerGroupID = IDFactory.newPeerGroupID(PeerGroupID.defaultNetPeerGroupID, PeerGroupName.getBytes());
     
     public static void main(String[] args) {
         
         try {
-            
+           
+        	
             // Removing any existing configuration?
             Tools.CheckForExistingConfigurationDeletion(Name, ConfigurationFile);
 
@@ -89,14 +92,18 @@ public class _220_Creating_A_Custom_PeerGroup_Example {
                     PeerGroupName,
                     "Custom peergroup..."
                     );
+            
 
             if (Module.START_OK != ChildPeerGroup.startApp(new String[0]))
                 System.err.println("Cannot start custom peergroup");
 
+           //MyNetPeerGroup.newGroup(ChildPeerGroup.getPeerGroupAdvertisement());
+            
             // Checking membership implementation
             MembershipService ChildGroupMembership = ChildPeerGroup.getMembershipService();
 
-            Tools.PopInformationMessage(Name, "Custom group membership implementation:\n"
+            Tools.PopInformationMessage(Name
+            		, "Custom group membership implementation:\n"
                 + ChildGroupMembership.getClass().getSimpleName());
 
             // Stopping the network
