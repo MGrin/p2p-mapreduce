@@ -1,17 +1,17 @@
-package ch.epfl.p2pmaperduce;
+package ch.epfl.p2pmaperduce.rendezvous;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 
 import net.jxta.id.IDFactory;
 import net.jxta.peergroup.PeerGroupID;
 
-import ch.epfl.p2pmaperduce.rendezvous.CentralRendezVous;
-import ch.epfl.p2pmaperduce.rendezvous.RendezVous;
 
 public class MainRendezVous {
 
 	public static final String CENTRAL_NAME = "Central Seed";
-	public static final int PORT = 9710;
+	public static final int PORT = 9711;
 	
 	private static HashMap<String, RendezVous> seeds = new HashMap<String, RendezVous>();
 	
@@ -23,5 +23,15 @@ public class MainRendezVous {
         centralSeed.start();
         
         
+	}
+	
+	public static String getAddress(){
+		try {
+			return "tcp://"+InetAddress.getLocalHost().getHostAddress()+":"+PORT;
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

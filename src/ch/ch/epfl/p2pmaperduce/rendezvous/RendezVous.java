@@ -28,7 +28,6 @@ public class RendezVous {
 		this.configurationFile = new File("."+ System.getProperty("file.separator") + this.name);
 		
 		try {
-			Tools.CheckForExistingConfigurationDeletion(name, configurationFile);
 			// Creation of the network manager
 			MyNetworkManager = new NetworkManager(NetworkManager.ConfigMode.RENDEZVOUS,
                     name, configurationFile.toURI());

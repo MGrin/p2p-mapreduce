@@ -17,8 +17,6 @@ public class CentralRendezVous extends RendezVous{
             // Starting the JXTA network
             Tools.PopInformationMessage(name, "Start the JXTA network for RendezVous "+name);
             NetPeerGroup = MyNetworkManager.startNetwork();
-            
-            //NetPeerGroup.getRendezVousService();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
