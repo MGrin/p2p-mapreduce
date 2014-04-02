@@ -42,7 +42,6 @@ package Examples.E_Messages_And_Advertisements;
 
 import java.io.IOException;
 
-import ch.epfl.p2pmapreduce.DFSPeerAdvertisement;
 import net.jxta.document.MimeMediaType;
 import net.jxta.document.StructuredDocumentFactory;
 import net.jxta.document.XMLDocument;
@@ -50,6 +49,7 @@ import net.jxta.endpoint.Message;
 import net.jxta.endpoint.MessageElement;
 import net.jxta.endpoint.TextDocumentMessageElement;
 import Examples.Z_Tools_And_Others.Tools;
+import ch.epfl.p2pmapreduce.advertisement.DFSPeerAdvertisement;
 
 public class _440_Adding_An_Advertisement_In_Message_Example {
 
