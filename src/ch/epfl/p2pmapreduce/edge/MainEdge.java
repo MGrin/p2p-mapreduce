@@ -1,4 +1,4 @@
-package ch.epfl.p2pmaperduce.edge;
+package ch.epfl.p2pmapreduce.edge;
 
 import net.jxta.id.IDFactory;
 import net.jxta.peergroup.PeerGroupID;

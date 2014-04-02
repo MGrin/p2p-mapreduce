@@ -1,4 +1,4 @@
-package ch.epfl.p2pmaperduce.rendezvous;
+package ch.epfl.p2pmapreduce.rendezvous;
 
 import java.io.IOException;
 

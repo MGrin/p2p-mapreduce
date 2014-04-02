@@ -1,15 +1,14 @@
-package ch.epfl.p2pmaperduce.rendezvous;
+package ch.epfl.p2pmapreduce.rendezvous;
 
 import java.io.File;
 import java.io.IOException;
-
-import Examples.Z_Tools_And_Others.Tools;
 
 import net.jxta.exception.PeerGroupException;
 import net.jxta.peer.PeerID;
 import net.jxta.peergroup.PeerGroup;
 import net.jxta.platform.NetworkConfigurator;
 import net.jxta.platform.NetworkManager;
+import Examples.Z_Tools_And_Others.Tools;
 
 public class RendezVous {
 	

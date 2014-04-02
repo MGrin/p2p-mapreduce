@@ -1,4 +1,4 @@
-package ch.epfl.p2pmapreduce;
+package ch.epfl.p2pmapreduce.advertisement;
 
 /*
  * Copyright (c) 2010 DawningStreams, Inc.  All rights reserved.

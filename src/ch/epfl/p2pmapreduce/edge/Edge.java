@@ -1,19 +1,11 @@
-package ch.epfl.p2pmaperduce.edge;
+package ch.epfl.p2pmapreduce.edge;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.URI;
-import java.net.UnknownHostException;
-
-import Examples.Z_Tools_And_Others.Tools;
-
-import ch.epfl.p2pmaperduce.rendezvous.MainRendezVous;
-
 
 import net.jxta.discovery.DiscoveryEvent;
 import net.jxta.discovery.DiscoveryListener;
-import net.jxta.document.Advertisement;
 import net.jxta.document.AdvertisementFactory;
 import net.jxta.exception.PeerGroupException;
 import net.jxta.peer.PeerID;
@@ -22,6 +14,7 @@ import net.jxta.platform.NetworkConfigurator;
 import net.jxta.platform.NetworkManager;
 import net.jxta.rendezvous.RendezvousEvent;
 import net.jxta.rendezvous.RendezvousListener;
+import ch.epfl.p2pmapreduce.rendezvous.MainRendezVous;
 
 public class Edge implements RendezvousListener, DiscoveryListener {
 
