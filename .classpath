@@ -14,5 +14,6 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/netty-3.1.5.GA.jar"/>
 	<classpathentry kind="lib" path="lib/org.mortbay.jetty.jar"/>
+	<classpathentry kind="lib" path="C:/Users/David/Desktop/epfl/codage/jdom-2.0.5.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
