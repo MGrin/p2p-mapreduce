@@ -1,9 +1,8 @@
 package ch.epfl.p2pmapreduce.exchanger;
-
 import java.io.File;
 import java.text.SimpleDateFormat;
-import org.jdom2.*;
-import org.jdom2.output.*;
+//import org.jdom2.*;
+//import org.jdom2.output.*;
 
 import ch.epfl.p2pmapreduce.index.Metadata;
 
