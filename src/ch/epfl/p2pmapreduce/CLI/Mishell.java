@@ -4,11 +4,13 @@ import ch.epfl.p2pmapreduce.exchanger.Send;
 import java.util.Scanner;
 
 public class Mishell {
+	public static Send sender;
 	
 	public static void main(String[] args) throws java.io.IOException {
 		Scanner scanner = new Scanner(System.in);
 		String line;
 		String[] tok;
+		sender = new Send();
 		
 		// Ctrl + C
 		Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -27,21 +29,21 @@ public class Mishell {
 			;
 			if (tok != null) {
 				if (tok[0].compareTo("help") == 0) {
-					if (tok.length > 1) {
-						String options = interpretOptions(tok);
+					if (tok.length == 2) {
+						String options = interpretOptions(0, tok);
 						help(options);
 					} else {
 						System.out
 								.println("About what command do you need help ? (cat, cd, ls, get, put, rm)");
+						System.out.println("Specify only one command.");
 					}
 				} else if (tok[0].compareTo("ls") == 0) {
 					if (tok.length > 1) {
-						System.out.println("handle ls with options, regex ?");
-						String options = interpretOptions(tok);
-						ls(options);
+						System.out.println("handle ls");
+						ls();
 					} else {
 						System.out.println("handle ls");
-						ls(null);
+						ls();
 					}
 				} else if (tok[0].compareTo("cat") == 0) {
 					if (tok.length == 2) {
@@ -74,7 +76,7 @@ public class Mishell {
 					}
 				} else if (tok[0].compareTo("put") == 0) {
 					if (tok.length == 3) {
-						System.out.println("handle put");
+						System.out.print("handle put ");
 						put(tok[1],tok[2]);
 					} else if (tok.length > 3) {
 						System.out.println("Too much arguments for put");
@@ -84,7 +86,7 @@ public class Mishell {
 				} else if (tok[0].compareTo("rm") == 0) {
 					if (tok.length > 1) {
 						System.out.println("handle rm");
-						String options = interpretOptions(tok);
+						String options = interpretOptions(2, tok);
 						rm(options);
 					} else {
 						System.out
@@ -95,13 +97,7 @@ public class Mishell {
 		}
 	}
 	
-	public static String ls(String input) {
-		if (input == null) {
-			System.out.println("without options");
-			;
-		} else {
-			System.out.println("with the file : " + input);
-		}
+	public static String ls() {
 		return "";
 	}
 	
@@ -122,7 +118,7 @@ public class Mishell {
 	
 	public static String put(String input1, String input2) {
 		System.out.println("with the file (local): " + input1 + " (DFS): " + input2);
-		Send.put(input1, input2);
+		sender.put(input1, input2);
 		return "";
 	}
 	
@@ -132,32 +128,38 @@ public class Mishell {
 	}
 	
 	public static String rm(String input) {
-		System.out.println("");
-		Send.rm(input);
+		sender.rm(input);
 		return "";
 	}
 	
 	public static String help(String input) {
 		if (input.compareTo("cd") == 0) {
-			System.out.println("");
+			System.out.println("Format : cd place_to_go");
+			System.out.println("No options for \"cd\"");
 		} else if (input.compareTo("ls") == 0) {
-			System.out.println("");
+			System.out.println("Format : ls file_on_dfs");
+			System.out.println("No options for \"ls\"");
 		} else if (input.compareTo("cat") == 0) {
-			System.out.println("");
+			System.out.println("Format : cat file_on_dfs");
+			System.out.println("No options for \"cat\"");
 		} else if (input.compareTo("rm") == 0) {
-			System.out.println("");
+			System.out.println("Format : rm options file_to_delete_on_dfs ");
+			System.out.println("Option -r for \"rm\" permits to delete a directory.");
 		} else if (input.compareTo("get") == 0) {
-			System.out.println("");
+			System.out.println("Format : get file_to_get_on_dfs");
+			System.out.println("No options for \"get\"");
 		} else if (input.compareTo("put") == 0) {
-			System.out.println("");
+			System.out.println("format : put file_to_send file_on_the_dfs.");
+			System.out.println("No options for \"put\".");
 		}
 		return "";
 	}
 	
-	public static String interpretOptions(String[] list) {
+	public static String interpretOptions(int type, String[] list) {
 		// skip the "ls" or "rm"
-		for (int i = 1; i < list.length; i++) {
+		switch (type) {
+		default:
+			return list[1];
 		}
-		return "";
 	}
 }
