@@ -7,7 +7,6 @@
 	<classpathentry kind="lib" path="lib/felix.jar"/>
 	<classpathentry kind="lib" path="lib/h2-1.2.127.jar"/>
 	<classpathentry kind="lib" path="lib/javax.servlet.jar"/>
-	<classpathentry kind="lib" path="lib/jdom-2.0.5.jar"/>
 	<classpathentry kind="lib" path="lib/jxse-2.6.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="file:/C:/Users/Tketa/Documents/GitHub/p2p-mapreduce/doc/jxse-2.6-javadoc/"/>
@@ -15,5 +14,6 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/netty-3.1.5.GA.jar"/>
 	<classpathentry kind="lib" path="lib/org.mortbay.jetty.jar"/>
+	<classpathentry kind="lib" path="lib/jdom-2.0.5.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
