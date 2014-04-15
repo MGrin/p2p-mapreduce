@@ -42,7 +42,6 @@ package Examples.C_Peers_And_PeerGroups;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Random;
 
 import net.jxta.document.MimeMediaType;
 import net.jxta.document.XMLElement;
@@ -73,8 +72,6 @@ public class _220_Creating_A_Custom_PeerGroup_Example {
     public static void main(String[] args) {
         
         try {
-           
-        	
             // Removing any existing configuration?
             Tools.CheckForExistingConfigurationDeletion(Name, ConfigurationFile);
 

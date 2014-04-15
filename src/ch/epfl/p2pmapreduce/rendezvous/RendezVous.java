@@ -37,7 +37,7 @@ public class RendezVous {
             MyNetworkConfigurator.setTcpEnabled(true);
             MyNetworkConfigurator.setTcpIncoming(true);
             MyNetworkConfigurator.setTcpOutgoing(true);
-            MyNetworkConfigurator.setUseMulticast(false);            
+            //MyNetworkConfigurator.setUseMulticast(false);            
             MyNetworkConfigurator.setPeerID(peerID);
             
 		} catch (IOException e) {

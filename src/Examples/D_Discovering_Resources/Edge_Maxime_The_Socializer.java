@@ -118,7 +118,8 @@ public class Edge_Maxime_The_Socializer implements DiscoveryListener {
             
             // Checking if RendezVous_Jack should be a seed
             MyNetworkConfigurator.clearRendezvousSeeds();
-            String TheSeed = "tcp://" + serverAdress + ":" + RendezVous_Jack.TcpPort;
+            String TheSeed = "tcp://" + InetAddress.getLocalHost().getHostAddress() + ":" + 9711;
+            System.out.println("THE SEED IS : " + TheSeed);
             Tools.CheckForRendezVousSeedAddition(Name, TheSeed, MyNetworkConfigurator);
 
             // Setting Configuration

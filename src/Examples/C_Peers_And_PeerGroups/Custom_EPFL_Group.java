@@ -73,8 +73,6 @@ public class Custom_EPFL_Group {
     public static void main(String[] args) {
         
         try {
-           
-        	
             // Removing any existing configuration?
             Tools.CheckForExistingConfigurationDeletion(Name, ConfigurationFile);
 

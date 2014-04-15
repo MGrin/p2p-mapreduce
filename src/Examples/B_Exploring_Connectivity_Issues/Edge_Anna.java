@@ -79,7 +79,7 @@ public class Edge_Anna {
             
             // Checking if RendezVous_Jack should be a seed
             MyNetworkConfigurator.clearRendezvousSeeds();
-            String TheSeed = "tcp://" + Edge_Maxime_The_Socializer.serverAdress
+            String TheSeed = "tcp://" + InetAddress.getLocalHost().getHostAddress()
             		+ ":" + RendezVous_Jack.TcpPort;
             Tools.CheckForRendezVousSeedAddition(Name, TheSeed, MyNetworkConfigurator);
 
