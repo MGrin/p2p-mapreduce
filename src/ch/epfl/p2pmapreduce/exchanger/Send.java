@@ -37,20 +37,26 @@ public class Send {
 			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 			String fileDate = sdf.format(file.lastModified());
 			String infos = DFSFileName + "," + fileSize + "," + fileDate;
+
 			Metadata.metaPut(infos);
+
 			//envoyer message avec infos
-			send(infos, "peersId");
+			send(infos, "peersId", "PUT");
 		} else {
 			System.out.println("File " + localFileName + " doesn't exist.");
 		}
 	}
 	
-	public void rm(String fileName) {
-		Metadata.metaRm(fileName);
+
+	public void rm(String fileName, boolean directory) {
+		//Metadata.check(filename, directory);
+		//Metadata.metaRm(filename, directory);
+
 		//envoyer message avec infos
+		//send(infos, "peersId", "RM");
 	}
 	
-	public void send(String infos, String peersId) {
+	public void send(String infos, String peersId, String type) {
 		PipeAdvertisement adv = getAdvertisement(id, true);
 		Set<PeerID> peers = new HashSet<PeerID>();
 		

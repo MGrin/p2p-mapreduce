@@ -43,8 +43,10 @@ package Examples.D_Discovering_Resources;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.URI;
 import java.util.Enumeration;
 
+import ch.epfl.p2pmapreduce.rendezvous.MainRendezVous;
 import net.jxta.discovery.DiscoveryEvent;
 import net.jxta.discovery.DiscoveryListener;
 import net.jxta.discovery.DiscoveryService;
@@ -82,16 +84,11 @@ public class Tebogo_Jazz_Fan implements DiscoveryListener {
             while (TheEnumeration.hasMoreElements()) {
                 
                 try {
-                    
                     PeerGroupAdvertisement ThePeer = (PeerGroupAdvertisement) TheEnumeration.nextElement();
                     
                     System.out.println("PEER GROUP ADVERTISEMENT FROM : " + ThePeer.getName());
                     
-                    
-                    
-                    
                     //Tools.PopInformationMessage(Name, "Received advertisement of: " + ThePeer.getName());
-                    
                 } catch (ClassCastException Ex) {
                     
                     // We are not dealing with a Peer Advertisement
@@ -123,8 +120,10 @@ public class Tebogo_Jazz_Fan implements DiscoveryListener {
             
             // Checking if RendezVous_Jack should be a seed
             MyNetworkConfigurator.clearRendezvousSeeds();
-            String TheSeed = "tcp://" + serverAdress + ":" + RendezVous_Jack.TcpPort;
-            Tools.CheckForRendezVousSeedAddition(Name, TheSeed, MyNetworkConfigurator);
+            //String TheSeed = "tcp://" + InetAddress.getLocalHost().getHostAddress() + ":" + 9711;
+            URI seedURI = URI.create(MainRendezVous.getAddress());
+            MyNetworkConfigurator.addSeedRendezvous(seedURI);
+            //Tools.CheckForRendezVousSeedAddition(Name, TheSeed, MyNetworkConfigurator);
 
             // Setting Configuration
             MyNetworkConfigurator.setTcpPort(TcpPort);
@@ -140,8 +139,6 @@ public class Tebogo_Jazz_Fan implements DiscoveryListener {
             Tools.PopInformationMessage(Name, "Start the JXTA network and to wait for a rendezvous\nconnection with "
                     + RendezVous_Jack.Name + " for maximum 2 minutes");
             PeerGroup NetPeerGroup = MyNetworkManager.startNetwork();
-            
-          
 
           
             // Disabling any rendezvous autostart
