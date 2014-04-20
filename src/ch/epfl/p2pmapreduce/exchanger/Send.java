@@ -37,7 +37,7 @@ public class Send {
 			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 			String fileDate = sdf.format(file.lastModified());
 			String infos = DFSFileName + "," + fileSize + "," + fileDate;
-			Metadata.put(infos);
+			Metadata.metaPut(infos);
 			//envoyer message avec infos
 			send(infos, "peersId");
 		} else {
@@ -46,7 +46,7 @@ public class Send {
 	}
 	
 	public void rm(String fileName) {
-		Metadata.metaRm();
+		Metadata.metaRm(fileName);
 		//envoyer message avec infos
 	}
 	
@@ -108,10 +108,10 @@ public class Send {
 	
 	
 	//UTILITY FUNCTIONS
-	public static List<String> tokenize(String input) {
+	public static List<String> tokenize(String input, String delim) {
 		List<String> output = new ArrayList<String>();
 		
-		StringTokenizer tok = new StringTokenizer(input, ",");
+		StringTokenizer tok = new StringTokenizer(input, delim);
 		while(tok.hasMoreTokens()) {
 			 output.add(tok.nextToken());
 		}
