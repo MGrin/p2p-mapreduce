@@ -50,7 +50,7 @@ public class Send {
 
 	public void rm(String fileName, boolean directory) {
 		//Metadata.check(filename, directory);
-		//Metadata.metaRm(filename, directory);
+		Metadata.metaRm(fileName);
 
 		//envoyer message avec infos
 		//send(infos, "peersId", "RM");
@@ -74,7 +74,7 @@ public class Send {
 			e.printStackTrace();
 		}
 		
-		List<String> data = tokenize(infos);
+		List<String> data = tokenize(infos, ",");
 		
 		Put message = new Put("PUT");
 		MessageElement name = new StringMessageElement("name", data.get(0), null);

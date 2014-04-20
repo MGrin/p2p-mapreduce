@@ -14,7 +14,7 @@ public class Receive implements MessageVisitor {
 		
 		String infos = name + "," + size + "," + date;
 		
-		//Metadata.metaPut("infos");
+		Metadata.metaPut(infos);
 	}
 
 	@Override
@@ -22,7 +22,7 @@ public class Receive implements MessageVisitor {
 		System.out.println("Visiting rm");
 		String name = rm.getMessageElement("name").getBytes(true).toString();
 		String infos = name;
-		//Metadata.metaRm(infos);
+		Metadata.metaRm(infos);
 	}
 
 	@Override

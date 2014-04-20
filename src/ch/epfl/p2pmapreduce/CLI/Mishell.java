@@ -1,6 +1,8 @@
 package ch.epfl.p2pmapreduce.CLI;
 
 import ch.epfl.p2pmapreduce.exchanger.Send;
+import ch.epfl.p2pmapreduce.index.Metadata;
+
 import java.util.Scanner;
 
 public class Mishell {
@@ -38,10 +40,10 @@ public class Mishell {
 				} else if (tok[0].compareTo("ls") == 0) {
 					if (tok.length > 1) {
 						System.out.println("handle ls");
-						ls();
+						ls(tok[1]);
 					} else {
 						System.out.println("handle ls");
-						ls();
+						ls(tok[1]);
 					}
 				} else if (tok[0].compareTo("cat") == 0) {
 					if (tok.length == 2) {
@@ -104,7 +106,8 @@ public class Mishell {
 		}
 	}
 
-	public static String ls() {
+	public static String ls(String input) {
+		Metadata.metaLs(input);
 		return "";
 	}
 
