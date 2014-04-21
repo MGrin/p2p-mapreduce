@@ -4,6 +4,7 @@ import ch.epfl.p2pmapreduce.index.Metadata;
 
 
 public class Receive implements MessageVisitor {
+	private boolean isConnected = false;
 
 	@Override
 	public void visit(Put put) {
@@ -27,9 +28,10 @@ public class Receive implements MessageVisitor {
 
 	@Override
 	public void visit(Connect connect) {
-		System.out.println("Visiting connect");
-		String name = connect.getMessageElement("name").getBytes(true).toString();
-		String infos = name;
-		//Metadata.metaConnect(infos);
+		if (!isConnected) {
+			System.out.println("Visiting connect");
+			isConnected = true;
+			Metadata.metaConnect();
+		}
 	}
 }

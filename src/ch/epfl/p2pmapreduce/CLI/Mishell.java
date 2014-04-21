@@ -34,8 +34,16 @@ public class Mishell {
 						help(tok[1]);
 					} else {
 						System.out
-								.println("About what command do you need help ? (cat, cd, ls, get, put, rm)");
+								.println("About what command do you need help ? (connect, cat, cd, ls, get, put, rm)");
 						System.out.println("Specify only one command.");
+					}
+				} else if (tok[0].compareTo("connect") == 0) {
+					if (tok.length == 1) {
+						System.out.println("handle connect");
+						connect();
+					} else {
+						System.out.println("handle ls");
+						ls(tok[1]);
 					}
 				} else if (tok[0].compareTo("ls") == 0) {
 					if (tok.length > 1) {
@@ -142,11 +150,18 @@ public class Mishell {
 		sender.rm(input, directory);
 		return "";
 	}
+	
+	public static void connect() {
+		sender.connect();
+	}
 
 	public static String help(String input) {
 		if (input.compareTo("cd") == 0) {
 			System.out.println("Format : cd place_to_go");
 			System.out.println("No options for \"cd\"");
+		} else if (input.compareTo("connect") == 0) {
+			System.out.println("Format : connect");
+			System.out.println("No options for \"connect\"");
 		} else if (input.compareTo("ls") == 0) {
 			System.out.println("Format : ls file_on_dfs");
 			System.out.println("No options for \"ls\"");
