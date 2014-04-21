@@ -2,6 +2,7 @@ package ch.epfl.p2pmapreduce.exchanger;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
@@ -28,6 +29,10 @@ import ch.epfl.p2pmapreduce.index.Metadata;
 public class Send {
 	private PipeID id;
 	private PipeService pipeService;
+	
+	public void connect() {
+		send(null, "peersId", "CONNECT");
+	}
 	
 	public void put(String localFileName, String DFSFileName) {
 		File file = new File(localFileName);
@@ -57,8 +62,10 @@ public class Send {
 	}
 	
 	public void send(String infos, String peersId, String type) {
+		id = getId();
 		PipeAdvertisement adv = getAdvertisement(id, true);
 		Set<PeerID> peers = new HashSet<PeerID>();
+		Message message = null;
 		
 		//send message to all the peersId we want
 		try {
@@ -76,16 +83,25 @@ public class Send {
 		
 		List<String> data = tokenize(infos, ",");
 		
-		Put message = new Put("PUT");
-		MessageElement name = new StringMessageElement("name", data.get(0), null);
-		MessageElement size = new StringMessageElement("size", data.get(1), null);
-		MessageElement date = new StringMessageElement("date", data.get(2), null);
-		message.addMessageElement(name);
-		message.addMessageElement(size);
-		message.addMessageElement(date);
+		if (type.compareTo("PUT") == 0) {
+			message = new Put("PUT");
+			MessageElement name = new StringMessageElement("name", data.get(0), null);
+			MessageElement size = new StringMessageElement("size", data.get(1), null);
+			MessageElement date = new StringMessageElement("date", data.get(2), null);
+			message.addMessageElement(name);
+			message.addMessageElement(size);
+			message.addMessageElement(date);
+		} else if (type.compareTo("CONNECT") == 0) {
+			message = new Connect("CONNECT");
+		} else if (type.compareTo("RM") == 0) {
+			message = new Rm("RM");
+			MessageElement name = new StringMessageElement("name", data.get(0), null);
+			message.addMessageElement(name);
+		}
+		
 		
 		try {
-			if (sender != null) {
+			if (sender != null && message != null) {
 				sender.send(message);
 			} else {
 				throw new Exception("outputPipe = null");
@@ -115,14 +131,22 @@ public class Send {
 	
 	//UTILITY FUNCTIONS
 	public static List<String> tokenize(String input, String delim) {
-		List<String> output = new ArrayList<String>();
+		List<String> output = null;
 		
-		StringTokenizer tok = new StringTokenizer(input, delim);
-		while(tok.hasMoreTokens()) {
-			 output.add(tok.nextToken());
+		if (input != null) {
+			output = new ArrayList<String>();
+			
+			StringTokenizer tok = new StringTokenizer(input, delim);
+			while(tok.hasMoreTokens()) {
+				 output.add(tok.nextToken());
+			}
 		}
 		
 		return output;
+	}
+	
+	public static PipeID getId() {
+		return (PipeID) PipeID.nullID;
 	}
 }
 
