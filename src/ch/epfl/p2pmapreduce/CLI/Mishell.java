@@ -12,7 +12,6 @@ public class Mishell {
 		Scanner scanner = new Scanner(System.in);
 		String line;
 		String[] tok;
-		sender = new Send();
 
 		// Ctrl + C
 		Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -137,7 +136,7 @@ public class Mishell {
 	public static String put(String input1, String input2) {
 		System.out.println("with the file (local): " + input1 + " (DFS): "
 				+ input2);
-		sender.put(input1, input2);
+		Send.put(input1, input2);
 		return "";
 	}
 
@@ -147,12 +146,12 @@ public class Mishell {
 	}
 
 	public static String rm(String input, boolean directory) {
-		sender.rm(input, directory);
+		Send.rm(input, directory);
 		return "";
 	}
 	
 	public static void connect() {
-		sender.connect();
+		Send.connect();
 	}
 
 	public static String help(String input) {

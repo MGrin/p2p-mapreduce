@@ -3,9 +3,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
-import java.util.StringTokenizer;
 
-import org.jdom2.*;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
@@ -19,10 +20,10 @@ import ch.epfl.p2pmapreduce.exchanger.Send;
  * 
  */
 public class Metadata {
-	static Element racine = new Element("DFS");
+	private static Element racine = new Element("DFS");
 	private static File file = new File("C:/Users/David/Desktop/epfl/master semestre 1 été/Big Data/projet/DFS/meta.xml");
 	//private static File file = null;
-	static Document document = new Document(racine);
+	private static Document document = new Document(racine);
 
 
     
@@ -167,6 +168,7 @@ public class Metadata {
 		File fileToSend = file;
 		Send.metaFile(fileToSend);
 	}
+	
 	public static void main(String[] args){
 		//Metadata meta = new Metadata("C:/Users/David/Desktop/epfl/master semestre 1 été/Big Data/projet/DFS/meta.xml");
 		//metaPut("hibou/coucou.txt,28,20.29.20");

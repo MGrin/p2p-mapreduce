@@ -1,8 +1,9 @@
 package ch.epfl.p2pmapreduce.exchanger;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
@@ -13,6 +14,8 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import net.jxta.document.AdvertisementFactory;
+import net.jxta.document.MimeMediaType;
+import net.jxta.endpoint.ByteArrayMessageElement;
 import net.jxta.endpoint.Message;
 import net.jxta.endpoint.MessageElement;
 import net.jxta.endpoint.StringMessageElement;
@@ -22,19 +25,18 @@ import net.jxta.pipe.OutputPipe;
 import net.jxta.pipe.PipeID;
 import net.jxta.pipe.PipeService;
 import net.jxta.protocol.PipeAdvertisement;
-
 import ch.epfl.p2pmapreduce.index.Metadata;
 
 
 public class Send {
-	private PipeID id;
-	private PipeService pipeService;
+	private static PipeID id;
+	private static PipeService pipeService;
 	
-	public void connect() {
-		send(null, "peersId", "CONNECT");
+	public static void connect() {
+		send(null, "peersId", "CONNECT", null);
 	}
 	
-	public void put(String localFileName, String DFSFileName) {
+	public static void put(String localFileName, String DFSFileName) {
 		File file = new File(localFileName);
 		
 		if (file.exists()) {
@@ -46,21 +48,21 @@ public class Send {
 			Metadata.metaPut(infos);
 
 			//envoyer message avec infos
-			send(infos, "peersId", "PUT");
+			send(infos, "peersId", "PUT", null);
 		} else {
 			System.out.println("File " + localFileName + " doesn't exist.");
 		}
 	}
 	
 
-	public void rm(String fileName, boolean directory) {
+	public static void rm(String fileName, boolean directory) {
 		//Metadata.check(filename, directory);
 		Metadata.metaRm(fileName);
 		//envoyer message avec infos
-		send(infos, "peersId", "RM");
+		//send(infos, "peersId", "RM");
 	}
 	
-	public void send(String infos, String peersId, String type) {
+	public static void send(String infos, String peersId, String type, byte[] array) {
 		id = getId();
 		PipeAdvertisement adv = getAdvertisement(id, true);
 		Set<PeerID> peers = new HashSet<PeerID>();
@@ -83,7 +85,7 @@ public class Send {
 		List<String> data = tokenize(infos, ",");
 		
 		if (type.compareTo("PUT") == 0) {
-			message = new Put("PUT");
+			message = new Put(type);
 			MessageElement name = new StringMessageElement("name", data.get(0), null);
 			MessageElement size = new StringMessageElement("size", data.get(1), null);
 			MessageElement date = new StringMessageElement("date", data.get(2), null);
@@ -93,9 +95,15 @@ public class Send {
 		} else if (type.compareTo("CONNECT") == 0) {
 			message = new Connect("CONNECT");
 		} else if (type.compareTo("RM") == 0) {
-			message = new Rm("RM");
+			message = new Rm(type);
 			MessageElement name = new StringMessageElement("name", data.get(0), null);
 			message.addMessageElement(name);
+		} else if (type.compareTo("ALL") == 0 && array != null) {
+			message = new All(type);
+			MessageElement name = new StringMessageElement("name", data.get(0), null);
+			MessageElement file = new ByteArrayMessageElement("data", MimeMediaType.XML_DEFAULTENCODING, array, null);
+			message.addMessageElement(name);
+			message.addMessageElement(file);
 		}
 		
 		
@@ -112,7 +120,7 @@ public class Send {
 		}
 	}
 	
-	private PipeAdvertisement getAdvertisement(PipeID id, boolean isMulticast) {
+	private static PipeAdvertisement getAdvertisement(PipeID id, boolean isMulticast) {
 		PipeAdvertisement adv = (PipeAdvertisement) AdvertisementFactory.newAdvertisement(PipeAdvertisement.getAdvertisementType());
 		
 		adv.setPipeID(id);
@@ -146,6 +154,35 @@ public class Send {
 	
 	public static PipeID getId() {
 		return (PipeID) PipeID.nullID;
+	}
+
+	public static void metaFile(File fileToSend) {
+		byte[] array = null;
+		if (fileToSend != null) {
+			FileInputStream fis = null;
+			try {
+				fis = new FileInputStream(fileToSend);
+				array = new byte[(int) fileToSend.length()];
+				fis.read(array);
+				fis.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					if (fis != null) {
+						fis.close();
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		if (array != null) {
+			send(null, "peersId", "ALL", array);
+		}
 	}
 }
 
