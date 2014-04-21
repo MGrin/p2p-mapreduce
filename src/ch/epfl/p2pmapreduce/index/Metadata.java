@@ -1,5 +1,6 @@
 package ch.epfl.p2pmapreduce.index;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
@@ -20,10 +21,10 @@ import ch.epfl.p2pmapreduce.exchanger.Send;
  * 
  */
 public class Metadata {
-	private static Element racine = new Element("DFS");
+	private static Element racine;
 	private static File file = new File("C:/Users/David/Desktop/epfl/master semestre 1 été/Big Data/projet/DFS/meta.xml");
 	//private static File file = null;
-	private static Document document = new Document(racine);
+	private static Document document;
 
 
     
@@ -41,6 +42,31 @@ public class Metadata {
 		}
 		
 	}
+	
+	public Metadata(byte[] newFile) {
+		FileOutputStream fos = null;
+		racine = new Element("DFS");
+		document = new Document(racine);
+		try {
+			//TODO
+			file = new File("nom");
+			fos = new FileOutputStream(file);
+			fos.write(newFile);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (fos != null) {
+					fos.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	//Methode metaPut to add a file in the xml (arborescence of the DFS)
 	public static void metaPut(String fileName) {
 		SAXBuilder sxb = new SAXBuilder();

@@ -100,9 +100,7 @@ public class Send {
 			message.addMessageElement(name);
 		} else if (type.compareTo("ALL") == 0 && array != null) {
 			message = new All(type);
-			MessageElement name = new StringMessageElement("name", data.get(0), null);
 			MessageElement file = new ByteArrayMessageElement("data", MimeMediaType.XML_DEFAULTENCODING, array, null);
-			message.addMessageElement(name);
 			message.addMessageElement(file);
 		}
 		
@@ -164,7 +162,6 @@ public class Send {
 				fis = new FileInputStream(fileToSend);
 				array = new byte[(int) fileToSend.length()];
 				fis.read(array);
-				fis.close();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
