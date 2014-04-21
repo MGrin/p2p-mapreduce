@@ -20,13 +20,15 @@ import ch.epfl.p2pmapreduce.exchanger.Send;
  */
 public class Metadata {
 	static Element racine = new Element("DFS");
-	private static File file = new File("C:/Users/David/Desktop/epfl/master semestre 1 été/Big Data/projet/DFS/meta.xml");
+	//private static File file = new File("C:/Users/David/Desktop/epfl/master semestre 1 été/Big Data/projet/DFS/meta.xml");
+	private static File file = null;
 	static Document document = new Document(racine);
 
 
     
 	//Constructor for Metadata, use only by the "creator" of the DFS to create a metadata file.
-	public Metadata() {
+	public Metadata(String fileName) {
+		file = new File(fileName);
 		try {
 			file.createNewFile();
 			racine = new Element("DFS");
@@ -59,7 +61,7 @@ public class Metadata {
 				current = currentChildren.get(indice);
 				currentChildren = current.getChildren();
 			} else {
-				System.out.println("add " + current.getName());
+				//System.out.println("add " + current.getName());
 				Element added = new Element(list.get(i));
 				current.addContent(added);
 				
@@ -151,15 +153,19 @@ public class Metadata {
 				System.out.println("Folder doesn't exist");
 			}
 		}
-		//updateMeta(document, file.getAbsolutePath());
+	}
+	
+	public static void metaConnect(){
+		File fileToSend = file;
+		Send.metaFile(fileToSend);
 	}
 	public static void main(String[] args){
-		//Metadata meta = new Metadata();
+		Metadata meta = new Metadata("C:/Users/David/Desktop/epfl/master semestre 1 été/Big Data/projet/DFS/meta.xml");
 		//metaPut("hibou/coucou.txt");
-		//metaPut("hibou/bonjour.txt");
+		//metaPut("hibou/caillou/bonjour.txt");
 		//metaPut("poil/poilu.txt");
 		//metaPut("hibou/genoux/hirondelle.txt");
-		//metaRm("hibou/genoux/hirondelle.txt");
+		//metaRm("hibou/genoux");
 		//metaLs("hibou");
 	}
 }
