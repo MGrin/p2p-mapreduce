@@ -34,4 +34,8 @@ public class Receive implements MessageVisitor {
 			Metadata.metaConnect();
 		}
 	}
+	public void visit(All all){
+		System.out.println("Visiting all");
+		//Metadata meta = new Metadata();
+	}
 }

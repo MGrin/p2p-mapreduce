@@ -39,7 +39,7 @@ public class Send {
 		
 		if (file.exists()) {
 			long fileSize = file.length()/1024; //bytes to kb 
-			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+			SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
 			String fileDate = sdf.format(file.lastModified());
 			String infos = DFSFileName + "," + fileSize + "," + fileDate;
 
@@ -56,9 +56,8 @@ public class Send {
 	public void rm(String fileName, boolean directory) {
 		//Metadata.check(filename, directory);
 		Metadata.metaRm(fileName);
-
 		//envoyer message avec infos
-		//send(infos, "peersId", "RM");
+		send(infos, "peersId", "RM");
 	}
 	
 	public void send(String infos, String peersId, String type) {

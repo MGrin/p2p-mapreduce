@@ -20,8 +20,8 @@ import ch.epfl.p2pmapreduce.exchanger.Send;
  */
 public class Metadata {
 	static Element racine = new Element("DFS");
-	//private static File file = new File("C:/Users/David/Desktop/epfl/master semestre 1 été/Big Data/projet/DFS/meta.xml");
-	private static File file = null;
+	private static File file = new File("C:/Users/David/Desktop/epfl/master semestre 1 été/Big Data/projet/DFS/meta.xml");
+	//private static File file = null;
 	static Document document = new Document(racine);
 
 
@@ -62,9 +62,16 @@ public class Metadata {
 				currentChildren = current.getChildren();
 			} else {
 				//System.out.println("add " + current.getName());
-				Element added = new Element(list.get(i));
+				List<String> fileInfos = Send.tokenize(list.get(i), ",");
+				Element added = new Element(fileInfos.get(0));
+				String text = "";
+				if (fileInfos.size() > 1){
+					for( int j = 1; j < fileInfos.size();j++){
+						text = text.concat(fileInfos.get(j) + ",");
+					}
+					added.setText(text);
+				}
 				current.addContent(added);
-				
 				current =added;
 				currentChildren = current.getChildren();
 			}
@@ -110,7 +117,8 @@ public class Metadata {
 		Element current = racine;
 		List<Element> currentChildren = current.getChildren();
 		for (int i = 0; i <= list.size()-1; i++){
-			int indice = searchIndice(currentChildren , list.get(i));
+			List<String> fileInfos = Send.tokenize(list.get(i), ",");
+			int indice = searchIndice(currentChildren , fileInfos.get(0));
 			if( indice != -1 && i == list.size()-1){
 				currentChildren.remove(indice);
 				i = list.size();
@@ -160,12 +168,12 @@ public class Metadata {
 		Send.metaFile(fileToSend);
 	}
 	public static void main(String[] args){
-		Metadata meta = new Metadata("C:/Users/David/Desktop/epfl/master semestre 1 été/Big Data/projet/DFS/meta.xml");
-		//metaPut("hibou/coucou.txt");
+		//Metadata meta = new Metadata("C:/Users/David/Desktop/epfl/master semestre 1 été/Big Data/projet/DFS/meta.xml");
+		//metaPut("hibou/coucou.txt,28,20.29.20");
 		//metaPut("hibou/caillou/bonjour.txt");
 		//metaPut("poil/poilu.txt");
 		//metaPut("hibou/genoux/hirondelle.txt");
-		//metaRm("hibou/genoux");
+		//metaRm("hibou/coucou.txt");
 		//metaLs("hibou");
 	}
 }
