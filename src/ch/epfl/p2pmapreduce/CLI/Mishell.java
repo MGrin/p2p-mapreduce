@@ -49,8 +49,7 @@ public class Mishell {
 						System.out.println("handle ls");
 						ls(tok[1]);
 					} else {
-						System.out.println("handle ls");
-						ls(tok[1]);
+						System.out.println("not enough arguments");
 					}
 				} else if (tok[0].compareTo("cat") == 0) {
 					if (tok.length == 2) {
@@ -94,16 +93,7 @@ public class Mishell {
 					if (tok.length == 2) {
 						System.out.println("handle rm");
 						System.out.println("on " + tok[1]);
-						rm(tok[1], false);
-					} else if (tok.length == 3) {
-						if (tok[1].compareTo("-r") == 0) {
-							System.out.println("handle rm");
-							System.out.println("on " + tok[2]);
-							rm(tok[2], true);
-						} else {
-							System.out
-									.println("Please specify a file/folder to delete");
-						}
+						rm(tok[1]);
 					} else {
 						System.out
 								.println("Please specify a file/folder to delete");
@@ -145,11 +135,11 @@ public class Mishell {
 		return "";
 	}
 
-	public static String rm(String input, boolean directory) {
-		Send.rm(input, directory);
+	public static String rm(String input) {
+		Send.rm(input);
 		return "";
 	}
-	
+
 	public static void connect() {
 		Send.connect();
 	}
@@ -168,9 +158,9 @@ public class Mishell {
 			System.out.println("Format : cat file_on_dfs");
 			System.out.println("No options for \"cat\"");
 		} else if (input.compareTo("rm") == 0) {
-			System.out.println("Format : rm options file_to_delete_on_dfs ");
+			System.out.println("Format : rm file_to_delete_on_dfs ");
 			System.out
-					.println("Option -r for \"rm\" permits to delete a directory.");
+					.println("Take care : if you select a folder, rm will delete all its containing files");
 		} else if (input.compareTo("get") == 0) {
 			System.out.println("Format : get file_to_get_on_dfs");
 			System.out.println("No options for \"get\"");

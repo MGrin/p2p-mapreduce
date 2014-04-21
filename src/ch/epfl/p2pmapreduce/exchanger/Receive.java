@@ -37,6 +37,6 @@ public class Receive implements MessageVisitor {
 	public void visit(All all){
 		System.out.println("Visiting all");
 		byte[] newFile = all.getMessageElement("data").getBytes(true);
-		Metadata meta = new Metadata(newFile);
+		Metadata.SaveNewVersion(newFile);
 	}
 }

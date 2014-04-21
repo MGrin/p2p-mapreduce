@@ -40,7 +40,8 @@ public class Send {
 		File file = new File(localFileName);
 		
 		if (file.exists()) {
-			long fileSize = file.length()/1024; //bytes to kb 
+			long fileSize = file.length(); //bytes to kb
+			System.out.println(file.length());
 			SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
 			String fileDate = sdf.format(file.lastModified());
 			String infos = DFSFileName + "," + fileSize + "," + fileDate;
@@ -50,16 +51,16 @@ public class Send {
 			//envoyer message avec infos
 			send(infos, "peersId", "PUT", null);
 		} else {
-			System.out.println("File " + localFileName + " doesn't exist.");
+			System.err.println("File " + localFileName + " doesn't exist.");
 		}
 	}
 	
 
-	public static void rm(String fileName, boolean directory) {
-		//Metadata.check(filename, directory);
+	public static void rm(String fileName) {
 		Metadata.metaRm(fileName);
+		
 		//envoyer message avec infos
-		//send(infos, "peersId", "RM");
+		send(fileName, "peersId", "RM", null);
 	}
 	
 	public static void send(String infos, String peersId, String type, byte[] array) {
@@ -93,7 +94,7 @@ public class Send {
 			message.addMessageElement(size);
 			message.addMessageElement(date);
 		} else if (type.compareTo("CONNECT") == 0) {
-			message = new Connect("CONNECT");
+			message = new Connect(type);
 		} else if (type.compareTo("RM") == 0) {
 			message = new Rm(type);
 			MessageElement name = new StringMessageElement("name", data.get(0), null);
