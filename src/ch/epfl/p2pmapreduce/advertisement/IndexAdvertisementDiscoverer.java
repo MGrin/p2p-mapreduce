@@ -43,7 +43,7 @@ public class IndexAdvertisementDiscoverer implements DiscoveryListener {
 					} else {
 						
 						System.out.println("Received an Advertisement which is neither an IndexAdvertisement nor a PeerGroupAdvertisement..");
-						System.out.println("It is a " + adv.getAdvertisementType());
+						System.out.println("It is a " + adv.getAdvType());
 						
 					}
 
