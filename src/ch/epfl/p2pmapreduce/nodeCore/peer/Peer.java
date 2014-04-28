@@ -16,7 +16,7 @@ import ch.epfl.p2pmapreduce.nodeCore.messages.NewFile;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendChunk;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendChunkfield;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendIndex;
-import ch.epfl.p2pmapreduce.nodeCore.network.ConnexionManager;
+import ch.epfl.p2pmapreduce.nodeCore.network.SimConnectionManager;
 import ch.epfl.p2pmapreduce.nodeCore.utils.NetworkConstants;
 import ch.epfl.p2pmapreduce.nodeCore.utils.PeerConstants;
 import ch.epfl.p2pmapreduce.nodeCore.volume.File;
@@ -35,7 +35,7 @@ public class Peer implements Runnable, MessageBuilder{
 	private StateManager state = new StateManager();
 	private boolean running = false;
 	
-	private ConnexionManager cManager;
+	private SimConnectionManager cManager;
 	private MessageHandler messages;
 	private FileManager fManager;
 	
@@ -50,7 +50,7 @@ public class Peer implements Runnable, MessageBuilder{
 		x = (int) (Math.random() * NetworkConstants.AREA_SIZE);
 		y = (int) (Math.random() * NetworkConstants.AREA_SIZE);
 		runner = new Thread(this);
-		cManager = new ConnexionManager(this.id);
+		cManager = new SimConnectionManager(this.id);
 		messages = new MessageHandler(this, state, fManager, cManager);
 		System.out.println("Hello world, I'm " + peerName + " with id " + id);
 		

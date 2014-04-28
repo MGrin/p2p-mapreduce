@@ -20,7 +20,7 @@ import ch.epfl.p2pmapreduce.nodeCore.volume.File;
 import ch.epfl.p2pmapreduce.nodeCore.volume.GlobalChunkfield;
 
 
-public class ConnexionManager {
+public class SimConnectionManager implements IConnectionManager {
 
 	private final static PeerManager PM = PeerManager.getInstance();
 	
@@ -29,7 +29,7 @@ public class ConnexionManager {
 	// TODO think of resetting globalChunkfields entries when getting chunk !!
 	private Map<File, GlobalChunkfield> globalChunkfields = new HashMap<File, GlobalChunkfield>();
 	
-	public ConnexionManager(int peerId) {
+	public SimConnectionManager(int peerId) {
 		this.peerId = peerId;
 	}
 

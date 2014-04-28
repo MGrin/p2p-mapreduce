@@ -12,7 +12,7 @@ import ch.epfl.p2pmapreduce.nodeCore.messages.NewFile;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendChunk;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendChunkfield;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendIndex;
-import ch.epfl.p2pmapreduce.nodeCore.network.ConnexionManager;
+import ch.epfl.p2pmapreduce.nodeCore.network.SimConnectionManager;
 import ch.epfl.p2pmapreduce.nodeCore.utils.PeerManager;
 import ch.epfl.p2pmapreduce.nodeCore.volume.File;
 import ch.epfl.p2pmapreduce.nodeCore.volume.FileManager;
@@ -27,11 +27,11 @@ public class MessageHandler implements MessageReceiver {
 	private MessageBuilder builder;
 	private StateManager state;
 	private FileManager files;
-	private ConnexionManager cManager;
+	private SimConnectionManager cManager;
 	
 	private int pendingChunkRequest = 0;
 	
-	public MessageHandler(MessageBuilder builder, StateManager state, FileManager files, ConnexionManager cManager) {
+	public MessageHandler(MessageBuilder builder, StateManager state, FileManager files, SimConnectionManager cManager) {
 		this.builder = builder;
 		this.state = state;
 		this.files = files;
