@@ -16,7 +16,8 @@ public class Mishell {
 	 * TODO file overwriting does not occur in Peer. calling twice rootPut() with same parameter will result in
 	 * loading same file twice under different references. Overwritting put must be controlled by miShell
 	 * 
-	 * 
+	 * TODO remotePut will have to transmit information under same format as in index initialisation (see first todo)
+	 * data received from network has to be parsed and put in a nodeCore.volume.File class
 	 */
 	
 	
