@@ -1,23 +1,29 @@
 package ch.epfl.p2pmapreduce.nodeCore.volume;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class Index {
 	
-	private List<File> files = new ArrayList<File>();
+	private HashMap<File, Chunkfield> files = new HashMap<File, Chunkfield>();
 	
 	public Index() {
 		
 	}
 	
+	// creates index initialized from files with empty chunkfields
 	private Index(List<File> files) {
-		this.files = files;
+		for (File f : files) {
+			this.files.put(f, new Chunkfield(f));
+		}
 	}
 	
 	public Index copy() {
 		List<File> copied = new ArrayList<File>();
-		for (File f: files) {
+		for (File f: files.keySet()) {
 			copied.add(new File(f));
 		}
 		return new Index(copied);
@@ -25,7 +31,7 @@ public class Index {
 	
 	public List<File> lsUnstab() {
 		List<File> unstab = new ArrayList<File>();
-		for (File f: files) {
+		for (File f: files.keySet()) {
 			if (!f.isStabilized()) {
 				unstab.add(f);
 			}
@@ -34,26 +40,30 @@ public class Index {
 		return unstab;
 	}
 	
-	public void rm(File f) {
+	public boolean remove(File f) {
+		boolean existF = files.containsKey(f);
 		files.remove(f);
-		// push notif rmIndex
+		return existF;
 	}
 	
-	public void put(File f) {
-		files.add(f);
-		// push notif putIndex done by peer
+	public boolean put(File f) {
+		if (!files.containsKey(f)) {
+			files.put(f, new Chunkfield(f));
+			return true;
+		} else return false;
+		
 	}
 	
 	public boolean contains(File f) {
-		return files.contains(f);
+		return files.containsKey(f);
 	}
 	
-	public List<File> files() {
-		return new ArrayList<File>(files);
+	public Set<File> files() {
+		return files.keySet();
 	}
 
 	public File getFile(int fileUid) {
-		for (File f : files) {
+		for (File f : files.keySet()) {
 			if (f.uid == fileUid) return f;
 		}
 		return null;
@@ -66,4 +76,34 @@ public class Index {
 		}
 	}
 
+	public Chunkfield getChunkfield(File f) {
+		return files.get(f);
+	}
+	public Chunkfield getChunkfield(int fileId) {
+		return files.get(getFile(fileId));
+	}
+
+	public Map<File, Chunkfield> filesWithChunkfields() {
+		return files;
+	}
+
+	public Map<Integer, Chunkfield> getChunkfields() {
+		// TODO check implementation/ utility after reconsidering use of uID
+		Map<Integer, Chunkfield> result = new HashMap<Integer, Chunkfield>();
+		for (File f : files.keySet()) {
+			Chunkfield temp = files.get(f);
+			if (! temp.isEmpty()) {
+				result.put(f.uid, new Chunkfield(files.get(f)));
+			}
+		}
+		return result;
+	}
+
+	public int size() {
+		return files.size();
+	}
+
+	public void putChunk(int fileId, int chunkId) {
+		files.get(getFile(fileId)).putChunk(chunkId);
+	}
 }

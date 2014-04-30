@@ -1,12 +1,13 @@
 package ch.epfl.p2pmapreduce.nodeCore.volume;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class FileManager {
 
-	private Map<File, Chunkfield> files = new HashMap<File, Chunkfield>();
+//	private Map<File, Chunkfield> files = new HashMap<File, Chunkfield>();
 	private Index index = new Index();
 	public final int peerId;
 	
@@ -14,35 +15,14 @@ public class FileManager {
 		this.peerId = peerId;
 	}
 	
-	// typically called on index update
+	// typically called on index update (or put Instruction in simulation mode)
 	/**
 	 * Puts a file in the index.
 	 * @param f the file to add.
 	 * @return true if the file was not already present
 	 */
 	public boolean addFile(File f) {
-		if (!files.containsKey(f)) {
-			files.put(f, new Chunkfield(f));
-			index.put(f);
-			return true;
-		} else return false;
-		
-	}
-	
-	// typically called on put instruction
-	
-	/*
-	 * FOR SIMULATION USE ONLY
-	 * 
-	 *  NOTE be careful, really important, not kidding at all !
-	 *  files and index gets same file reference. Thus modifying a file in
-	 *  one of both will modify in the other one as well.
-	 */
-	public void createFile(File f) {
-		if (!files.containsKey(f)) {
-			files.put(f, new Chunkfield(f, true));
-			index.put(f);
-		}
+		return index.put(f);
 	}
 
 	/**
@@ -59,8 +39,9 @@ public class FileManager {
 		return new File(dfsFullPath, 100);
 	}
 	
-	public void rmFile(File f) {
-		files.remove(f);
+	public boolean rmFile(File f) {
+		// TODO erase all chunkfiles stored in OS.
+		return index.remove(f);
 	}
 
 	public File getFile(int fileUid) {
@@ -72,72 +53,58 @@ public class FileManager {
 	}
 	
 	public Chunkfield getChunkfield(File f) {
-		return new Chunkfield(files.get(f));
+		return new Chunkfield(index.getChunkfield(f));
 	}
 	
 	/**
 	 * For sending all chunkfields over network
-	 * @return
+	 * @return map of filesUid to chunkfields
 	 */
 	public Map<Integer, Chunkfield> getChunkfields() {
-		Map<Integer, Chunkfield> result = new HashMap<Integer, Chunkfield>();
-		for (File f : files.keySet()) {
-			Chunkfield temp = files.get(f);
-			if (! temp.isEmpty()) {
-				result.put(f.uid, new Chunkfield(files.get(f)));
-			}
-		}
-		return result;
+		return index.getChunkfields();
 	}
 	
 	public void replaceIndex(Index newIndex) {
-		Map<File, Chunkfield> newFiles = new HashMap<File, Chunkfield>();
 		
+		List<File> oldFiles = new ArrayList<File>();
+		for (File oldF: index.files()) {
+			if (!newIndex.contains(oldF)) oldFiles.add(oldF);
+		}
+		// TODO rm oldfiles from filesystem
 		
-		for (File f : files.keySet()) {
-			if (newIndex.contains(f)) {
-				// keep old files
-				newFiles.put(f, files.get(f));
-			} else {
-				// put new files
-				newFiles.put(f, new Chunkfield(f, false));
-			}
-			
+		for (File oldF: oldFiles) {
+			index.remove(oldF);
 		}
 		
-		/*
-		 * For concrete implementation :
-		 * remove stored unused pieces from disk
-		 */
-		
-		// rm unused files
-		files = newFiles;
-		index = newIndex;
+		for (File newF: newIndex.files()) {
+			if (! index.contains(newF)) index.put(newF);
+		}
 	}
 
 
 	public Set<File> getFiles() {
-		return files.keySet();
+		return index.files();
 	}
 
 
 	public int filesCount() {
-		return files.size();
+		return index.size();
 	}
 	
 	public boolean containsChunk(int fileId, int chunkId) {
-		Chunkfield cf = files.get(fileId);
+		Chunkfield cf = index.getChunkfield(fileId);
 		if (cf != null) {
 			return cf.hasChunk(chunkId);
 		} else return false ;
 	}
 
-	public void addChunk(int fileId, int chunkId) {
-		files.get(index.getFile(fileId)).putChunk(chunkId);
+	// TODO add byte array as parameter for chunkfield data and store that data in os.
+	public void addChunk(int fileId, int chunkId/*, byte[] chunkData*/) {
+		// TODO store chunkData
+		index.putChunk(fileId, chunkId);
 	}
 
 	public void stabilize(int file) {
-		// as long as index and files rely on same reference of file, modifying index only is enough.
 		index.stabilize(file);
 	}
 	

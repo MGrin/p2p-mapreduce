@@ -203,7 +203,7 @@ public class Peer implements Runnable, MessageBuilder{
 	 * @param f the file to put in RAIDFS
 	 */
 	public void put(File f) {
-		fManager.createFile(f);
+		fManager.addFile(f);
 		cManager.broadcastAll(newFile(f.uid, f.name, f.chunkCount));
 	}
 	
@@ -230,6 +230,16 @@ public class Peer implements Runnable, MessageBuilder{
 	 */
 	public boolean remotePut(File file) {
 		return fManager.addFile(file);
+	}
+	
+	/**
+	 * used by miShell to notify rm index update
+	 * 
+	 * @param file The file representation of file to remove from local index.
+	 * @return true if the file existed false if no such file
+	 */
+	public boolean rm(File file) {
+		return fManager.rmFile(file);
 	}
 
 	
