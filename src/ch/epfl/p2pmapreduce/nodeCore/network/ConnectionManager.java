@@ -1,20 +1,17 @@
 package ch.epfl.p2pmapreduce.nodeCore.network;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunk;
+import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunkfield;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetIndex;
-import ch.epfl.p2pmapreduce.nodeCore.messages.IndexUpdate;
-import ch.epfl.p2pmapreduce.nodeCore.messages.Message;
+import ch.epfl.p2pmapreduce.nodeCore.messages.SendChunk;
+import ch.epfl.p2pmapreduce.nodeCore.messages.SendChunkfield;
+import ch.epfl.p2pmapreduce.nodeCore.messages.SendIndex;
 import ch.epfl.p2pmapreduce.nodeCore.peer.Peer;
-import ch.epfl.p2pmapreduce.nodeCore.utils.NetworkConstants;
-import ch.epfl.p2pmapreduce.nodeCore.utils.PeerManager;
 import ch.epfl.p2pmapreduce.nodeCore.volume.Chunkfield;
 import ch.epfl.p2pmapreduce.nodeCore.volume.File;
 import ch.epfl.p2pmapreduce.nodeCore.volume.GlobalChunkfield;
@@ -22,7 +19,10 @@ import ch.epfl.p2pmapreduce.nodeCore.volume.GlobalChunkfield;
 
 public class ConnectionManager {
 
-	private final static PeerManager PM = PeerManager.getInstance();
+	// TODO replace by concrete implementation of those interfaces !!!!
+	private final INeighbourDiscoverer nD = null;
+	// TODO replace by concrete implementation of those interfaces !!!!
+	private final IMessageSender sender = null;
 	
 	private int peerId;
 	private List<Neighbour> neighbors = new ArrayList<Neighbour>();
@@ -34,53 +34,12 @@ public class ConnectionManager {
 	}
 
 	public void init() {
-		neighbors = new ArrayList<Neighbour>();
-		getNeighbors();
-	}
-	
-	private void getNeighbors() {
-		List<Peer> tempNeighbors = new ArrayList<Peer>();
-		Peer p1 = null;
-		while (tempNeighbors.size() < NetworkConstants.CANDIDATE_SIZE) {
-			p1 = PM.getPeer(peerId);
-			if (! tempNeighbors.contains(p1)) {
-				tempNeighbors.add(p1);
-			}
-		}
-		Collections.sort(tempNeighbors, new Comparator<Peer>() {
-			@Override
-			public int compare(Peer a, Peer b) {
-				Peer thisPeer = PM.get(peerId);
-				int result = (int) Math.signum(thisPeer.dist(a) - thisPeer.dist(b));
-				if (result == 0) result = (int) Math.signum(a.id - b.id);
-				return result;
-			}
-		});
-		
-		tempNeighbors = tempNeighbors.subList(0, NetworkConstants.N_OPT);
-		
-		// resets neighbors with chunkfields
-		// TODO discuss about usefulness of keeping known chunkfields (fetched periodically anyway)
-		neighbors = new ArrayList<Neighbour>();
-		for (Peer p: tempNeighbors) {
-			neighbors.add(new Neighbour(p.id));
-		}
+		neighbors = nD.getNeighbors();
 	}
 
-	public void printNeighbors() {
-		System.out.println(neighborsToString());
-	}
-	
-	public String neighborsToString() {
-		StringBuilder sb = new StringBuilder("[");
-		Peer temPeer = null;
-		for (Neighbour n: neighbors) {
-			temPeer = PM.get(n.id);
-			if (temPeer.isRunning()) {
-				sb.append(n.id + ", ");
-			}
-		}
-		return sb.substring(0, sb.length()-2)+"]";
+	public void stop() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	/**
@@ -123,21 +82,6 @@ public class ConnectionManager {
 	}
 
 	// message sending methods
-	
-	/**
-	 * Sends the message to all memorized peers (in neighbors)
-	 * 
-	 * @param message
-	 */
-	public void broadcast(Message message) {
-		for (Neighbour n : neighbors) {
-			PM.get(n.id).enqueue(message);
-		}
-	}
-
-	public void send(GetIndex getIndex) {
-		PM.get(neighbors.iterator().next().id).enqueue(getIndex);
-	}
 
 	/**
 	 * Sends request getChunk, only if finds some neighbor having the chunk.
@@ -145,23 +89,71 @@ public class ConnectionManager {
 	 * @return true if a peer was found to send the request.
 	 */
 	public boolean send(GetChunk getChunk) {
-		int ownerId = -1;
+		Neighbour owner = null;
 		// finds a neighbor owning the selected chunk
 		for (Neighbour n : neighbors) {
 			if (n.getChunkfield(getChunk.file()).hasChunk(getChunk.chunkId())) {
-				ownerId = peerId;
+				owner = n;
 				break;
 			}
 		}
-		if (ownerId != -1) {
-			PM.get(ownerId).enqueue(getChunk);
-			return true;
+		if (owner != null) {
+			return sender.send(getChunk, owner);
 		} else return false;
 	}
 	
-	public void broadcastAll(IndexUpdate updateIndex) {
-		// trick here !!! should rely on index dissemination system
-		PM.broadcast(updateIndex);
+	public boolean send(SendChunk sendChunk, int receiverId) {
+		Neighbour receiver = getFromId(receiverId);
+		if (receiver != null) {
+			return sender.send(sendChunk, receiver);
+		} else return false;
+		
+	}
+
+	public boolean send(SendChunkfield sendChunkfield, int receiverId) {
+		Neighbour receiver = getFromId(receiverId);
+		if (receiver != null) {
+			return sender.send(sendChunkfield, receiver);
+		} else return false;
+	}
+
+	public void broadcast(GetChunkfield getChunkfield) {
+		// TODO Discuss if Broadcast should be done in JXTAMessager or here
+		// sender.broadcast(getChunkfield)
+		
+		for (Neighbour n: neighbors) {
+			sender.send(getChunkfield, n);
+		}
+	}
+
+	// temporary, until index messages gestion in miShell is integrated 
+	public boolean send(SendIndex sendIndex, int receiverId) {
+		Neighbour receiver = getFromId(receiverId);
+		if (receiver != null) {
+			return sender.send(sendIndex, receiver);
+		} else return false;
+	}
+
+	// temporary, until index messages gestion in miShell is integrated
+	public boolean send(GetIndex getIndex) {
+		return sender.send(getIndex, neighbors.get(0));
+	}
+	
+	// utilities
+	
+	private Neighbour getFromId(int neighbourId) {
+		for (Neighbour n: neighbors) {
+			if (n.id == neighbourId) return n;
+		}
+		return null;
+	}
+	
+	public String neighborsToString() {
+		StringBuilder sb = new StringBuilder("[");
+		for (Neighbour n: neighbors) {
+			sb.append(n.id + ", ");
+		}
+		return sb.substring(0, sb.length()-2)+"]";
 	}
 }
 

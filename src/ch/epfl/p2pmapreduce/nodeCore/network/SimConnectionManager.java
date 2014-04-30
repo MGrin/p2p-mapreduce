@@ -151,7 +151,7 @@ public class SimConnectionManager implements IConnectionManager {
 		int ownerId = -1;
 		// finds a neighbor owning the selected chunk
 		for (Integer peerId : neighbors.keySet()) {
-			if (neighbors.get(peerId).get(getChunk.fileId()).hasChunk(getChunk.chunkId())) {
+			if (neighbors.get(peerId).get(getChunk.file()).hasChunk(getChunk.chunkId())) {
 				ownerId = peerId;
 				break;
 			}

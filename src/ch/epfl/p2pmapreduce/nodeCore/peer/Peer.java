@@ -1,7 +1,6 @@
 package ch.epfl.p2pmapreduce.nodeCore.peer;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -16,6 +15,7 @@ import ch.epfl.p2pmapreduce.nodeCore.messages.NewFile;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendChunk;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendChunkfield;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendIndex;
+import ch.epfl.p2pmapreduce.nodeCore.network.ConnectionManager;
 import ch.epfl.p2pmapreduce.nodeCore.network.SimConnectionManager;
 import ch.epfl.p2pmapreduce.nodeCore.utils.NetworkConstants;
 import ch.epfl.p2pmapreduce.nodeCore.utils.PeerConstants;
@@ -34,7 +34,7 @@ public class Peer implements Runnable, MessageBuilder{
 	private StateManager state = new StateManager();
 	private boolean running = false;
 	
-	private SimConnectionManager cManager;
+	private ConnectionManager cManager;
 	private MessageHandler messages;
 	private FileManager fManager;
 	
@@ -49,7 +49,7 @@ public class Peer implements Runnable, MessageBuilder{
 		x = (int) (Math.random() * NetworkConstants.AREA_SIZE);
 		y = (int) (Math.random() * NetworkConstants.AREA_SIZE);
 		runner = new Thread(this);
-		cManager = new SimConnectionManager(this.id);
+		cManager = new ConnectionManager(this.id);
 		messages = new MessageHandler(this, state, fManager, cManager);
 		System.out.println("Hello world, I'm " + peerName + " with id " + id);
 		
@@ -198,13 +198,12 @@ public class Peer implements Runnable, MessageBuilder{
 	}
 	
 	/**
-	 * Caller must guarantee that new file is completely new (unique id).
-	 * this method will not overwrite oldVersions of a file. Must use rm first.
+	 * Don't use this method !!!
+	 * Use rootPut or remotePut instead
+	 * 
 	 * @param f the file to put in RAIDFS
 	 */
 	public void put(File f) {
-		fManager.addFile(f);
-		cManager.broadcastAll(newFile(f.uid, f.name, f.chunkCount));
 	}
 	
 	/* miShell interface */
@@ -272,7 +271,7 @@ public class Peer implements Runnable, MessageBuilder{
 			if (! f.isStabilized() && tempLowChunks.size() == 0) {
 				// enough duplication archieved, file can be stabilized
 				f.stabilise();
-				cManager.broadcastAll(fileStabilized(f.uid));
+				// TODO Send message to miShell for index updating
 			}
 			if (tempGC.underMinChunks().size() == 0) {
 				// peer will become responsible for the file
@@ -355,7 +354,7 @@ public class Peer implements Runnable, MessageBuilder{
 	@Override
 	public GetChunk getChunk(int fileId, int chunkId) {
 		print("creating getChunk message for file " + fileId + ", chunk " + chunkId);
-		return new GetChunk(this.id, fileId, chunkId);
+		return new GetChunk(this.id, fManager.getFile(fileId), chunkId);
 	}
 
 	@Override
