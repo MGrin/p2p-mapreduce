@@ -144,7 +144,6 @@ public class IndexAdvertisement extends Advertisement {
 
 	@Override
 	public String getAdvType() {
-		
 		return IndexAdvertisement.class.getName();
 	}
 

@@ -2,6 +2,10 @@
 /build/
 /bin/
 target/
+
+Central Seed/
+IndexBroadcaster/
+IndexDiscoverer/
  
 # OS Files #
 .DS_Store

@@ -9,6 +9,7 @@ import net.jxta.discovery.DiscoveryEvent;
 import net.jxta.discovery.DiscoveryListener;
 import net.jxta.discovery.DiscoveryService;
 import net.jxta.document.Advertisement;
+import net.jxta.document.AdvertisementFactory;
 import net.jxta.exception.PeerGroupException;
 import net.jxta.peer.PeerID;
 import net.jxta.peergroup.PeerGroup;
@@ -75,6 +76,11 @@ public class Edge implements RendezvousListener {
 			//NetPeerGroup.getRendezVousService().setAutoStart(false);
 			//NetPeerGroup.getRendezVousService().addListener(this);
 			//NetPeerGroup.getDiscoveryService().addDiscoveryListener(this);
+			
+			// Registering our customized advertisement instance
+	        AdvertisementFactory.registerAdvertisementInstance(
+	                IndexAdvertisement.getAdvertisementType(),
+	                new IndexAdvertisement.Instantiator());
 
 		} catch (PeerGroupException e) {
 			// TODO Auto-generated catch block
@@ -116,7 +122,7 @@ public class Edge implements RendezvousListener {
 	public void discoverAdvertisements() {
 		DiscoveryService discoveryService = NetPeerGroup.getDiscoveryService();
 
-		discoveryService.getRemoteAdvertisements(null, DiscoveryService.ADV, null, null, 1, new IndexAdvertisementDiscoverer());
+		discoveryService.getRemoteAdvertisements(null, DiscoveryService.ADV, null, null, 10, new IndexAdvertisementDiscoverer());
 
 		System.out.println("Advertisement Discovery sent! Going to sleep for 60 seconds now...");
 
@@ -126,12 +132,13 @@ public class Edge implements RendezvousListener {
 
 	public void publishIndexAdvertisement() {
 
-		IndexAdvertisement index = new IndexAdvertisement();
+		IndexAdvertisement index = (IndexAdvertisement) AdvertisementFactory.newAdvertisement(IndexAdvertisement.getAdvertisementType());
 
-		DiscoveryService discoveryService = NetPeerGroup.getParentGroup().getDiscoveryService();
+		DiscoveryService discoveryService = NetPeerGroup.getDiscoveryService();
 
 		try {
 			discoveryService.publish(index);
+			discoveryService.remotePublish(index);
 			System.out.println("IndexAdvertiement with ID " + index.getID() + " sent.");
 
 		} catch (IOException e) {
