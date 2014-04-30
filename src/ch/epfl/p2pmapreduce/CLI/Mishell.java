@@ -12,6 +12,11 @@ public class Mishell {
 	 * 
 	 * TODO when requesting index at connection, has to initialise Peer with data contained in meta.xml
 	 * What need to be done : meta.xml -> List<nodeCore.volume.File> (already done by Jeremy ?)
+	 * 
+	 * TODO file overwriting does not occur in Peer. calling twice rootPut() with same parameter will result in
+	 * loading same file twice under different references. Overwritting put must be controlled by miShell
+	 * 
+	 * 
 	 */
 	
 	
