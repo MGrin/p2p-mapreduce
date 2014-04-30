@@ -100,6 +100,7 @@ public class MessageHandler implements MessageReceiver {
 
 	@Override
 	public void receive(SendIndex sendIndex) {
+		
 		// simply ignore sendIndex when not requested
 		if(state.get().equals(PeerState.WAITINGINDEX)) {
 			files.replaceIndex(sendIndex.index);
