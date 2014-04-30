@@ -29,7 +29,6 @@ public class Peer implements Runnable, MessageBuilder{
 	private String peerName;
 	private Thread runner;
 	
-	
 	public final int id;
 	
 	private StateManager state = new StateManager();
@@ -123,6 +122,7 @@ public class Peer implements Runnable, MessageBuilder{
 			}
 		}
 		
+		cManager.stop();
 		print("disconnected");
 	}
 	

@@ -36,12 +36,12 @@ public class Index {
 	
 	public void rm(File f) {
 		files.remove(f);
-		// push notif rmIndex
+		// TODO: push notif rmIndex
 	}
 	
 	public void put(File f) {
 		files.add(f);
-		// push notif putIndex done by peer
+		//TODO: push notif putIndex done by peer
 	}
 	
 	public boolean contains(File f) {

@@ -26,6 +26,7 @@ public class SimConnectionManager implements IConnectionManager {
 	
 	private int peerId;
 	private LinkedHashMap<Integer, Map<Integer, Chunkfield>> neighbors = new LinkedHashMap<Integer, Map<Integer, Chunkfield>>();
+	
 	// TODO think of resetting globalChunkfields entries when getting chunk !!
 	private Map<File, GlobalChunkfield> globalChunkfields = new HashMap<File, GlobalChunkfield>();
 	
@@ -36,6 +37,10 @@ public class SimConnectionManager implements IConnectionManager {
 	public void init() {
 		neighbors = new LinkedHashMap<Integer, Map<Integer, Chunkfield>>();
 		getNeighbors();
+	}
+	
+	public void stop() {
+		
 	}
 	
 	private void getNeighbors() {
