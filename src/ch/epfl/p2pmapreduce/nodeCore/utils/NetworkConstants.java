@@ -22,6 +22,9 @@ public class NetworkConstants {
 	
 	// #chunk per peer ~ #chunk in file * GC_OPT / (N_OPT+1)
 	
+	// chunk size (bytes)
+	public static final int CHUNK_SIZE = 256;
+	
 	// just for simulation
 	
 	public static final int AREA_SIZE = 10;

@@ -32,6 +32,8 @@ public class FileManager {
 	// typically called on put instruction
 	
 	/*
+	 * FOR SIMULATION USE ONLY
+	 * 
 	 *  NOTE be careful, really important, not kidding at all !
 	 *  files and index gets same file reference. Thus modifying a file in
 	 *  one of both will modify in the other one as well.
@@ -39,9 +41,22 @@ public class FileManager {
 	public void createFile(File f) {
 		if (!files.containsKey(f)) {
 			files.put(f, new Chunkfield(f, true));
-			// triggering index update done in peer
 			index.put(f);
 		}
+	}
+
+	/**
+	 * Loads, chunkify and creates file representation fo target osFile
+	 * 
+	 * 
+	 * @param osFullPath
+	 * @param dfsFullPath
+	 * @return the file representation of the loaded file.
+	 */
+	public File loadFile(String osFullPath, String dfsFullPath) {
+		// TODO Really load the file from os, duplicate in chunkfiles for local chunk storing
+		
+		return new File(dfsFullPath, 100);
 	}
 	
 	public void rmFile(File f) {

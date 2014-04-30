@@ -206,6 +206,31 @@ public class Peer implements Runnable, MessageBuilder{
 		fManager.createFile(f);
 		cManager.broadcastAll(newFile(f.uid, f.name, f.chunkCount));
 	}
+	
+	/* miShell interface */
+	
+	/**
+	 * Used by miShell to chunkify new file
+	 * Will chunkify argument and update index and chunkfield in FileManager.
+	 * Index update is assumed to be managed by miShell itself.
+	 * 
+	 * @param osFullPath os full path of file to load
+	 * @param dfsFullPath dfsFullPath to store file (including fileName)
+	 * @return file representation with metadata (chunk count, uID, name, dfsFull path)
+	 */
+	public File rootPut(String osFullPath, String dfsFullPath) {
+		return fManager.loadFile(osFullPath, dfsFullPath);
+	}
+	
+	/**
+	 * Used by miShell to notify put index update
+	 * 
+	 * @param file The file representation of file to store in local index.
+	 * @return true if the file was added (not already existing in local index) false otherwise
+	 */
+	public boolean remotePut(File file) {
+		return fManager.addFile(file);
+	}
 
 	
 	// state machine methods
