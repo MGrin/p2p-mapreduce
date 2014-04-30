@@ -6,6 +6,16 @@ import ch.epfl.p2pmapreduce.index.Metadata;
 import java.util.Scanner;
 
 public class Mishell {
+	
+	/*
+	 * What need to be implemented for compatibility with Peer class
+	 * 
+	 * TODO when requesting index at connection, has to initialise Peer with data contained in meta.xml
+	 * What need to be done : meta.xml -> List<nodeCore.volume.File> (already done by Jeremy ?)
+	 */
+	
+	
+	
 	public static Send sender;
 
 	public static void main(String[] args) throws java.io.IOException {
