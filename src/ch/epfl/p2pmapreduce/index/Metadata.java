@@ -191,6 +191,11 @@ public class Metadata {
 	public static void metaConnect() {
 		Send.metaFile(file);
 	}
+	
+	public static List<File> XMLtoFiles(String xmlContent) {
+		
+		return null;
+	}
 
 	public static void main(String[] args) {
 		metaRm("DFS");
