@@ -42,13 +42,13 @@ public class PeerGroupJoiner extends Thread {
 
 		PeerID id = IDFactory.newPeerID(dfsID, name.getBytes());
 
-		//this.edge = new Edge(name, port, id, courseRendezVousAddress);
-		//this.edge = new Edge(name, port, id);
+		this.edge = new Edge(name, port, id);
 	}
 
 	public static void main(String[] args) {
 		PeerGroupJoiner p = new PeerGroupJoiner("PEER TEST", 8383, PeerGroupID.defaultNetPeerGroupID);
 
+		
 		p.start();
 	}
 
