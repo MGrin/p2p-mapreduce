@@ -38,7 +38,7 @@ public class Edge implements RendezvousListener {
 	public PeerGroup NetPeerGroup;
 
 	public Edge() {
-		//dummy object
+		//dummy object.
 	}
 
 	public Edge(String _name, int _port, PeerID _peerID){
@@ -55,7 +55,7 @@ public class Edge implements RendezvousListener {
 
 			MyNetworkConfigurator.addSeedRendezvous(URI.create(getMainRendezVousIP));
 			MyNetworkConfigurator.setTcpPort(port);
-			MyNetworkConfigurator.setTcpEnabled(true);
+			MyNetworkConfigurator.setTcpEnabled(true); 
 			MyNetworkConfigurator.setTcpIncoming(true);
 			MyNetworkConfigurator.setTcpOutgoing(true);
 			// MyNetworkConfigurator.setUseMulticast(false);
@@ -119,15 +119,19 @@ public class Edge implements RendezvousListener {
 		}
 	}
 
-	public void discoverAdvertisements() {
+	public void discoverAdvertisements(DiscoveryListener discoveryListener) {
 		DiscoveryService discoveryService = NetPeerGroup.getDiscoveryService();
 
-		discoveryService.getRemoteAdvertisements(null, DiscoveryService.ADV, null, null, 10, new IndexAdvertisementDiscoverer());
+		discoveryService.getRemoteAdvertisements(null, DiscoveryService.ADV, null, null, 10, discoveryListener);
 
 		System.out.println("Advertisement Discovery sent! Going to sleep for 60 seconds now...");
 
 		// Sleeping for 60 seconds
 		Tools.GoToSleep(60000);
+	}
+	
+	public void discoverAdvertisements() {
+		discoverAdvertisements(new IndexAdvertisementDiscoverer());
 	}
 
 	public void publishIndexAdvertisement() {
