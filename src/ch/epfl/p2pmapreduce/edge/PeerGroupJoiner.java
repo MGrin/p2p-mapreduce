@@ -62,7 +62,7 @@ public class PeerGroupJoiner extends Thread {
 
 			Tools.PopInformationMessage("PEER TEST", "Entered the loop. Going to discover and Join Peer Groups");
 
-			edge.discoverAdvertisements(new PeerGroupJoiner.DFSPeerGroupAdvertisementDiscoverer());
+			edge.discoverPeerGroupAdvertisements(new PeerGroupJoiner.DFSPeerGroupAdvertisementDiscoverer());
 
 			Tools.PopInformationMessage("PEER TEST", "Going to stop JXTA Network once you press \"Enter\" ");
 			edge.stop();

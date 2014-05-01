@@ -133,6 +133,17 @@ public class Edge implements RendezvousListener {
 	public void discoverAdvertisements() {
 		discoverAdvertisements(new IndexAdvertisementDiscoverer());
 	}
+	
+	public void discoverPeerGroupAdvertisements(DiscoveryListener discoveryListener) {
+		DiscoveryService discoveryService = NetPeerGroup.getDiscoveryService();
+
+		discoveryService.getRemoteAdvertisements(null, DiscoveryService.GROUP, null, null, 10, discoveryListener);
+
+		System.out.println("PeerGroupAdvertisement Discovery sent! Going to sleep for 60 seconds now...");
+
+		// Sleeping for 60 seconds
+		Tools.GoToSleep(60000);
+	}
 
 	public void publishIndexAdvertisement() {
 
