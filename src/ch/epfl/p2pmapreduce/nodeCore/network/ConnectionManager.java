@@ -11,7 +11,6 @@ import ch.epfl.p2pmapreduce.nodeCore.messages.GetIndex;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendChunk;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendChunkfield;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendIndex;
-import ch.epfl.p2pmapreduce.nodeCore.peer.Peer;
 import ch.epfl.p2pmapreduce.nodeCore.volume.Chunkfield;
 import ch.epfl.p2pmapreduce.nodeCore.volume.File;
 import ch.epfl.p2pmapreduce.nodeCore.volume.GlobalChunkfield;

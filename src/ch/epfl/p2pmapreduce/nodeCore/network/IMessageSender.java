@@ -15,12 +15,11 @@ import ch.epfl.p2pmapreduce.nodeCore.messages.SendIndex;
  */
 public interface IMessageSender {
 	
-	
-	
 	boolean send(GetChunkfield message, Neighbour receiver);
 	boolean send(SendChunkfield message, Neighbour receiver);
 	boolean send(GetChunk getChunk, Neighbour receiver);
 	boolean send(SendChunk sendChunk, Neighbour receiver);
+	
 	// Should be removed with index messages done by miShell
 	boolean send(SendIndex sendIndex, Neighbour receiver);
 	// Should be removed with index messages done by miShell
