@@ -64,6 +64,8 @@ public class Mishell {
 					if (tok.length > 1) {
 						System.out.println("handle ls");
 						ls(tok[1]);
+					} else if (tok.length == 1){
+						ls("DFS");
 					} else {
 						System.out.println("not enough arguments");
 					}

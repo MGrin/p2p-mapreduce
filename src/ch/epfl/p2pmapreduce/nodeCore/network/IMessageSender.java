@@ -24,4 +24,6 @@ public interface IMessageSender {
 	boolean send(SendIndex sendIndex, Neighbour receiver);
 	// Should be removed with index messages done by miShell
 	boolean send(GetIndex getIndex, Neighbour receiver);
+	
+	
 }

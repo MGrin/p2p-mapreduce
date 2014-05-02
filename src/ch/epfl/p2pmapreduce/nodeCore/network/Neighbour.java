@@ -9,6 +9,7 @@ import ch.epfl.p2pmapreduce.nodeCore.volume.File;
 public class Neighbour {
 	
 	public final int id;
+	//private PeerID peerID;
 	
 	private final Map<File, Chunkfield> chunkfields = new HashMap<File, Chunkfield>();
 	

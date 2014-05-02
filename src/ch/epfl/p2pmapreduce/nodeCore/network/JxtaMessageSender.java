@@ -25,7 +25,9 @@ public class JxtaMessageSender implements IMessageSender{
 
 	@Override
 	public boolean send(GetChunk getChunk, Neighbour receiver) {
-		// TODO Auto-generated method stub
+
+		
+		
 		return false;
 	}
 
