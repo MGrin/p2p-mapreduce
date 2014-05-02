@@ -36,7 +36,7 @@ public class Mishell {
 				System.out.println("Shutdown hook ran!");
 			}
 		});
-
+		System.out.println("Root of the DFS is \"DFS\"");
 		System.out.println("Type \"help\" if you are lost.");
 
 		while (true) {
