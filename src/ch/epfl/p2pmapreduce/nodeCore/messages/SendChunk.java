@@ -31,5 +31,9 @@ public class SendChunk implements Message {
 	public int fileId() { return fileId; }
 	
 	public int chunkId() { return chunkId; }
+	
+	public byte[] getChunkData() {
+		return chunkData;
+	}
 
 }
