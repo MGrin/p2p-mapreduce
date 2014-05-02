@@ -1,5 +1,7 @@
 package ch.epfl.p2pmapreduce.nodeCore.network;
 
+import ch.epfl.p2pmapreduce.advertisement.PutIndex;
+import ch.epfl.p2pmapreduce.advertisement.RmIndex;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunk;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunkfield;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetIndex;
@@ -25,5 +27,6 @@ public interface IMessageSender {
 	// Should be removed with index messages done by miShell
 	boolean send(GetIndex getIndex, Neighbour receiver);
 	
-	
+	boolean send(PutIndex putIndex);
+	boolean send(RmIndex rmIndex);
 }

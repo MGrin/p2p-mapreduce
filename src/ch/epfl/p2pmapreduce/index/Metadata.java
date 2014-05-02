@@ -14,10 +14,11 @@ import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
 import ch.epfl.p2pmapreduce.exchanger.Send;
+import ch.epfl.p2pmapreduce.nodeCore.network.JxtaMessageSender;
 
 public class Metadata {
 	private static Element racine = new Element("DFS");
-	private static File file = new File("meta.xml");
+	public static File file = new File("meta.xml");
 	private static Document document = new Document(racine);
 
 	// Constructor for Metadata, use only by the "creator" of the DFS to create
@@ -189,7 +190,7 @@ public class Metadata {
 	}
 
 	public static void metaConnect() {
-		Send.metaFile(file);
+		JxtaMessageSender.metaFile(file);
 	}
 	
 	public static List<File> XMLtoFiles(String xmlContent) {
