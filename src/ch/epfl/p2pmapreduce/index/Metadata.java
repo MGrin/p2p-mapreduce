@@ -17,7 +17,7 @@ import ch.epfl.p2pmapreduce.exchanger.Send;
 
 public class Metadata {
 	private static Element racine = new Element("DFS");
-	private static File file = new File("meta.xml");
+	public static File file = new File("meta.xml");
 	private static Document document = new Document(racine);
 
 	// Constructor for Metadata, use only by the "creator" of the DFS to create

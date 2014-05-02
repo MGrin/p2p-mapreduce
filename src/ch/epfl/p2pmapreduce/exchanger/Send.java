@@ -94,13 +94,13 @@ public class Send {
 			message.addMessageElement(size);
 			message.addMessageElement(date);
 		} else if (type.compareTo("CONNECT") == 0) {
-			message = new Connect(type);
+			//message = new Connect(type);
 		} else if (type.compareTo("RM") == 0) {
 			message = new Rm(type);
 			MessageElement name = new StringMessageElement("name", data.get(0), null);
 			message.addMessageElement(name);
 		} else if (type.compareTo("ALL") == 0 && array != null) {
-			message = new All(type);
+			//message = new All(type);
 			MessageElement file = new ByteArrayMessageElement("data", MimeMediaType.XML_DEFAULTENCODING, array, null);
 			message.addMessageElement(file);
 		}
@@ -155,32 +155,5 @@ public class Send {
 		return (PipeID) PipeID.nullID;
 	}
 
-	public static void metaFile(File fileToSend) {
-		byte[] array = null;
-		if (fileToSend != null) {
-			FileInputStream fis = null;
-			try {
-				fis = new FileInputStream(fileToSend);
-				array = new byte[(int) fileToSend.length()];
-				fis.read(array);
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} finally {
-				try {
-					if (fis != null) {
-						fis.close();
-					}
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		
-		if (array != null) {
-			send(null, "peersId", "ALL", array);
-		}
-	}
 }
 
