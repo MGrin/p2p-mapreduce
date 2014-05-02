@@ -10,6 +10,7 @@ import net.jxta.document.AdvertisementFactory;
 import net.jxta.document.MimeMediaType;
 import net.jxta.endpoint.ByteArrayMessageElement;
 import net.jxta.endpoint.MessageElement;
+import net.jxta.endpoint.StringMessageElement;
 import net.jxta.peer.PeerID;
 import net.jxta.pipe.OutputPipe;
 import net.jxta.pipe.PipeService;
@@ -17,6 +18,8 @@ import net.jxta.protocol.PipeAdvertisement;
 import ch.epfl.p2pmapreduce.advertisement.PutIndex;
 import ch.epfl.p2pmapreduce.advertisement.RmIndex;
 import ch.epfl.p2pmapreduce.exchanger.All;
+import ch.epfl.p2pmapreduce.exchanger.ChunkGetter;
+import ch.epfl.p2pmapreduce.exchanger.ChunkSender;
 import ch.epfl.p2pmapreduce.exchanger.Connect;
 import ch.epfl.p2pmapreduce.index.Metadata;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunk;
@@ -45,13 +48,46 @@ public class JxtaMessageSender implements IMessageSender{
 
 	@Override
 	public boolean send(GetChunk getChunk, Neighbour receiver) {
-
+		OutputPipe pipe = createPipe(receiver);
+		
+		if (pipe != null) {
+			ChunkGetter message = new ChunkGetter(getChunk);
+			MessageElement name = new StringMessageElement("name", message.getName(), null);
+			message.addMessageElement(name);
+			MessageElement fileId = new StringMessageElement("fileId", String.valueOf(message.getFile().uid), null);
+			message.addMessageElement(fileId);
+			MessageElement chunkId = new StringMessageElement("chunkId", String.valueOf(message.getChunkId()), null);
+			message.addMessageElement(chunkId);
+			try {
+				pipe.send(message);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
 		return false;
 	}
 
 	@Override
 	public boolean send(SendChunk sendChunk, Neighbour receiver) {
-		// TODO Auto-generated method stub
+		OutputPipe pipe = createPipe(receiver);
+		
+		if (pipe != null) {
+			ChunkSender message = new ChunkSender(sendChunk);
+			MessageElement name = new StringMessageElement("name", message.getName(), null);
+			message.addMessageElement(name);
+			MessageElement fileId = new StringMessageElement("fileId", String.valueOf(message.getFileId()), null);
+			message.addMessageElement(fileId);
+			MessageElement chunk = new ByteArrayMessageElement("chunk", MimeMediaType.XML_DEFAULTENCODING, message.getChunkData(), null);
+			message.addMessageElement(chunk);
+			try {
+				pipe.send(message);
+				return true;
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
 		return false;
 	}
 
@@ -63,7 +99,7 @@ public class JxtaMessageSender implements IMessageSender{
 		if (pipe != null) {
 			try {
 				byte[] array = metaFile(Metadata.file);
-				MessageElement file = new ByteArrayMessageElement("data", MimeMediaType.XML_DEFAULTENCODING, array, null);
+				MessageElement file = new ByteArrayMessageElement("index", MimeMediaType.XML_DEFAULTENCODING, array, null);
 				all.addMessageElement(file);
 				pipe.send(all);
 				return true;
