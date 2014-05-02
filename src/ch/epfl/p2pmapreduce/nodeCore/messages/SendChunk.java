@@ -6,10 +6,15 @@ public class SendChunk implements Message {
 	private int fileId;
 	private int chunkId;
 	
-	public SendChunk(int from, int fileId, int chunkId) {
+	private byte[] chunkData;
+	
+	public SendChunk(int from, int fileId, int chunkId, byte[] chunkData) {
 		this.from = from;
 		this.fileId = fileId;
 		this.chunkId = chunkId;
+		
+		//TODO: Copy?
+		this.chunkData = chunkData;
 	}
 	@Override
 	public int sender() { return from; }
