@@ -2,10 +2,7 @@ package ch.epfl.p2pmapreduce.edge;
 
 import java.io.StringWriter;
 import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
 
-import Examples.Z_Tools_And_Others.Tools;
 import net.jxta.credential.AuthenticationCredential;
 import net.jxta.credential.Credential;
 import net.jxta.discovery.DiscoveryEvent;
@@ -23,9 +20,7 @@ import net.jxta.peergroup.PeerGroup;
 import net.jxta.peergroup.PeerGroupID;
 import net.jxta.protocol.DiscoveryResponseMsg;
 import net.jxta.protocol.PeerGroupAdvertisement;
-import ch.epfl.p2pmapreduce.advertisement.IndexAdvertisement;
-import ch.epfl.p2pmapreduce.index.Metadata;
-import ch.epfl.p2pmapreduce.peergroup.FilePeerGroup;
+import Examples.Z_Tools_And_Others.Tools;
 
 public class PeerGroupJoiner extends Thread {
 
@@ -34,7 +29,7 @@ public class PeerGroupJoiner extends Thread {
 
 	
 
-	private Map<String, FilePeerGroup> fileGroups = new HashMap<String, FilePeerGroup>();
+	//private Map<String, FilePeerGroup> fileGroups = new HashMap<String, FilePeerGroup>();
 
 	private Edge edge;
 

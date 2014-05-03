@@ -24,7 +24,6 @@ public class IndexAdvertisementDiscoverer implements DiscoveryListener {
 			while (TheEnumeration.hasMoreElements()) {
 
 				try {
-
 					Advertisement adv = TheEnumeration.nextElement();
 
 					if(adv.getClass().equals(IndexAdvertisement.class)) {
