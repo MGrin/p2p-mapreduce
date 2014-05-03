@@ -1,5 +1,7 @@
 package ch.epfl.p2pmapreduce.nodeCore.utils;
 
+import java.util.Random;
+
 public class NetworkConstants {
 
 
@@ -28,4 +30,14 @@ public class NetworkConstants {
 	// just for simulation
 	
 	public static final int AREA_SIZE = 10;
+	
+	private static final int rangeInf = 8300;
+	private static final int rangeSup = 8400;
+	
+	public static int generatePortNumber() {
+		
+		Random r = new Random();
+		return 8300 + r.nextInt(rangeSup - rangeInf);
+		
+	}
 }

@@ -99,8 +99,10 @@ public class MessageHandler implements MessageReceiver {
 		
 		// simply ignore sendIndex when not requested
 		if(state.get().equals(PeerState.WAITINGINDEX)) {
+			
 			files.replaceIndex(sendIndex.index);
 			state.set(PeerState.BUILDGLOBALCF);
+			
 		}
 	}
 

@@ -2,8 +2,9 @@ package ch.epfl.p2pmapreduce.networkCore.communication;
 
 import java.io.StringWriter;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
+import java.util.Map;
 
 import net.jxta.credential.AuthenticationCredential;
 import net.jxta.credential.Credential;
@@ -34,7 +35,7 @@ public class PeerGroupJoiner implements DiscoveryListener {
 	private String joinRegex;
 	private PeerGroup parentPeerGroup;
 	
-	private Set<String> joinedGroups;
+	private Map<String, PeerGroup> joinedGroups;
 
 	/**
 	 * @param joinRegex regex for the names of the PeerGroups we will join
@@ -43,11 +44,21 @@ public class PeerGroupJoiner implements DiscoveryListener {
 		this.joinRegex = joinRegex;
 		this.parentPeerGroup = parent;
 		
-		joinedGroups = new HashSet<String>();
+		joinedGroups = new HashMap<String, PeerGroup>();
 	}
 	
 	public boolean isJoined(PeerGroup pg) {
-		return joinedGroups.contains(pg.getPeerGroupName());
+		return isJoined(pg.getPeerGroupName());
+	}
+	
+	public boolean isJoined(String peerGroupName) {
+		return joinedGroups.keySet().contains(peerGroupName);
+	}
+	
+	public PeerGroup getJoinedGroup(String peerGroupName) {
+		if(!isJoined(peerGroupName)) return null;
+		
+		return joinedGroups.get(peerGroupName);
 	}
 
 	@Override
@@ -74,7 +85,8 @@ public class PeerGroupJoiner implements DiscoveryListener {
 						
 						
 						if(joinGroup(pg)) {
-							joinedGroups.add(pg.getPeerGroupName());
+							joinedGroups.put(pg.getPeerGroupName(), pg);
+							this.notify();
 						}
 					}
 					

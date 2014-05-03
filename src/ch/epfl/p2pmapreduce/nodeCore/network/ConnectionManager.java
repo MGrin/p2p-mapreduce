@@ -11,6 +11,7 @@ import ch.epfl.p2pmapreduce.nodeCore.messages.GetIndex;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendChunk;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendChunkfield;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendIndex;
+import ch.epfl.p2pmapreduce.nodeCore.utils.NetworkConstants;
 import ch.epfl.p2pmapreduce.nodeCore.volume.Chunkfield;
 import ch.epfl.p2pmapreduce.nodeCore.volume.File;
 import ch.epfl.p2pmapreduce.nodeCore.volume.GlobalChunkfield;
@@ -19,9 +20,11 @@ import ch.epfl.p2pmapreduce.nodeCore.volume.GlobalChunkfield;
 public class ConnectionManager {
 
 	// TODO replace by concrete implementation of those interfaces !!!!
-	private final INeighbourDiscoverer nD = null;
+	private final INeighbourDiscoverer nD ;
 	// TODO replace by concrete implementation of those interfaces !!!!
-	private final IMessageSender sender = null;
+	private final IMessageSender sender ;
+	
+	private final JxtaCommunicator communicator;
 	
 	private int peerId;
 	private List<Neighbour> neighbors = new ArrayList<Neighbour>();
@@ -30,9 +33,15 @@ public class ConnectionManager {
 	
 	public ConnectionManager(int peerId) {
 		this.peerId = peerId;
+		this.communicator = new JxtaCommunicator("Peer" + peerId, NetworkConstants.generatePortNumber());
+		this.nD = communicator.new JxtaNeighbourDiscoverer();
+		this.sender = new JxtaMessageSender(communicator);
 	}
 
 	public void init() {
+		
+		communicator.start();
+		
 		neighbors = nD.getNeighbors();
 	}
 
