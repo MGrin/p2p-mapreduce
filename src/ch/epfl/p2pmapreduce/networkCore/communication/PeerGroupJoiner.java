@@ -2,6 +2,8 @@ package ch.epfl.p2pmapreduce.networkCore.communication;
 
 import java.io.StringWriter;
 import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Set;
 
 import net.jxta.credential.AuthenticationCredential;
 import net.jxta.credential.Credential;
@@ -31,6 +33,8 @@ public class PeerGroupJoiner implements DiscoveryListener {
 
 	private String joinRegex;
 	private PeerGroup parentPeerGroup;
+	
+	private Set<String> joinedGroups;
 
 	/**
 	 * @param joinRegex regex for the names of the PeerGroups we will join
@@ -38,6 +42,12 @@ public class PeerGroupJoiner implements DiscoveryListener {
 	public PeerGroupJoiner(String joinRegex, PeerGroup parent) {
 		this.joinRegex = joinRegex;
 		this.parentPeerGroup = parent;
+		
+		joinedGroups = new HashSet<String>();
+	}
+	
+	public boolean isJoined(PeerGroup pg) {
+		return joinedGroups.contains(pg.getPeerGroupName());
 	}
 
 	@Override
@@ -61,7 +71,11 @@ public class PeerGroupJoiner implements DiscoveryListener {
 
 					if(pga.getName().matches(joinRegex)) {
 						PeerGroup pg = parentPeerGroup.newGroup(pga);
-						joinGroup(pg);
+						
+						
+						if(joinGroup(pg)) {
+							joinedGroups.add(pg.getPeerGroupName());
+						}
 					}
 					
 
