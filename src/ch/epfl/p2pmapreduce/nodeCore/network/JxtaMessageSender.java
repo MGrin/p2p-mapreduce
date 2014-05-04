@@ -9,6 +9,7 @@ import net.jxta.document.MimeMediaType;
 import net.jxta.endpoint.ByteArrayMessageElement;
 import net.jxta.endpoint.MessageElement;
 import net.jxta.endpoint.StringMessageElement;
+import net.jxta.protocol.PipeAdvertisement;
 import ch.epfl.p2pmapreduce.advertisement.PutIndex;
 import ch.epfl.p2pmapreduce.advertisement.RmIndex;
 import ch.epfl.p2pmapreduce.exchanger.All;
@@ -37,9 +38,12 @@ import ch.epfl.p2pmapreduce.nodeCore.messages.SendIndex;
 public class JxtaMessageSender implements IMessageSender{
 
 	private JxtaCommunicator communicator;
+	private PipeAdvertisement senderPipeAdvertisement;
 
 	public JxtaMessageSender(JxtaCommunicator jxtaCommunicator) {
 		this.communicator = jxtaCommunicator;
+		
+		this.senderPipeAdvertisement = communicator.getPipeAdvertisement();
 	}
 
 	@Override
