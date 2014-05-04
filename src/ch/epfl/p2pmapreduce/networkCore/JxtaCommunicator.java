@@ -30,6 +30,7 @@ import ch.epfl.p2pmapreduce.advertisement.IndexAdvertisement;
 import ch.epfl.p2pmapreduce.nodeCore.network.INeighbourDiscoverer;
 import ch.epfl.p2pmapreduce.nodeCore.network.JxtaNeighbour;
 import ch.epfl.p2pmapreduce.nodeCore.network.Neighbour;
+import ch.epfl.p2pmapreduce.nodeCore.peer.Peer;
 import ch.epfl.p2pmapreduce.nodeCore.utils.NetworkConstants;
 
 public class JxtaCommunicator {
@@ -82,6 +83,19 @@ public class JxtaCommunicator {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * This method tries to:
+	 * 
+	 * -Start the JXTA network.
+	 * 
+	 * -Discover and join the "RAIDFS" main PeerGroup of our DFS, that is created by the RendezVous launched on icdatasrv2.epfl.ch 
+	 * 
+	 * -Create an InputPipe to start listening to messages from Peers in the PeerGroup. Also publishes this advertisement in order to be discovered by other peers.
+	 * 
+	 * 
+	 * @return false if any of those steps failed, true otherwise.
+	 */
 
 	public boolean start() {
 		try {
@@ -136,6 +150,8 @@ public class JxtaCommunicator {
 
 	/**
 	 * 
+	 * Tries to connect with the rendez-vous peers we already should have specified in the NetworkManager
+	 * 
 	 * @param timeout timeout in milliseconds, a zero timeout of waits forever 
 
 	 * @return true if we successfuly connected to the rendez-vous, false otherwise.
@@ -152,7 +168,14 @@ public class JxtaCommunicator {
 
 	}
 	
-	public void initMessageListener() {
+	/**
+	 * Create a PipeAdvertisement, publish it on the DFS PeerGroup, and create an input pipe that will handle connection and
+	 * forward received messages to the Peer abstraction (cf JxtaMessageListener)
+	 * 
+	 * TODO: This method is currently being called after we join the RAIDFS PeerGroup, but it might be moved after we discover the Index.
+	 * 
+	 */
+	private void initMessageListener() {
 		
 		 // Creating a Pipe Advertisement
         PipeAdvertisement pipeAdvertisement = (PipeAdvertisement) AdvertisementFactory.newAdvertisement(PipeAdvertisement.getAdvertisementType());
@@ -164,10 +187,10 @@ public class JxtaCommunicator {
         pipeAdvertisement.setDescription("Created by " + name);
         
         try {
-        	// TODO: May have to start Thread to re-publish PipeAdvertisement!
+        	// TODO: May have to start Thread to re-publish PipeAdvertisement! Otherwise it expires.
 			dfsPeerGroup.getDiscoveryService().publish(pipeAdvertisement);
 			
-			//dfsPeerGroup.getPipeService().createInputPipe(pipeAdvertisement, new )
+			dfsPeerGroup.getPipeService().createInputPipe(pipeAdvertisement, Peer.getMessageListener());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -178,6 +201,15 @@ public class JxtaCommunicator {
 		return networkManager.isStarted();
 	}
 
+	/**
+	 * Send a JXTA-Encoded message to the corresponding JxtaNeighbour using its PipeAdvertisement,
+	 * and CURRENTLY the DFSPeerGroup.
+	 * 
+	 * Note that we might change that part if we create specific PeerGroups per shared File.
+	 * 
+	 * @param m net.jxta.endpoint.Message to be sent on the OutputPipe
+	 * @param neighbour neighbour we are sending the message to
+	 */
 	public void sendMessage(Message m, JxtaNeighbour neighbour) {
 
 		PeerGroup pg = dfsPeerGroup;
@@ -201,6 +233,15 @@ public class JxtaCommunicator {
 
 	}
 
+	/**
+	 * Inner class of JxtaCommunicator, used to discover Peers ( well actually, their PipeAdvertisements 
+	 * in order to send them messages ).
+	 * 
+	 * Implements the NeighbourDiscoverer interface.
+	 * 
+	 * @author Tketa
+	 *
+	 */
 	public class JxtaNeighbourDiscoverer implements INeighbourDiscoverer, DiscoveryListener {
 
 		List<Neighbour> neighbours = new LinkedList<Neighbour>();

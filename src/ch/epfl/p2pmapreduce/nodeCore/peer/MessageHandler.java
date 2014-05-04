@@ -41,7 +41,7 @@ public class MessageHandler implements MessageReceiver {
 	
 	public synchronized Message get() {
 		if (!messages.isEmpty()) {
-			return messages.peekFirst();
+			return messages.peekFirst(); 
 		} else {
 			return null;
 		}
@@ -102,7 +102,7 @@ public class MessageHandler implements MessageReceiver {
 			
 			files.replaceIndex(sendIndex.index);
 			state.set(PeerState.BUILDGLOBALCF);
-			
+			//TODO: Maybe now we can initialize our InputPipe to start receiving messages
 		}
 	}
 
