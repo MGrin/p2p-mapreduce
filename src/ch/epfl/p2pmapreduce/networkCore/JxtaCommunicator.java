@@ -51,6 +51,8 @@ public class JxtaCommunicator {
 	private NetworkConfigurator networkConfigurator;
 	private PeerGroup netPeerGroup;
 	private PeerGroup dfsPeerGroup = null;
+	
+	private PipeAdvertisement pipeAdvertisement = null;
 
 	//All the Peer Groups this Peer belongs to.
 	private Set<PeerGroup> peerGroups;
@@ -101,11 +103,11 @@ public class JxtaCommunicator {
 		try {
 			netPeerGroup = networkManager.startNetwork();
 		} catch (PeerGroupException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 			return false;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 			return false;
 		}
@@ -177,8 +179,8 @@ public class JxtaCommunicator {
 	 */
 	private void initMessageListener() {
 		
-		 // Creating a Pipe Advertisement
-        PipeAdvertisement pipeAdvertisement = (PipeAdvertisement) AdvertisementFactory.newAdvertisement(PipeAdvertisement.getAdvertisementType());
+		 // Instantiating the Pipe Advertisement
+        pipeAdvertisement = (PipeAdvertisement) AdvertisementFactory.newAdvertisement(PipeAdvertisement.getAdvertisementType());
         PipeID pipeID = IDFactory.newPipeID(dfsPeerGroup.getPeerGroupID(), name.getBytes());
 
         pipeAdvertisement.setPipeID(pipeID);
@@ -192,7 +194,7 @@ public class JxtaCommunicator {
 			
 			dfsPeerGroup.getPipeService().createInputPipe(pipeAdvertisement, Peer.getMessageListener());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 	}
@@ -231,6 +233,10 @@ public class JxtaCommunicator {
 
 		}
 
+	}
+	
+	public PipeAdvertisement getPipeAdvertisement() {
+		return pipeAdvertisement;
 	}
 
 	/**
