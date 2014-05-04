@@ -4,16 +4,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.HashSet;
 
-import net.jxta.document.AdvertisementFactory;
 import net.jxta.document.MimeMediaType;
 import net.jxta.endpoint.ByteArrayMessageElement;
 import net.jxta.endpoint.MessageElement;
 import net.jxta.endpoint.StringMessageElement;
-import net.jxta.peer.PeerID;
-import net.jxta.pipe.OutputPipe;
-import net.jxta.protocol.PipeAdvertisement;
 import ch.epfl.p2pmapreduce.advertisement.PutIndex;
 import ch.epfl.p2pmapreduce.advertisement.RmIndex;
 import ch.epfl.p2pmapreduce.exchanger.All;
@@ -21,12 +16,23 @@ import ch.epfl.p2pmapreduce.exchanger.ChunkGetter;
 import ch.epfl.p2pmapreduce.exchanger.ChunkSender;
 import ch.epfl.p2pmapreduce.exchanger.Connect;
 import ch.epfl.p2pmapreduce.index.Metadata;
+import ch.epfl.p2pmapreduce.networkCore.JxtaCommunicator;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunk;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunkfield;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetIndex;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendChunk;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendChunkfield;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendIndex;
+
+
+/**
+ * This class is responsible for transforming abstract messages into JXTA messages, and send them to the corresponding Neighbour.
+ * 
+ * TODO: Add PipeAdvertisement of this peer to the message, so that the other peer can ANSWER messages.
+ * 
+ * @author Tketa
+ *
+ */
 
 public class JxtaMessageSender implements IMessageSender{
 

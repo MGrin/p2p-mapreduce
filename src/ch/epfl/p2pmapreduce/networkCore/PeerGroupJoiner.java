@@ -1,4 +1,4 @@
-package ch.epfl.p2pmapreduce.networkCore.communication;
+package ch.epfl.p2pmapreduce.networkCore;
 
 import java.io.StringWriter;
 import java.util.Enumeration;

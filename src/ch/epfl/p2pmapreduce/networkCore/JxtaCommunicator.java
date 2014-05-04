@@ -1,4 +1,4 @@
-package ch.epfl.p2pmapreduce.nodeCore.network;
+package ch.epfl.p2pmapreduce.networkCore;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,7 +27,9 @@ import net.jxta.platform.NetworkManager;
 import net.jxta.protocol.DiscoveryResponseMsg;
 import net.jxta.protocol.PipeAdvertisement;
 import ch.epfl.p2pmapreduce.advertisement.IndexAdvertisement;
-import ch.epfl.p2pmapreduce.networkCore.communication.PeerGroupJoiner;
+import ch.epfl.p2pmapreduce.nodeCore.network.INeighbourDiscoverer;
+import ch.epfl.p2pmapreduce.nodeCore.network.JxtaNeighbour;
+import ch.epfl.p2pmapreduce.nodeCore.network.Neighbour;
 import ch.epfl.p2pmapreduce.nodeCore.utils.NetworkConstants;
 
 public class JxtaCommunicator {
@@ -97,7 +99,7 @@ public class JxtaCommunicator {
 		// TODO: Registering our customized advertisement instances
 		AdvertisementFactory.registerAdvertisementInstance(IndexAdvertisement.getAdvertisementType(), new IndexAdvertisement.Instantiator());
 
-		// TODO: Join DFS Peer Group.
+		// TODO: Connect and try to join DFS Peer Group.
 		if(!connectToRDV(60000)) {
 			System.err.println("Unable to connect to " + MAIN_RENDEZ_VOUS_ADDRESS);
 			return false;
@@ -165,7 +167,7 @@ public class JxtaCommunicator {
         	// TODO: May have to start Thread to re-publish PipeAdvertisement!
 			dfsPeerGroup.getDiscoveryService().publish(pipeAdvertisement);
 			
-			//dfsPeerGroup.getPipeService().createInputPipe(pipeAdvertisement, listener)
+			//dfsPeerGroup.getPipeService().createInputPipe(pipeAdvertisement, new )
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -253,6 +255,7 @@ public class JxtaCommunicator {
 
 						Advertisement adv = TheEnumeration.nextElement();
 
+						// We are only interested in the PipeAdvertisements.
 						if(adv.getAdvType().equals(PipeAdvertisement.getAdvertisementType())) {
 
 							PipeAdvertisement pipeAdv = (PipeAdvertisement) adv;
@@ -261,7 +264,6 @@ public class JxtaCommunicator {
 
 							neighbours.add(neighbour);
 						}
-
 
 
 					} catch (ClassCastException Ex) {

@@ -1,4 +1,4 @@
-package ch.epfl.p2pmapreduce.networkCore.communication;
+package ch.epfl.p2pmapreduce.networkCore;
 
 import net.jxta.endpoint.Message;
 import net.jxta.pipe.PipeMsgEvent;
@@ -23,7 +23,6 @@ public class JxtaMessageListener implements PipeMsgListener{
         ch.epfl.p2pmapreduce.nodeCore.messages.Message message = MessageDecoder.decode(received);
         
         p.enqueue(message);
-		
 	}
 	
 }

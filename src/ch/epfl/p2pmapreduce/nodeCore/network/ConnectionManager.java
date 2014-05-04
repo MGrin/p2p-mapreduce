@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ch.epfl.p2pmapreduce.networkCore.JxtaCommunicator;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunk;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunkfield;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetIndex;
@@ -23,14 +24,14 @@ public class ConnectionManager {
 	private final INeighbourDiscoverer nD ;
 	// TODO replace by concrete implementation of those interfaces !!!!
 	private final IMessageSender sender ;
-	
+
 	private final JxtaCommunicator communicator;
-	
+
 	private int peerId;
 	private List<Neighbour> neighbors = new ArrayList<Neighbour>();
 	// TODO think of resetting globalChunkfields entries when getting chunk !!
 	private Map<File, GlobalChunkfield> globalChunkfields = new HashMap<File, GlobalChunkfield>();
-	
+
 	public ConnectionManager(int peerId) {
 		this.peerId = peerId;
 		this.communicator = new JxtaCommunicator("Peer" + peerId, NetworkConstants.generatePortNumber());
@@ -39,17 +40,22 @@ public class ConnectionManager {
 	}
 
 	public void init() {
-		
-		communicator.start();
-		
-		neighbors = nD.getNeighbors();
+
+		boolean couldStart = communicator.start();
+
+		if(couldStart) {
+			neighbors = nD.getNeighbors();
+		} else {
+			System.err.println("Could not start JXTA network.. Exiting");
+			System.exit(-1);
+		}
 	}
 
 	public void stop() {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	/**
 	 * returns the global chunkfield of all neighbors including the peers data passed
 	 * as parameter.
@@ -69,7 +75,7 @@ public class ConnectionManager {
 		}
 		return result;
 	}
-	
+
 	public void update(int peerId, File file, Chunkfield c) {
 		for (Neighbour n: neighbors) {
 			if (n.id == peerId) n.setChunkfield(file, c);
@@ -84,7 +90,7 @@ public class ConnectionManager {
 		// entry for file in globalChunkfields will have to be recomputed
 		globalChunkfields.put(file, null);
 	}
-	
+
 	public void remove(int peerId) {
 		neighbors.remove(peerId);
 	}
@@ -109,13 +115,13 @@ public class ConnectionManager {
 			return sender.send(getChunk, owner);
 		} else return false;
 	}
-	
+
 	public boolean send(SendChunk sendChunk, int receiverId) {
 		Neighbour receiver = getFromId(receiverId);
 		if (receiver != null) {
 			return sender.send(sendChunk, receiver);
 		} else return false;
-		
+
 	}
 
 	public boolean send(SendChunkfield sendChunkfield, int receiverId) {
@@ -128,7 +134,7 @@ public class ConnectionManager {
 	public void broadcast(GetChunkfield getChunkfield) {
 		// TODO Discuss if Broadcast should be done in JXTAMessager or here
 		// sender.broadcast(getChunkfield)
-		
+
 		for (Neighbour n: neighbors) {
 			sender.send(getChunkfield, n);
 		}
@@ -146,16 +152,16 @@ public class ConnectionManager {
 	public boolean send(GetIndex getIndex) {
 		return sender.send(getIndex, neighbors.get(0));
 	}
-	
+
 	// utilities
-	
+
 	private Neighbour getFromId(int neighbourId) {
 		for (Neighbour n: neighbors) {
 			if (n.id == neighbourId) return n;
 		}
 		return null;
 	}
-	
+
 	public String neighborsToString() {
 		StringBuilder sb = new StringBuilder("[");
 		for (Neighbour n: neighbors) {

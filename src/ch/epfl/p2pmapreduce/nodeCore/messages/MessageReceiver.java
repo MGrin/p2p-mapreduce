@@ -1,6 +1,7 @@
 package ch.epfl.p2pmapreduce.nodeCore.messages;
 
 public interface MessageReceiver {
+	
 	void receive(GetChunkfield message);
 	void receive(SendChunkfield message);
 	void receive(GetIndex message);
