@@ -118,7 +118,7 @@ public class JxtaMessageSender implements IMessageSender{
 
 	@Override
 	public boolean send(PutIndex putIndex) {
-		// TODO Auto-generated method stub
+		
 		return false;
 	}
 

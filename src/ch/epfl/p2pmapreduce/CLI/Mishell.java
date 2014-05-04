@@ -2,6 +2,7 @@ package ch.epfl.p2pmapreduce.CLI;
 
 import ch.epfl.p2pmapreduce.exchanger.Send;
 import ch.epfl.p2pmapreduce.index.Metadata;
+import ch.epfl.p2pmapreduce.nodeCore.peer.Peer;
 
 import java.util.Scanner;
 
@@ -21,14 +22,19 @@ public class Mishell {
 	 */
 	
 	
+	public static Peer p;
 	
-	public static Send sender;
-
 	public static void main(String[] args) throws java.io.IOException {
 		Scanner scanner = new Scanner(System.in);
 		String line;
 		String[] tok;
 
+		String name = "Jeremy-Test";
+		
+		p = new Peer(name, 0);
+		
+		p.start();
+		
 		// Ctrl + C
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
@@ -144,7 +150,7 @@ public class Mishell {
 	public static String put(String input1, String input2) {
 		System.out.println("with the file (local): " + input1 + " (DFS): "
 				+ input2);
-		Send.put(input1, input2);
+		p.sendIndex();
 		return "";
 	}
 
