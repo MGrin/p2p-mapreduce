@@ -40,66 +40,56 @@
 
 package Examples.E_Messages_And_Advertisements;
 
-import java.io.IOException;
-
-import net.jxta.document.MimeMediaType;
-import net.jxta.document.StructuredDocumentFactory;
-import net.jxta.document.XMLDocument;
-import net.jxta.endpoint.Message;
-import net.jxta.endpoint.MessageElement;
-import net.jxta.endpoint.TextDocumentMessageElement;
-import Examples.Z_Tools_And_Others.Tools;
-import ch.epfl.p2pmapreduce.advertisement.DFSPeerAdvertisement;
 
 public class _440_Adding_An_Advertisement_In_Message_Example {
 
-    public static final String Name = "Example 440";
-    
-    public static void main(String[] args) {
-            
-        // Creating a customized advertisement
-        DFSPeerAdvertisement MyAdvertisement = new DFSPeerAdvertisement();
-        MyAdvertisement.setStorage(64000);
+	public static final String Name = "Example 440";
 
-        // Creating the message
-        Message MyMessage = new Message();
+	//    public static void main(String[] args) {
 
-        // Creating the message element and adding it
-        TextDocumentMessageElement MyTextDocumentMessageElement = new TextDocumentMessageElement(
-                "CUSTOMIZED_ADVERTISEMENT", 
-                (XMLDocument) MyAdvertisement.getDocument(MimeMediaType.XMLUTF8),
-                null);
-
-        MyMessage.addMessageElement("CUSTOMIZED_ADVERTISEMENT",MyTextDocumentMessageElement);
-
-        // Retrieving the advertisement from the message
-        MessageElement MyMessageElement = MyMessage.getMessageElement("CUSTOMIZED_ADVERTISEMENT","CUSTOMIZED_ADVERTISEMENT");
-
-        try {
-
-            XMLDocument TheDocument = (XMLDocument) StructuredDocumentFactory.newStructuredDocument(
-                MyMessageElement.getMimeType(),
-                MyMessageElement.getStream());
-
-            DFSPeerAdvertisement MyCustomizedAdvertisement =
-                    new DFSPeerAdvertisement(TheDocument.getRoot());
-
-            // Displaying advertisement
-            Tools.PopInformationMessage(Name, MyCustomizedAdvertisement.toString());
-
-        } catch (IOException Ex) {
-
-            // Thrown when message element cannot be read.
-            Tools.PopErrorMessage(Name, Ex.toString());
-
-        } catch (IllegalArgumentException Ex) {
-
-            // Thrown when the document or advertisement has an invalid
-            // structure (illegal values or missing tags...)
-            Tools.PopErrorMessage(Name, Ex.toString());
-
-        }
-
-    }
-
+	// Creating a customized advertisement
+	//        DFSPeerAdvertisement MyAdvertisement = new DFSPeerAdvertisement();
+	//        MyAdvertisement.setStorage(64000);
+	//
+	//        // Creating the message
+	//        Message MyMessage = new Message();
+	//
+	//        // Creating the message element and adding it
+	//        TextDocumentMessageElement MyTextDocumentMessageElement = new TextDocumentMessageElement(
+	//                "CUSTOMIZED_ADVERTISEMENT", 
+	//                (XMLDocument) MyAdvertisement.getDocument(MimeMediaType.XMLUTF8),
+	//                null);
+	//
+	//        MyMessage.addMessageElement("CUSTOMIZED_ADVERTISEMENT",MyTextDocumentMessageElement);
+	//
+	//        // Retrieving the advertisement from the message
+	//        MessageElement MyMessageElement = MyMessage.getMessageElement("CUSTOMIZED_ADVERTISEMENT","CUSTOMIZED_ADVERTISEMENT");
+	//
+	//        try {
+	//
+	//            XMLDocument TheDocument = (XMLDocument) StructuredDocumentFactory.newStructuredDocument(
+	//                MyMessageElement.getMimeType(),
+	//                MyMessageElement.getStream());
+	//
+	//            DFSPeerAdvertisement MyCustomizedAdvertisement =
+	//                    new DFSPeerAdvertisement(TheDocument.getRoot());
+	//
+	//            // Displaying advertisement
+	//            Tools.PopInformationMessage(Name, MyCustomizedAdvertisement.toString());
+	//
+	//        } catch (IOException Ex) {
+	//
+	//            // Thrown when message element cannot be read.
+	//            Tools.PopErrorMessage(Name, Ex.toString());
+	//
+	//        } catch (IllegalArgumentException Ex) {
+	//
+	//            // Thrown when the document or advertisement has an invalid
+	//            // structure (illegal values or missing tags...)
+	//            Tools.PopErrorMessage(Name, Ex.toString());
+	//
+	//        }
+	//
+	//    }
+	//
 }
