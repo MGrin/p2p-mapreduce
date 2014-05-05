@@ -382,5 +382,9 @@ public class Peer implements Runnable, MessageBuilder{
 		print("creating fileStablilized message for file " + fileId);
 		return new FileStabilized(this.id, fileId);
 	}
+	
+	public MessageHandler getMessageHandler() {
+		return messages;
+	}
 
 }
