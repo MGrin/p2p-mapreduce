@@ -31,20 +31,19 @@ public class MessageDecoder {
 		Message message = null;
 		MessageElement messageElement = jxtaMessage.getMessageElement("from",
 				"from");
-
+		PipeAdvertisement from = null;
 		XMLDocument doc;
 		try {
 			doc = (XMLDocument) StructuredDocumentFactory
 					.newStructuredDocument(messageElement.getMimeType(),
 							messageElement.getStream());
 
-		//TODO LOL PipeAdvertisement non instanciable !!
-		PipeAdvertisement from = (PipeAdvertisement) AdvertisementFactory.newAdvertisement(doc.getRoot());
+			from = (PipeAdvertisement) AdvertisementFactory
+					.newAdvertisement(doc.getRoot());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 
 		if (name.compareTo(JxtaMessageSender.SEND_INDEX) == 0) {
 			byte[] index = jxtaMessage.getMessageElement("index")
