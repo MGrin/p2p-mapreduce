@@ -57,7 +57,7 @@ public class JxtaMessageSender implements IMessageSender{
 		ChunkfieldGetter message = new ChunkfieldGetter(getChunkfield);
 		MessageElement name = new StringMessageElement("name", message.getName(), null);
 		message.addMessageElement(name);
-		MessageElement from = new StringMessageElement(String.valueOf(message.getFrom()), message.getName(), null);
+		MessageElement from = new StringMessageElement("from", String.valueOf(message.getFrom()), null);
 		message.addMessageElement(from);
 		
 		communicator.sendMessage(message, (JxtaNeighbour)receiver);
@@ -85,6 +85,8 @@ public class JxtaMessageSender implements IMessageSender{
 		ChunkGetter message = new ChunkGetter(getChunk);
 		MessageElement name = new StringMessageElement("name", message.getName(), null);
 		message.addMessageElement(name);
+		MessageElement from = new StringMessageElement("from", String.valueOf(message.getFrom()), null);
+		message.addMessageElement(from);
 		MessageElement fileId = new StringMessageElement("fileId", String.valueOf(message.getFile().uid), null);
 		message.addMessageElement(fileId);
 		MessageElement chunkId = new StringMessageElement("chunkId", String.valueOf(message.getChunkId()), null);
@@ -101,6 +103,8 @@ public class JxtaMessageSender implements IMessageSender{
 		ChunkSender message = new ChunkSender(sendChunk);
 		MessageElement name = new StringMessageElement("name", message.getName(), null);
 		message.addMessageElement(name);
+		MessageElement from = new StringMessageElement("from", String.valueOf(message.getFrom()), null);
+		message.addMessageElement(from);
 		MessageElement fileId = new StringMessageElement("fileId", String.valueOf(message.getFileId()), null);
 		message.addMessageElement(fileId);
 		MessageElement chunkId = new StringMessageElement("chunkId", String.valueOf(message.getChunkId()), null);
@@ -117,12 +121,16 @@ public class JxtaMessageSender implements IMessageSender{
 	@Override
 	public boolean send(SendIndex sendIndex, Neighbour receiver) {
 
-		All all = new All(sendIndex);
-
+		All message = new All(sendIndex);
+		
+		MessageElement name = new StringMessageElement("name", String.valueOf(message.getFrom()), null);
+		message.addMessageElement(name);
+		MessageElement from = new StringMessageElement("from", String.valueOf(message.getFrom()), null);
+		message.addMessageElement(from);
 		byte[] array = metaFile(Metadata.file);
 		MessageElement file = new ByteArrayMessageElement("index", MimeMediaType.XML_DEFAULTENCODING, array, null);
-		all.addMessageElement(file);
-		communicator.sendMessage(all, (JxtaNeighbour)receiver);
+		message.addMessageElement(file);
+		communicator.sendMessage(message, (JxtaNeighbour)receiver);
 
 		return false;
 	}
@@ -131,6 +139,10 @@ public class JxtaMessageSender implements IMessageSender{
 	public boolean send(GetIndex getIndex, Neighbour receiver) {
 
 		Connect message = new Connect(getIndex);
+		MessageElement name = new StringMessageElement("name", message.getName(), null);
+		message.addMessageElement(name);
+		MessageElement from = new StringMessageElement("from", String.valueOf(message.getFrom()), null);
+		message.addMessageElement(from);
 
 		communicator.sendMessage(message, (JxtaNeighbour)receiver);
 
