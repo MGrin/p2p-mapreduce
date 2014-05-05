@@ -15,8 +15,8 @@ import net.jxta.endpoint.MessageElement;
 import net.jxta.endpoint.StringMessageElement;
 import net.jxta.endpoint.TextDocumentMessageElement;
 import net.jxta.protocol.PipeAdvertisement;
-import ch.epfl.p2pmapreduce.advertisement.PutIndex;
-import ch.epfl.p2pmapreduce.advertisement.RmIndex;
+import ch.epfl.p2pmapreduce.advertisement.PutIndexAdvertisement;
+import ch.epfl.p2pmapreduce.advertisement.RmIndexAdvertisement;
 import ch.epfl.p2pmapreduce.index.Metadata;
 import ch.epfl.p2pmapreduce.networkCore.JxtaCommunicator;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunk;
@@ -170,7 +170,7 @@ public class JxtaMessageSender implements IMessageSender {
 	}
 
 	@Override
-	public boolean send(PutIndex putIndex) {
+	public boolean send(PutIndexAdvertisement putIndex) {
 		
 		
 		//BROADCAST -> no neighbour
@@ -180,7 +180,7 @@ public class JxtaMessageSender implements IMessageSender {
 	}
 
 	@Override
-	public boolean send(RmIndex rmIndex) {
+	public boolean send(RmIndexAdvertisement rmIndex) {
 		
 		
 		//BROADCAST -> no neighbour

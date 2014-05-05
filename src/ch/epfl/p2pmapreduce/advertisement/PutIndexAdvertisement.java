@@ -17,7 +17,7 @@ import net.jxta.document.TextElement;
 import net.jxta.id.ID;
 import net.jxta.id.IDFactory;
 
-public class PutIndex extends Advertisement {
+public class PutIndexAdvertisement extends Advertisement {
 	private ID AdvertisementID = ID.nullID;
 
 	public static final String Name = "PutIndexAdvertisement";
@@ -25,7 +25,7 @@ public class PutIndex extends Advertisement {
 
 	private String DFSFileName = "";
 	private long fileSize = 0;
-	private Date fileDate = null;
+	private long fileCreationTime = 0;
 
 	private final static String NameTag = "MyNameTag";
 	private final static String IDTag = "MyIDTag";
@@ -36,7 +36,7 @@ public class PutIndex extends Advertisement {
 
 	private final static String[] IndexableFields = { NameTag, IDTag, DateTag };
 
-	public PutIndex(Element Root) {
+	public PutIndexAdvertisement(Element Root) {
 		// Retrieving the elements
 		TextElement MyTextElement = (TextElement) Root;
 
@@ -85,11 +85,7 @@ public class PutIndex extends Advertisement {
 
 		if (TheElementName.compareTo(DateTag) == 0) {
 
-			try {
-				fileDate = new SimpleDateFormat("dd/MMM/yyyy HH:mm:ss").parse(TheTextValue);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
+			fileCreationTime = Long.parseLong(TheTextValue);
 			return;
 
 		}
@@ -104,7 +100,7 @@ public class PutIndex extends Advertisement {
 		// Adding elements
 		Element MyTempElement;
 
-		MyTempElement = TheResult.createElement(DateTag, fileDate);
+		MyTempElement = TheResult.createElement(DateTag, fileCreationTime);
 		TheResult.appendChild(MyTempElement);
 
 		MyTempElement = TheResult.createElement(SizeTag,
@@ -134,5 +130,28 @@ public class PutIndex extends Advertisement {
 	public static String getAdvertisementType() {
 		return AdvertisementType;
 	}
-
+	
+	public long getFileSize() {
+		return fileSize;
+	}
+	
+	public void setFileSize(long size) {
+		fileSize = size;
+	}
+	
+	public long getFileCreationTime() {
+		return fileCreationTime;
+	}
+	
+	public void setFileCreationTime(long time) {
+		fileCreationTime = time;
+	}
+	
+	public String getDFSFileName() {
+		return DFSFileName;
+	}
+	
+	public void setDFSFileName(String name) {
+		DFSFileName = name;
+	}
 }
