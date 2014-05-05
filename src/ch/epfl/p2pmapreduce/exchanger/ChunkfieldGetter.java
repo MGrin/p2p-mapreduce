@@ -3,7 +3,7 @@ package ch.epfl.p2pmapreduce.exchanger;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunkfield;
 import net.jxta.endpoint.Message;
 
-public class ChunkfieldGetter extends Message{
+public class ChunkfieldGetter extends Message implements MessageStruct {
 	/**
 	 * 
 	 */
@@ -31,5 +31,11 @@ public class ChunkfieldGetter extends Message{
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@Override
+	public void accept(MessageVisitor visitor) {
+		visitor.visit(this);
+		
 	}
 }

@@ -6,7 +6,7 @@ import ch.epfl.p2pmapreduce.nodeCore.messages.SendChunkfield;
 import ch.epfl.p2pmapreduce.nodeCore.volume.Chunkfield;
 import net.jxta.endpoint.Message;
 
-public class ChunkfieldSender extends Message {
+public class ChunkfieldSender extends Message implements MessageStruct {
 	private static final long serialVersionUID = 1L;
 	
 	String name;
@@ -42,6 +42,11 @@ public class ChunkfieldSender extends Message {
 
 	public Map<Integer, Chunkfield> getChunkfields() {
 		return chunkfields;
+	}
+
+	@Override
+	public void accept(MessageVisitor visitor) {
+		visitor.visit(this);
 	}
 
 }

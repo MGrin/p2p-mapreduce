@@ -3,7 +3,7 @@ package ch.epfl.p2pmapreduce.exchanger;
 import net.jxta.endpoint.Message;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendChunk;
 
-public class ChunkSender extends Message {
+public class ChunkSender extends Message implements MessageStruct{
 	private static final long serialVersionUID = 1L;
 	
 	private String name;
@@ -68,5 +68,11 @@ public class ChunkSender extends Message {
 
 	public int getChunkId() {
 		return chunkId;
+	}
+
+
+	@Override
+	public void accept(MessageVisitor visitor) {
+		visitor.visit(this);
 	}
 }
