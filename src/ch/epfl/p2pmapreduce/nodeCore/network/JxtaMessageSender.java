@@ -10,17 +10,13 @@ import java.util.Map;
 
 import net.jxta.document.MimeMediaType;
 import net.jxta.endpoint.ByteArrayMessageElement;
+import net.jxta.endpoint.Message;
 import net.jxta.endpoint.MessageElement;
 import net.jxta.endpoint.StringMessageElement;
+import net.jxta.endpoint.TextDocumentMessageElement;
 import net.jxta.protocol.PipeAdvertisement;
 import ch.epfl.p2pmapreduce.advertisement.PutIndex;
 import ch.epfl.p2pmapreduce.advertisement.RmIndex;
-import ch.epfl.p2pmapreduce.exchanger.All;
-import ch.epfl.p2pmapreduce.exchanger.ChunkGetter;
-import ch.epfl.p2pmapreduce.exchanger.ChunkSender;
-import ch.epfl.p2pmapreduce.exchanger.ChunkfieldGetter;
-import ch.epfl.p2pmapreduce.exchanger.ChunkfieldSender;
-import ch.epfl.p2pmapreduce.exchanger.Connect;
 import ch.epfl.p2pmapreduce.index.Metadata;
 import ch.epfl.p2pmapreduce.networkCore.JxtaCommunicator;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunk;
@@ -31,68 +27,86 @@ import ch.epfl.p2pmapreduce.nodeCore.messages.SendChunkfield;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendIndex;
 import ch.epfl.p2pmapreduce.nodeCore.volume.Chunkfield;
 
-
 /**
- * This class is responsible for transforming abstract messages into JXTA messages, and send them to the corresponding Neighbour.
+ * This class is responsible for transforming abstract messages into JXTA
+ * messages, and send them to the corresponding Neighbour.
  * 
- * TODO: Add PipeAdvertisement of this peer to the message, so that the other peer can ANSWER messages.
+ * TODO: Add PipeAdvertisement of this peer to the message, so that the other
+ * peer can ANSWER messages.
  * 
  * @author Tketa
- *
+ * 
  */
 
-public class JxtaMessageSender implements IMessageSender{
+public class JxtaMessageSender implements IMessageSender {
 
 	private JxtaCommunicator communicator;
 	private PipeAdvertisement senderPipeAdvertisement;
+	
+	//types of messages
+	public static final String ALL = "ALL";
+	public static final String CONNECT = "CONNECT";
+	public static final String RM = "RM";
+	public static final String PUT = "PUT";
+	public static final String SEND_CHUNK = "SENDCHUNK";
+	public static final String GET_CHUNK = "GETCHUNK";
+	public static final String GET_CHUNKFIELD = "GETCHUNKFIELD";
+	public static final String SEND_CHUNKFIELD = "SENDCHUNKFIELD";
 
 	public JxtaMessageSender(JxtaCommunicator jxtaCommunicator) {
 		this.communicator = jxtaCommunicator;
-		
+
 		this.senderPipeAdvertisement = communicator.getPipeAdvertisement();
 	}
 
 	@Override
 	public boolean send(GetChunkfield getChunkfield, Neighbour receiver) {
-		ChunkfieldGetter message = new ChunkfieldGetter(getChunkfield);
-		MessageElement name = new StringMessageElement("name", message.getName(), null);
+		Message message = new Message();
+		MessageElement name = new StringMessageElement("name", GET_CHUNKFIELD,
+				null);
 		message.addMessageElement(name);
-		MessageElement from = new StringMessageElement("from", String.valueOf(message.getFrom()), null);
-		message.addMessageElement(from);
-		
-		communicator.sendMessage(message, (JxtaNeighbour)receiver);
-		return false;
-	}
+//		TextDocumentMessageElement from = new TextDocumentMessageElement("from", (XMLDocument) getChunkfield.sender().getDocument(MimeMediaType.XMLUTF8), null);
+//		message.addMessageElement(from);
 
-	@Override
-	public boolean send(SendChunkfield sendChunkfield, Neighbour receiver) {
-		ChunkfieldSender message = new ChunkfieldSender(sendChunkfield);
-		MessageElement name = new StringMessageElement("name", message.getName(), null);
-		message.addMessageElement(name);
-		MessageElement from = new StringMessageElement("from", String.valueOf(message.getFrom()), null);
-		message.addMessageElement(from);
-		MessageElement chunkfield = new ByteArrayMessageElement("chunkfield", MimeMediaType.XML_DEFAULTENCODING, convertMapToBytes(message.getChunkfields()), null);
-		message.addMessageElement(chunkfield);
-		
 		communicator.sendMessage(message, (JxtaNeighbour) receiver);
 		
 		return false;
 	}
 
 	@Override
+	public boolean send(SendChunkfield sendChunkfield, Neighbour receiver) {
+		Message message = new Message();
+		MessageElement name = new StringMessageElement("name",
+				SEND_CHUNKFIELD, null);
+		message.addMessageElement(name);
+//		TextDocumentMessageElement from = new TextDocumentMessageElement("from", (XMLDocument) getChunkfield.sender().getDocument(MimeMediaType.XMLUTF8), null);
+//		message.addMessageElement(from);
+		MessageElement chunkfield = new ByteArrayMessageElement("chunkfield",
+				MimeMediaType.XML_DEFAULTENCODING,
+				convertMapToBytes(sendChunkfield.chunkfields()), null);
+		message.addMessageElement(chunkfield);
+
+		communicator.sendMessage(message, (JxtaNeighbour) receiver);
+
+		return false;
+	}
+
+	@Override
 	public boolean send(GetChunk getChunk, Neighbour receiver) {
 
-		ChunkGetter message = new ChunkGetter(getChunk);
-		MessageElement name = new StringMessageElement("name", message.getName(), null);
+		Message message = new Message();
+		MessageElement name = new StringMessageElement("name", GET_CHUNK, null);
 		message.addMessageElement(name);
-		MessageElement from = new StringMessageElement("from", String.valueOf(message.getFrom()), null);
-		message.addMessageElement(from);
-		MessageElement fileId = new StringMessageElement("fileId", String.valueOf(message.getFile().uid), null);
+//		TextDocumentMessageElement from = new TextDocumentMessageElement("from", (XMLDocument) getChunkfield.sender().getDocument(MimeMediaType.XMLUTF8), null);
+//		message.addMessageElement(from);
+		MessageElement fileId = new StringMessageElement("fileId",
+				String.valueOf(getChunk.file().uid), null);
 		message.addMessageElement(fileId);
-		MessageElement chunkId = new StringMessageElement("chunkId", String.valueOf(message.getChunkId()), null);
+		MessageElement chunkId = new StringMessageElement("chunkId",
+				String.valueOf(getChunk.chunkId()), null);
 		message.addMessageElement(chunkId);
 
-		communicator.sendMessage(message, (JxtaNeighbour)receiver);
+		communicator.sendMessage(message, (JxtaNeighbour) receiver);
 
 		return false;
 	}
@@ -100,20 +114,24 @@ public class JxtaMessageSender implements IMessageSender{
 	@Override
 	public boolean send(SendChunk sendChunk, Neighbour receiver) {
 
-		ChunkSender message = new ChunkSender(sendChunk);
-		MessageElement name = new StringMessageElement("name", message.getName(), null);
+		Message message = new Message();
+		MessageElement name = new StringMessageElement("name", SEND_CHUNK,
+				null);
 		message.addMessageElement(name);
-		MessageElement from = new StringMessageElement("from", String.valueOf(message.getFrom()), null);
-		message.addMessageElement(from);
-		MessageElement fileId = new StringMessageElement("fileId", String.valueOf(message.getFileId()), null);
+//		TextDocumentMessageElement from = new TextDocumentMessageElement("from", (XMLDocument) getChunkfield.sender().getDocument(MimeMediaType.XMLUTF8), null);
+//		message.addMessageElement(from);
+		MessageElement fileId = new StringMessageElement("fileId",
+				String.valueOf(sendChunk.fileId()), null);
 		message.addMessageElement(fileId);
-		MessageElement chunkId = new StringMessageElement("chunkId", String.valueOf(message.getChunkId()), null);
+		MessageElement chunkId = new StringMessageElement("chunkId",
+				String.valueOf(sendChunk.chunkId()), null);
 		message.addMessageElement(chunkId);
-		MessageElement chunk = new ByteArrayMessageElement("chunk", MimeMediaType.XML_DEFAULTENCODING, message.getChunkData(), null);
+		MessageElement chunk = new ByteArrayMessageElement("chunk",
+				MimeMediaType.XML_DEFAULTENCODING, sendChunk.getChunkData(),
+				null);
 		message.addMessageElement(chunk);
 
-		communicator.sendMessage(message, (JxtaNeighbour)receiver);
-
+		communicator.sendMessage(message, (JxtaNeighbour) receiver);
 
 		return false;
 	}
@@ -121,16 +139,18 @@ public class JxtaMessageSender implements IMessageSender{
 	@Override
 	public boolean send(SendIndex sendIndex, Neighbour receiver) {
 
-		All message = new All(sendIndex);
-		
-		MessageElement name = new StringMessageElement("name", String.valueOf(message.getFrom()), null);
+		Message message = new Message();
+
+		MessageElement name = new StringMessageElement("name", ALL, null);
 		message.addMessageElement(name);
-		MessageElement from = new StringMessageElement("from", String.valueOf(message.getFrom()), null);
-		message.addMessageElement(from);
+//		TextDocumentMessageElement from = new TextDocumentMessageElement("from", (XMLDocument) getChunkfield.sender().getDocument(MimeMediaType.XMLUTF8), null);
+//		message.addMessageElement(from);
 		byte[] array = metaFile(Metadata.file);
-		MessageElement file = new ByteArrayMessageElement("index", MimeMediaType.XML_DEFAULTENCODING, array, null);
+		MessageElement file = new ByteArrayMessageElement("index",
+				MimeMediaType.XML_DEFAULTENCODING, array, null);
 		message.addMessageElement(file);
-		communicator.sendMessage(message, (JxtaNeighbour)receiver);
+
+		communicator.sendMessage(message, (JxtaNeighbour) receiver);
 
 		return false;
 	}
@@ -138,57 +158,70 @@ public class JxtaMessageSender implements IMessageSender{
 	@Override
 	public boolean send(GetIndex getIndex, Neighbour receiver) {
 
-		Connect message = new Connect(getIndex);
-		MessageElement name = new StringMessageElement("name", message.getName(), null);
+		Message message = new Message();
+		MessageElement name = new StringMessageElement("name", CONNECT, null);
 		message.addMessageElement(name);
-		MessageElement from = new StringMessageElement("from", String.valueOf(message.getFrom()), null);
-		message.addMessageElement(from);
+//		TextDocumentMessageElement from = new TextDocumentMessageElement("from", (XMLDocument) getChunkfield.sender().getDocument(MimeMediaType.XMLUTF8), null);
+//		message.addMessageElement(from);
 
-		communicator.sendMessage(message, (JxtaNeighbour)receiver);
+		communicator.sendMessage(message, (JxtaNeighbour) receiver);
 
 		return false;
 	}
 
 	@Override
 	public boolean send(PutIndex putIndex) {
+		Message message = new Message();
+		MessageElement name = new StringMessageElement("name", PUT, null);
+		message.addMessageElement(name);
+		
+		//BROADCAST -> no neighbour
+		//communicator.sendMessage(message, neighbour);
 		
 		return false;
 	}
 
 	@Override
 	public boolean send(RmIndex rmIndex) {
-		// TODO Auto-generated method stub
+		Message message = new Message();
+		MessageElement name = new StringMessageElement("name", RM, null);
+		message.addMessageElement(name);
+		
+		//BROADCAST -> no neighbour
+		//communicator.sendMessage(message, neighbour);
+		
 		return false;
 	}
 
+	// UTILS
 
-	//UTILS
-	
 	public byte[] convertMapToBytes(Map<Integer, Chunkfield> map) {
 		ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
-	    ObjectOutputStream out;
-	    
+		ObjectOutputStream out;
+
 		try {
 			out = new ObjectOutputStream(byteOut);
 			out.writeObject(map);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-	    return byteOut.toByteArray();
+
+		return byteOut.toByteArray();
 	}
 
-	//	public OutputPipe createPipe(Neighbour neighbour){
-	//		OutputPipe pipe = null;
-	//		//TODO maybe need to set PipeID to adv
-	//		PipeAdvertisement adv = (PipeAdvertisement) AdvertisementFactory.newAdvertisement(PipeAdvertisement.getAdvertisementType());
-	//		try {
-	//			pipe = pipeService.createOutputPipe(adv, new HashSet<PeerID>(neighbour.id), 1000);
-	//		} catch (IOException e) {
-	//			e.printStackTrace();
-	//		}
-	//		return pipe;
-	//	}
+	// public OutputPipe createPipe(Neighbour neighbour){
+	// OutputPipe pipe = null;
+	// //TODO maybe need to set PipeID to adv
+	// PipeAdvertisement adv = (PipeAdvertisement)
+	// AdvertisementFactory.newAdvertisement(PipeAdvertisement.getAdvertisementType());
+	// try {
+	// pipe = pipeService.createOutputPipe(adv, new
+	// HashSet<PeerID>(neighbour.id), 1000);
+	// } catch (IOException e) {
+	// e.printStackTrace();
+	// }
+	// return pipe;
+	// }
 
 	public static byte[] metaFile(File fileToSend) {
 		byte[] array = null;
