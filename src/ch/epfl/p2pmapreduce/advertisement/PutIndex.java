@@ -2,6 +2,7 @@ package ch.epfl.p2pmapreduce.advertisement;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
@@ -74,6 +75,24 @@ public class PutIndex extends Advertisement {
 
 			}
 		}
+
+		if (TheElementName.compareTo(NameTag) == 0) {
+
+			DFSFileName = TheTextValue;
+			return;
+
+		}
+
+		if (TheElementName.compareTo(DateTag) == 0) {
+
+			try {
+				fileDate = new SimpleDateFormat("dd/MMM/yyyy HH:mm:ss").parse(TheTextValue);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			return;
+
+		}
 	}
 
 	@Override
@@ -91,7 +110,7 @@ public class PutIndex extends Advertisement {
 		MyTempElement = TheResult.createElement(SizeTag,
 				Long.toString(fileSize));
 		TheResult.appendChild(MyTempElement);
-		
+
 		MyTempElement = TheResult.createElement(NameTag, DFSFileName);
 		TheResult.appendChild(MyTempElement);
 
