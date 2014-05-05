@@ -3,6 +3,7 @@ package ch.epfl.p2pmapreduce.exchanger;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 import ch.epfl.p2pmapreduce.CLI.Mishell;
@@ -118,6 +119,4 @@ public class Receive implements MessageVisitor {
 //		
 //		//Mishell.p.getMessageHandler().receive(new SendChunk(from, fileId, chunkId));
 	}
-	
-	
 }

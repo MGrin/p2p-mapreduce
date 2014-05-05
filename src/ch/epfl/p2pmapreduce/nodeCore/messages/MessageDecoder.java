@@ -4,7 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.Map;
-
+import java.io.UnsupportedEncodingException;
 import ch.epfl.p2pmapreduce.exchanger.All;
 import ch.epfl.p2pmapreduce.exchanger.ChunkGetter;
 import ch.epfl.p2pmapreduce.exchanger.ChunkSender;
@@ -32,6 +32,7 @@ public class MessageDecoder {
 	 * @return
 	 */
 	public static Message decode(net.jxta.endpoint.Message jxtaMessage) {
+
 			String name = jxtaMessage.getMessageElement("name").getBytes(true).toString();
 			Message message = null;
 			//from = ...
@@ -96,4 +97,31 @@ public class MessageDecoder {
 		} 
 		return map;
 	}
+
+	// UTILS
+
+	public static int convertByteToInt(byte[] b) {
+		int value = 0;
+		for (int i = 0; i < b.length; i++)
+			value = (value << 8) | b[i];
+		return value;
+	}
+
+	public static byte[] intToByteArray(int value) {
+		return new byte[] { (byte) (value >>> 24),
+				(byte) (value >>> 16),
+				(byte) (value >>> 8),
+				(byte) value };
+	}
+
+	public static String byteArrayToString(byte[] b) {
+		String s = null;
+		try {
+			s = new String(b, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return s;
+	}
+
 }
