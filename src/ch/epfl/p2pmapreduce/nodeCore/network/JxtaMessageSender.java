@@ -1,9 +1,12 @@
 package ch.epfl.p2pmapreduce.nodeCore.network;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.util.Map;
 
 import net.jxta.document.MimeMediaType;
 import net.jxta.endpoint.ByteArrayMessageElement;
@@ -16,6 +19,7 @@ import ch.epfl.p2pmapreduce.exchanger.All;
 import ch.epfl.p2pmapreduce.exchanger.ChunkGetter;
 import ch.epfl.p2pmapreduce.exchanger.ChunkSender;
 import ch.epfl.p2pmapreduce.exchanger.ChunkfieldGetter;
+import ch.epfl.p2pmapreduce.exchanger.ChunkfieldSender;
 import ch.epfl.p2pmapreduce.exchanger.Connect;
 import ch.epfl.p2pmapreduce.index.Metadata;
 import ch.epfl.p2pmapreduce.networkCore.JxtaCommunicator;
@@ -25,6 +29,7 @@ import ch.epfl.p2pmapreduce.nodeCore.messages.GetIndex;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendChunk;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendChunkfield;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendIndex;
+import ch.epfl.p2pmapreduce.nodeCore.volume.Chunkfield;
 
 
 /**
@@ -60,8 +65,17 @@ public class JxtaMessageSender implements IMessageSender{
 	}
 
 	@Override
-	public boolean send(SendChunkfield message, Neighbour receiver) {
-		// TODO Auto-generated method stub
+	public boolean send(SendChunkfield sendChunkfield, Neighbour receiver) {
+		ChunkfieldSender message = new ChunkfieldSender(sendChunkfield);
+		MessageElement name = new StringMessageElement("name", message.getName(), null);
+		message.addMessageElement(name);
+		MessageElement from = new StringMessageElement("from", String.valueOf(message.getFrom()), null);
+		message.addMessageElement(from);
+		MessageElement chunkfield = new ByteArrayMessageElement("chunkfield", MimeMediaType.XML_DEFAULTENCODING, convertMapToBytes(message.getChunkfields()), null);
+		message.addMessageElement(chunkfield);
+		
+		communicator.sendMessage(message, (JxtaNeighbour) receiver);
+		
 		return false;
 	}
 
@@ -89,10 +103,10 @@ public class JxtaMessageSender implements IMessageSender{
 		message.addMessageElement(name);
 		MessageElement fileId = new StringMessageElement("fileId", String.valueOf(message.getFileId()), null);
 		message.addMessageElement(fileId);
+		MessageElement chunkId = new StringMessageElement("chunkId", String.valueOf(message.getChunkId()), null);
+		message.addMessageElement(chunkId);
 		MessageElement chunk = new ByteArrayMessageElement("chunk", MimeMediaType.XML_DEFAULTENCODING, message.getChunkData(), null);
 		message.addMessageElement(chunk);
-		
-		//TODO: Add chunkId?
 
 		communicator.sendMessage(message, (JxtaNeighbour)receiver);
 
@@ -137,6 +151,20 @@ public class JxtaMessageSender implements IMessageSender{
 
 
 	//UTILS
+	
+	public byte[] convertMapToBytes(Map<Integer, Chunkfield> map) {
+		ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+	    ObjectOutputStream out;
+	    
+		try {
+			out = new ObjectOutputStream(byteOut);
+			out.writeObject(map);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	    return byteOut.toByteArray();
+	}
 
 	//	public OutputPipe createPipe(Neighbour neighbour){
 	//		OutputPipe pipe = null;
