@@ -16,6 +16,7 @@ import ch.epfl.p2pmapreduce.exchanger.Put;
 import ch.epfl.p2pmapreduce.exchanger.Receive;
 import ch.epfl.p2pmapreduce.exchanger.Rm;
 import ch.epfl.p2pmapreduce.index.Metadata;
+import ch.epfl.p2pmapreduce.nodeCore.network.JxtaMessageSender;
 import ch.epfl.p2pmapreduce.nodeCore.volume.Chunkfield;
 import ch.epfl.p2pmapreduce.nodeCore.volume.File;
 
@@ -26,8 +27,6 @@ public class MessageDecoder {
 	/**
 	 * Static method to turn a JXTA message into our Message abstraction.
 	 * 
-	 * TODO: Implement. (David & Alban ?)
-	 * 
 	 * @param jxtaMessage
 	 * @return
 	 */
@@ -37,30 +36,30 @@ public class MessageDecoder {
 			Message message = null;
 			//from = ...
 			
-			if (name.compareTo("ALL") == 0){
+			if (name.compareTo(JxtaMessageSender.ALL) == 0){
 				
 				byte[] index = jxtaMessage.getMessageElement("index").getBytes(true);
 				byte[] newFile = jxtaMessage.getMessageElement("data").getBytes(true);
 				Metadata.SaveNewVersion(newFile);
 				//message = new SendIndex(from, index);
 				
-			} else if (name.compareTo("GETCHUNKFIELD") == 0){
+			} else if (name.compareTo(JxtaMessageSender.GET_CHUNKFIELD) == 0){
 				
 				//message = new GetChunkfield(from);
 				
-			} else if (name.compareTo("SENDCHUNKFIELD") == 0){
+			} else if (name.compareTo(JxtaMessageSender.SEND_CHUNKFIELD) == 0){
 				
 				Map<Integer, Chunkfield> chunkfields = convertBytesToMap(jxtaMessage.getMessageElement("chunkfield").getBytes(true));
 				//message = new SendChunkfield(from, chunkfields);
 				
 				
-			} else if (name.compareTo("GETCHUNK") == 0){
+			} else if (name.compareTo(JxtaMessageSender.GET_CHUNK) == 0){
 								
 				String fileId = jxtaMessage.getMessageElement("fileId").getBytes(true).toString();
 				String chunkId = jxtaMessage.getMessageElement("chunkId").getBytes(true).toString();
 				//message = new GetChunk(from, fileId, chunkId);
 				
-			} else if (name.compareTo("SENDCHUNK") == 0){
+			} else if (name.compareTo(JxtaMessageSender.SEND_CHUNK) == 0){
 				
 				
 				String fileId = jxtaMessage.getMessageElement("fileId").getBytes(true).toString();
@@ -68,7 +67,7 @@ public class MessageDecoder {
 				byte[] chunk = jxtaMessage.getMessageElement("chunk").getBytes(true); 
 				//message = new SendChunk(from, fileId, chunkId, chunk);
 				
-			} else if (name.compareTo("CONNECT") == 0){
+			} else if (name.compareTo(JxtaMessageSender.CONNECT) == 0){
 				
 				if (!isConnected) {
 					System.out.println("Visiting connect");

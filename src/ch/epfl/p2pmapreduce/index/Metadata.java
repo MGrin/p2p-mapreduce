@@ -71,7 +71,6 @@ public class Metadata {
 				current = currentChildren.get(indice);
 				currentChildren = current.getChildren();
 			} else {
-				// System.out.println("add " + current.getName());
 				List<String> fileInfos = Send.tokenize(list.get(i), ",");
 				Element added = new Element(fileInfos.get(0));
 				String text = "";
@@ -113,7 +112,7 @@ public class Metadata {
 
 	public static void metaRm(String fileName) {
 		SAXBuilder sxb = new SAXBuilder();
-		racine = document.getRootElement();
+		
 		try {
 			document = sxb.build(file);
 		} catch (JDOMException e) {
@@ -121,7 +120,7 @@ public class Metadata {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
+		racine = document.getRootElement();
 		if (fileName == racine.getName()) {
 			System.err.println("Cannot delete the root");
 		} else {
@@ -199,6 +198,8 @@ public class Metadata {
 	}
 
 	public static void main(String[] args) {
-		metaRm("DFS");
+		//metaRm("DFS");
+		//Metadata meta = new Metadata();
+		//metaRm("boite/genou");
 	}
 }
