@@ -15,6 +15,7 @@ import ch.epfl.p2pmapreduce.advertisement.RmIndex;
 import ch.epfl.p2pmapreduce.exchanger.All;
 import ch.epfl.p2pmapreduce.exchanger.ChunkGetter;
 import ch.epfl.p2pmapreduce.exchanger.ChunkSender;
+import ch.epfl.p2pmapreduce.exchanger.ChunkfieldGetter;
 import ch.epfl.p2pmapreduce.exchanger.Connect;
 import ch.epfl.p2pmapreduce.index.Metadata;
 import ch.epfl.p2pmapreduce.networkCore.JxtaCommunicator;
@@ -47,8 +48,14 @@ public class JxtaMessageSender implements IMessageSender{
 	}
 
 	@Override
-	public boolean send(GetChunkfield message, Neighbour receiver) {
-		// TODO Auto-generated method stub
+	public boolean send(GetChunkfield getChunkfield, Neighbour receiver) {
+		ChunkfieldGetter message = new ChunkfieldGetter(getChunkfield);
+		MessageElement name = new StringMessageElement("name", message.getName(), null);
+		message.addMessageElement(name);
+		MessageElement from = new StringMessageElement(String.valueOf(message.getFrom()), message.getName(), null);
+		message.addMessageElement(from);
+		
+		communicator.sendMessage(message, (JxtaNeighbour)receiver);
 		return false;
 	}
 
@@ -84,7 +91,7 @@ public class JxtaMessageSender implements IMessageSender{
 		message.addMessageElement(fileId);
 		MessageElement chunk = new ByteArrayMessageElement("chunk", MimeMediaType.XML_DEFAULTENCODING, message.getChunkData(), null);
 		message.addMessageElement(chunk);
-
+		
 		//TODO: Add chunkId?
 
 		communicator.sendMessage(message, (JxtaNeighbour)receiver);

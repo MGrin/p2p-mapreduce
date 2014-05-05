@@ -11,7 +11,7 @@ public class MessageDecoder {
 	 * @return
 	 */
 	public static Message decode(net.jxta.endpoint.Message jxtaMessage) {
-		
+			//String messageName = jxtaMessage.getMessageElements();
 		return null;
 	}
 	

@@ -6,7 +6,7 @@ import net.jxta.document.MimeMediaType;
 import net.jxta.id.ID;
 
 public class PutIndex extends Advertisement {
-
+	
 	@Override
 	public Document getDocument(MimeMediaType arg0) {
 		// TODO Auto-generated method stub
