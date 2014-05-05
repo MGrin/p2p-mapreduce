@@ -26,8 +26,7 @@ public class MessageDecoder {
 	 * @return
 	 */
 	public static Message decode(net.jxta.endpoint.Message jxtaMessage) {
-		String name = jxtaMessage.getMessageElement("name").getBytes(true)
-				.toString();
+		String name = new String(jxtaMessage.getMessageElement("name").getBytes(true));
 		Message message = null;
 		MessageElement messageElement = jxtaMessage.getMessageElement("from",
 				"from");
@@ -46,8 +45,7 @@ public class MessageDecoder {
 		}
 
 		if (name.compareTo(JxtaMessageSender.SEND_INDEX) == 0) {
-			byte[] index = jxtaMessage.getMessageElement("index")
-					.getBytes(true);
+			byte[] index = jxtaMessage.getMessageElement("index").getBytes(true);
 			byte[] newFile = jxtaMessage.getMessageElement("data").getBytes(
 					true);
 			Metadata.SaveNewVersion(newFile);
@@ -57,6 +55,9 @@ public class MessageDecoder {
 			// message = new GetChunkfield(from);
 
 		} else if (name.compareTo(JxtaMessageSender.SEND_CHUNKFIELD) == 0) {
+			
+			
+			//TODO: DO NOT READ THAT WAY! (Alban)
 			Map<Integer, Chunkfield> chunkfields = convertBytesToMap(jxtaMessage
 					.getMessageElement("chunkfield").getBytes(true));
 			// message = new SendChunkfield(from, chunkfields);
@@ -73,8 +74,11 @@ public class MessageDecoder {
 					.getBytes(true).toString();
 			String chunkId = jxtaMessage.getMessageElement("chunkId")
 					.getBytes(true).toString();
-			byte[] chunk = jxtaMessage.getMessageElement("chunk")
-					.getBytes(true);
+			
+			
+			//TODO: DO NOT READ THAT WAY!
+			byte[] chunk; // = jxtaMessage.getMessageElement("chunk")
+					
 			// message = new SendChunk(from, fileId, chunkId, chunk);
 
 		} else if (name.compareTo(JxtaMessageSender.GET_INDEX) == 0) {

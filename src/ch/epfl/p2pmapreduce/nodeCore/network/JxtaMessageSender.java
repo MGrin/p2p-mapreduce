@@ -81,6 +81,8 @@ public class JxtaMessageSender implements IMessageSender {
 		message.addMessageElement(name);
 //		TextDocumentMessageElement from = new TextDocumentMessageElement("from", (XMLDocument) getChunkfield.sender().getDocument(MimeMediaType.XMLUTF8), null);
 //		message.addMessageElement(from);
+		
+		//TODO: TO CHANGE! Chunkfield is not serializable..
 		MessageElement chunkfield = new ByteArrayMessageElement("chunkfield",
 				MimeMediaType.XML_DEFAULTENCODING,
 				convertMapToBytes(sendChunkfield.chunkfields()), null);
