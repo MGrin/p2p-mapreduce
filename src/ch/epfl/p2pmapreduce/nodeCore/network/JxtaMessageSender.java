@@ -44,8 +44,8 @@ public class JxtaMessageSender implements IMessageSender {
 	private PipeAdvertisement senderPipeAdvertisement;
 	
 	//types of messages
-	public static final String ALL = "ALL";
-	public static final String CONNECT = "CONNECT";
+	public static final String SEND_INDEX = "SENDINDEX";
+	public static final String GET_INDEX = "GETINDEX";
 	public static final String RM = "RM";
 	public static final String PUT = "PUT";
 	public static final String SEND_CHUNK = "SENDCHUNK";
@@ -141,7 +141,7 @@ public class JxtaMessageSender implements IMessageSender {
 
 		Message message = new Message();
 
-		MessageElement name = new StringMessageElement("name", ALL, null);
+		MessageElement name = new StringMessageElement("name", SEND_INDEX, null);
 		message.addMessageElement(name);
 //		TextDocumentMessageElement from = new TextDocumentMessageElement("from", (XMLDocument) getChunkfield.sender().getDocument(MimeMediaType.XMLUTF8), null);
 //		message.addMessageElement(from);
@@ -159,7 +159,7 @@ public class JxtaMessageSender implements IMessageSender {
 	public boolean send(GetIndex getIndex, Neighbour receiver) {
 
 		Message message = new Message();
-		MessageElement name = new StringMessageElement("name", CONNECT, null);
+		MessageElement name = new StringMessageElement("name", GET_INDEX, null);
 		message.addMessageElement(name);
 //		TextDocumentMessageElement from = new TextDocumentMessageElement("from", (XMLDocument) getChunkfield.sender().getDocument(MimeMediaType.XMLUTF8), null);
 //		message.addMessageElement(from);

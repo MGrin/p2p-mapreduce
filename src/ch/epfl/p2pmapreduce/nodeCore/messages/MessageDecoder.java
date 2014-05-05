@@ -12,6 +12,7 @@ import net.jxta.document.XMLDocument;
 import net.jxta.endpoint.MessageElement;
 import net.jxta.protocol.PipeAdvertisement;
 import ch.epfl.p2pmapreduce.index.Metadata;
+import ch.epfl.p2pmapreduce.nodeCore.network.JxtaMessageSender;
 import ch.epfl.p2pmapreduce.nodeCore.volume.Chunkfield;
 
 public class MessageDecoder {
@@ -37,7 +38,6 @@ public class MessageDecoder {
 					.newStructuredDocument(messageElement.getMimeType(),
 							messageElement.getStream());
 
-
 		//TODO LOL PipeAdvertisement non instanciable !!
 		PipeAdvertisement from = (PipeAdvertisement) AdvertisementFactory.newAdvertisement(doc.getRoot());
 		} catch (IOException e) {
@@ -46,55 +46,47 @@ public class MessageDecoder {
 		}
 
 
-	if (name.compareTo("ALL") == 0) {
+		if (name.compareTo(JxtaMessageSender.SEND_INDEX) == 0) {
+			byte[] index = jxtaMessage.getMessageElement("index")
+					.getBytes(true);
+			byte[] newFile = jxtaMessage.getMessageElement("data").getBytes(
+					true);
+			Metadata.SaveNewVersion(newFile);
+			// message = new SendIndex(from, index);
 
-		byte[] index = jxtaMessage.getMessageElement("index")
-				.getBytes(true);
-		byte[] newFile = jxtaMessage.getMessageElement("data").getBytes(
-				true);
-		Metadata.SaveNewVersion(newFile);
-		// message = new SendIndex(from, index);
+		} else if (name.compareTo(JxtaMessageSender.GET_CHUNKFIELD) == 0) {
+			// message = new GetChunkfield(from);
 
-	} else if (name.compareTo("GETCHUNKFIELD") == 0) {
+		} else if (name.compareTo(JxtaMessageSender.SEND_CHUNKFIELD) == 0) {
+			Map<Integer, Chunkfield> chunkfields = convertBytesToMap(jxtaMessage
+					.getMessageElement("chunkfield").getBytes(true));
+			// message = new SendChunkfield(from, chunkfields);
 
-		// message = new GetChunkfield(from);
+		} else if (name.compareTo(JxtaMessageSender.GET_CHUNK) == 0) {
+			String fileId = jxtaMessage.getMessageElement("fileId")
+					.getBytes(true).toString();
+			String chunkId = jxtaMessage.getMessageElement("chunkId")
+					.getBytes(true).toString();
+			// message = new GetChunk(from, fileId, chunkId);
 
-	} else if (name.compareTo("SENDCHUNKFIELD") == 0) {
+		} else if (name.compareTo(JxtaMessageSender.SEND_CHUNK) == 0) {
+			String fileId = jxtaMessage.getMessageElement("fileId")
+					.getBytes(true).toString();
+			String chunkId = jxtaMessage.getMessageElement("chunkId")
+					.getBytes(true).toString();
+			byte[] chunk = jxtaMessage.getMessageElement("chunk")
+					.getBytes(true);
+			// message = new SendChunk(from, fileId, chunkId, chunk);
 
-		Map<Integer, Chunkfield> chunkfields = convertBytesToMap(jxtaMessage
-				.getMessageElement("chunkfield").getBytes(true));
-		// message = new SendChunkfield(from, chunkfields);
-
-	} else if (name.compareTo("GETCHUNK") == 0) {
-
-		String fileId = jxtaMessage.getMessageElement("fileId")
-				.getBytes(true).toString();
-		String chunkId = jxtaMessage.getMessageElement("chunkId")
-				.getBytes(true).toString();
-		// message = new GetChunk(from, fileId, chunkId);
-
-	} else if (name.compareTo("SENDCHUNK") == 0) {
-
-		String fileId = jxtaMessage.getMessageElement("fileId")
-				.getBytes(true).toString();
-		String chunkId = jxtaMessage.getMessageElement("chunkId")
-				.getBytes(true).toString();
-		byte[] chunk = jxtaMessage.getMessageElement("chunk")
-				.getBytes(true);
-		// message = new SendChunk(from, fileId, chunkId, chunk);
-
-	} else if (name.compareTo("CONNECT") == 0) {
-
-		if (!isConnected) {
-			System.out.println("Visiting connect");
-			isConnected = true;
-			Metadata.metaConnect();
+		} else if (name.compareTo(JxtaMessageSender.GET_INDEX) == 0) {
+			if (!isConnected) {
+				System.out.println("Visiting connect");
+				isConnected = true;
+				Metadata.metaConnect();
+			}
 		}
 		// message = new GetIndex(from);
-	}
-
-	// Mishell.p.getMessageHandler().receive(message);
-	return null;
+		return message;
 	}
 
 	public static Map<Integer, Chunkfield> convertBytesToMap(byte[] bytes) {
@@ -136,5 +128,4 @@ public class MessageDecoder {
 		}
 		return s;
 	}
-
 }
