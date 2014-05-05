@@ -17,24 +17,24 @@ import net.jxta.document.TextElement;
 import net.jxta.id.ID;
 import net.jxta.id.IDFactory;
 
-public class RmIndex extends Advertisement {
+public class RmIndexAdvertisement extends Advertisement {
 	
 	public static final String Name = "RmIndexAdvertisement";
 	public final static String AdvertisementType = "jxta:CustomizedAdvertisement";
 	private ID AdvertisementID = ID.nullID;
 	
-	private String TheName = "";
+	private String fileName = "";
     private final static String IDTag = "MyIDTag";
-    private final static String NameTag = "MyNameTag";
+    private final String fileNameTag = "MyfileNameTag";
  
-    private final static String[] IndexableFields = { IDTag, NameTag };
+    private final static String[] IndexableFields = { IDTag};
     
-    public RmIndex() {
+    public RmIndexAdvertisement() {
 
 		// Accepting default values
 
 	}
-    public RmIndex(Element Root) {
+    public RmIndexAdvertisement(Element Root) {
         
         // Retrieving the elements
         TextElement MyTextElement = (TextElement) Root;
@@ -77,9 +77,9 @@ public class RmIndex extends Advertisement {
             
         }
         
-        if (TheElementName.compareTo(NameTag)==0) {
+        if (TheElementName.compareTo(fileNameTag)==0) {
             
-            TheName = TheTextValue;
+            fileName = TheTextValue;
             return;
             
         }
@@ -94,7 +94,7 @@ public class RmIndex extends Advertisement {
 		// Adding elements
 		Element MyTempElement;
     
-		MyTempElement = TheResult.createElement(NameTag, TheName);
+		MyTempElement = TheResult.createElement(fileNameTag, fileName);
 		TheResult.appendChild(MyTempElement);
 
 		return TheResult;
@@ -114,20 +114,20 @@ public class RmIndex extends Advertisement {
 	}
 	
 	public void SetName(String InName) {
-        TheName = InName;
+        fileName = InName;
     }
 	
-	public String GetName() {
-        return TheName;
+	public String GetfileName() {
+        return fileName;
     }
 	@Override
-    public RmIndex clone() throws CloneNotSupportedException {
+    public RmIndexAdvertisement clone() throws CloneNotSupportedException {
         
-        RmIndex Result =
-                (RmIndex) super.clone();
+        RmIndexAdvertisement Result =
+                (RmIndexAdvertisement) super.clone();
 
         Result.AdvertisementID = this.AdvertisementID;
-        Result.TheName = this.TheName;
+        Result.fileName = this.fileName;
         
         return Result;
         
@@ -136,7 +136,7 @@ public class RmIndex extends Advertisement {
     @Override
     public String getAdvType() {
         
-        return RmIndex.class.getName();
+        return RmIndexAdvertisement.class.getName();
         
     }
     
@@ -147,15 +147,15 @@ public class RmIndex extends Advertisement {
     public static class Instantiator implements AdvertisementFactory.Instantiator {
 
         public String getAdvertisementType() {
-            return RmIndex.getAdvertisementType();
+            return RmIndexAdvertisement.getAdvertisementType();
         }
 
         public Advertisement newInstance() {
-            return new RmIndex();
+            return new RmIndexAdvertisement();
         }
 
         public Advertisement newInstance(net.jxta.document.Element root) {
-            return new RmIndex(root);
+            return new RmIndexAdvertisement(root);
         }
         
     }
