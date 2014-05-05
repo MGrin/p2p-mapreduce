@@ -10,6 +10,7 @@ public class ChunkSender extends Message {
 	private int from;
 	private byte[] chunkData;
 	private int fileId;
+	private int chunkId;
 	
 	public ChunkSender(SendChunk sendChunk) {
 		super();
@@ -17,6 +18,7 @@ public class ChunkSender extends Message {
 		this.setFrom(sendChunk.sender());
 		this.setChunkData(sendChunk.getChunkData());
 		this.setFileId(sendChunk.chunkId());
+		this.setChunkId(sendChunk.chunkId());
 	}
 	
 	
@@ -56,5 +58,15 @@ public class ChunkSender extends Message {
 
 	public int getFileId() {
 		return fileId;
+	}
+
+
+	public void setChunkId(int chunkId) {
+		this.chunkId = chunkId;
+	}
+
+
+	public int getChunkId() {
+		return chunkId;
 	}
 }
