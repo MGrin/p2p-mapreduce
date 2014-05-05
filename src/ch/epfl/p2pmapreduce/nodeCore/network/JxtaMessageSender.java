@@ -171,24 +171,20 @@ public class JxtaMessageSender implements IMessageSender {
 
 	@Override
 	public boolean send(PutIndex putIndex) {
-		Message message = new Message();
-		MessageElement name = new StringMessageElement("name", PUT, null);
-		message.addMessageElement(name);
+		
 		
 		//BROADCAST -> no neighbour
-		//communicator.sendMessage(message, neighbour);
+		//communicator.sendMessage(message, neighbour); ???
 		
 		return false;
 	}
 
 	@Override
 	public boolean send(RmIndex rmIndex) {
-		Message message = new Message();
-		MessageElement name = new StringMessageElement("name", RM, null);
-		message.addMessageElement(name);
+		
 		
 		//BROADCAST -> no neighbour
-		//communicator.sendMessage(message, neighbour);
+		//communicator.sendMessage(message, neighbour); ???
 		
 		return false;
 	}
