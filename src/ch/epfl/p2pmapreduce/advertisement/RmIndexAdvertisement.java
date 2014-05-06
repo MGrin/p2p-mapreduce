@@ -49,8 +49,7 @@ public class RmIndexAdvertisement extends Advertisement {
             
             ProcessElement(TheElement);
             
-        }        
-
+        }
     }
     public void ProcessElement(TextElement TheElement) {
         
@@ -115,11 +114,11 @@ public class RmIndexAdvertisement extends Advertisement {
 		return IndexableFields;
 	}
 	
-	public void SetName(String InName) {
-        fileName = InName;
+	public void setFileName(String newName) {
+        fileName = newName;
     }
 	
-	public String GetfileName() {
+	public String getFileName() {
         return fileName;
     }
 	@Override

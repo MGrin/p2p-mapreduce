@@ -11,8 +11,11 @@ import net.jxta.pipe.PipeMsgListener;
 import net.jxta.protocol.DiscoveryResponseMsg;
 import ch.epfl.p2pmapreduce.advertisement.PutIndexAdvertisement;
 import ch.epfl.p2pmapreduce.advertisement.RmIndexAdvertisement;
+import ch.epfl.p2pmapreduce.nodeCore.messages.FileRemoved;
 import ch.epfl.p2pmapreduce.nodeCore.messages.MessageDecoder;
+import ch.epfl.p2pmapreduce.nodeCore.messages.NewFile;
 import ch.epfl.p2pmapreduce.nodeCore.peer.MessageHandler;
+import ch.epfl.p2pmapreduce.nodeCore.utils.NetworkConstants;
 
 public class JxtaMessageListener implements PipeMsgListener, DiscoveryListener{
 
@@ -54,11 +57,19 @@ public class JxtaMessageListener implements PipeMsgListener, DiscoveryListener{
 
 						System.out.println("Received " + putAdvertisement.getClass().getSimpleName() + " with id : " + putAdvertisement.getID());
 
+						NewFile newFileMessage = new NewFile(-1, -1, putAdvertisement.getDFSFileName(), (int)Math.ceil( 1.0 * putAdvertisement.getFileSize() / NetworkConstants.CHUNK_SIZE));
+						handler.enqueue(newFileMessage);
+						
 					} else if (adv.getClass().equals(RmIndexAdvertisement.class)) {
 						
 						RmIndexAdvertisement rmAdvertisement = (RmIndexAdvertisement) adv;
 						
-						System.out.println("Received RmIndexAdvertisement with id : " + rmAdvertisement.getID());						
+						FileRemoved fileRemovedMessage = new FileRemoved(-1, -1, rmAdvertisement.getFileName());
+						
+						System.out.println("Received RmIndexAdvertisement with id : " + rmAdvertisement.getID());	
+						
+						handler.enqueue(fileRemovedMessage);
+						
 					} else {
 						
 						System.out.println("Received an Advertisement which is neither an IndexAdvertisement nor a PeerGroupAdvertisement..");

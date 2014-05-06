@@ -7,7 +7,7 @@ public class FileRemoved extends IndexUpdate {
 	private String fileName;
 	private int from;
 	
-	public FileRemoved(int from, int fileId, String fileName, int chunkCount) {
+	public FileRemoved(int from, int fileId, String fileName) {
 		super(from);
 		this.fileId = fileId;
 		this.from = from;
