@@ -26,7 +26,8 @@ import net.jxta.platform.NetworkConfigurator;
 import net.jxta.platform.NetworkManager;
 import net.jxta.protocol.DiscoveryResponseMsg;
 import net.jxta.protocol.PipeAdvertisement;
-import ch.epfl.p2pmapreduce.advertisement.IndexAdvertisement;
+import ch.epfl.p2pmapreduce.advertisement.PutIndexAdvertisement;
+import ch.epfl.p2pmapreduce.advertisement.RmIndexAdvertisement;
 import ch.epfl.p2pmapreduce.nodeCore.network.INeighbourDiscoverer;
 import ch.epfl.p2pmapreduce.nodeCore.network.JxtaNeighbour;
 import ch.epfl.p2pmapreduce.nodeCore.network.Neighbour;
@@ -113,7 +114,9 @@ public class JxtaCommunicator {
 		}
 
 		// TODO: Registering our customized advertisement instances
-		AdvertisementFactory.registerAdvertisementInstance(IndexAdvertisement.getAdvertisementType(), new IndexAdvertisement.Instantiator());
+		AdvertisementFactory.registerAdvertisementInstance(PutIndexAdvertisement.getAdvertisementType(), new PutIndexAdvertisement.Instantiator());
+		AdvertisementFactory.registerAdvertisementInstance(RmIndexAdvertisement.getAdvertisementType(), new RmIndexAdvertisement.Instantiator());
+
 
 		// TODO: Connect and try to join DFS Peer Group.
 		if(!connectToRDV(60000)) {
@@ -121,6 +124,9 @@ public class JxtaCommunicator {
 			return false;
 		}
 
+		initMessageListener(netPeerGroup);
+		
+		/*
 		DiscoveryService discoveryService = netPeerGroup.getDiscoveryService();
 
 		PeerGroupJoiner pgj = new PeerGroupJoiner("RAIDFS", netPeerGroup);
@@ -133,7 +139,7 @@ public class JxtaCommunicator {
 			if(pgj.isJoined("RAIDFS")) {
 				dfsPeerGroup = pgj.getJoinedGroup("RAIDFS");
 				
-				initMessageListener();
+				initMessageListener(dfsPeerGroup);
 				
 				return true;
 			} else {
@@ -145,6 +151,7 @@ public class JxtaCommunicator {
 			System.err.println("Interruption while trying to discover and join RAIDFS Peer Group");
 			e.printStackTrace();
 		}
+		*/
 
 
 		return false;
@@ -170,18 +177,18 @@ public class JxtaCommunicator {
 
 	}
 	
+
 	/**
-	 * Create a PipeAdvertisement, publish it on the DFS PeerGroup, and create an input pipe that will handle connection and
+	 * Create a PipeAdvertisement, publish it on the PeerGroup passed in parameter, and create an input pipe that will handle connection and
 	 * forward received messages to the Peer abstraction (cf JxtaMessageListener)
 	 * 
-	 * TODO: This method is currently being called after we join the RAIDFS PeerGroup, but it might be moved after we discover the Index.
-	 * 
+	 * @param pg the PeerGroup our Advertisement will be published in.
 	 */
-	private void initMessageListener() {
+	private void initMessageListener(PeerGroup pg) {
 		
 		 // Instantiating the Pipe Advertisement
         pipeAdvertisement = (PipeAdvertisement) AdvertisementFactory.newAdvertisement(PipeAdvertisement.getAdvertisementType());
-        PipeID pipeID = IDFactory.newPipeID(dfsPeerGroup.getPeerGroupID(), name.getBytes());
+        PipeID pipeID = IDFactory.newPipeID(pg.getPeerGroupID(), name.getBytes());
 
         pipeAdvertisement.setPipeID(pipeID);
         pipeAdvertisement.setType(PipeService.UnicastType);
@@ -190,9 +197,9 @@ public class JxtaCommunicator {
         
         try {
         	// TODO: May have to start Thread to re-publish PipeAdvertisement! Otherwise it expires.
-			dfsPeerGroup.getDiscoveryService().publish(pipeAdvertisement);
+			pg.getDiscoveryService().publish(pipeAdvertisement);
 			
-			dfsPeerGroup.getPipeService().createInputPipe(pipeAdvertisement, Peer.getMessageListener());
+			pg.getPipeService().createInputPipe(pipeAdvertisement, Peer.getMessageListener());
 		} catch (IOException e) {
 
 			e.printStackTrace();
@@ -214,7 +221,7 @@ public class JxtaCommunicator {
 	 */
 	public void sendMessage(Message m, JxtaNeighbour neighbour) {
 
-		PeerGroup pg = dfsPeerGroup;
+		PeerGroup pg = netPeerGroup;
 		//pg = neighbour.getPeerGroup();
 
 		if(pg != null) {
@@ -224,6 +231,8 @@ public class JxtaCommunicator {
 				op = pipeService.createOutputPipe(neighbour.getPipeAdvertisement(), PIPE_RESOLVING_TIMEOUT);
 
 				op.send(m);
+				
+				op.close();
 			} catch (IOException e) {
 
 				System.err.println("Problem writing the message to the pipe!");

@@ -7,6 +7,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Locale;
+
+import net.jxta.document.AdvertisementFactory;
 import net.jxta.document.Element;
 import net.jxta.document.Advertisement;
 import net.jxta.document.Document;
@@ -130,28 +132,45 @@ public class PutIndexAdvertisement extends Advertisement {
 	public static String getAdvertisementType() {
 		return AdvertisementType;
 	}
-	
+
 	public long getFileSize() {
 		return fileSize;
 	}
-	
+
 	public void setFileSize(long size) {
 		fileSize = size;
 	}
-	
+
 	public long getFileCreationTime() {
 		return fileCreationTime;
 	}
-	
+
 	public void setFileCreationTime(long time) {
 		fileCreationTime = time;
 	}
-	
+
 	public String getDFSFileName() {
 		return DFSFileName;
 	}
-	
+
 	public void setDFSFileName(String name) {
 		DFSFileName = name;
 	}
+
+	public static class Instantiator implements AdvertisementFactory.Instantiator {
+
+		public String getAdvertisementType() {
+			return RmIndexAdvertisement.getAdvertisementType();
+		}
+
+		public Advertisement newInstance() {
+			return new RmIndexAdvertisement();
+		}
+
+		public Advertisement newInstance(net.jxta.document.Element root) {
+			return new RmIndexAdvertisement(root);
+		}
+
+	}
+
 }
