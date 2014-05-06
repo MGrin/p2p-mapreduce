@@ -28,6 +28,17 @@ import net.jxta.protocol.PipeAdvertisement;
 import ch.epfl.p2pmapreduce.index.Metadata;
 
 
+//TODO
+//LECTURE des ByteArrayMessageElement example 430
+//Encodage des int et long dans les StringMessageElement
+//ProcessElement dans les Advertisements
+//reussir a envoyer le chunkfield d'une autre manière genre en String
+
+
+
+
+
+
 public class Send {
 	private static PipeID id;
 	private static PipeService pipeService;
