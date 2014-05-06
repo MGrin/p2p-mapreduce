@@ -1,12 +1,26 @@
 package ch.epfl.p2pmapreduce.nodeCore.volume;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.io.FileUtils;
+
+import ch.epfl.p2pmapreduce.nodeCore.utils.FileManagerConstants;
+import ch.epfl.p2pmapreduce.nodeCore.utils.NetworkConstants;
+
 public class FileManager {
 
+	private final static String CHUNK_EXT = ".chk";
+	
 //	private Map<File, Chunkfield> files = new HashMap<File, Chunkfield>();
 	private Index index = new Index();
 	public final int peerId;
@@ -27,21 +41,62 @@ public class FileManager {
 
 	/**
 	 * Loads, chunkify and creates file representation fo target osFile
+	 * Note that chunksize is only a lower bound on chunkSize. In order to implement map/reduce
+	 * it is required to keep lines in file intact. Thus a chunksize may vary.
 	 * 
-	 * 
-	 * @param osFullPath
-	 * @param dfsFullPath
-	 * @return the file representation of the loaded file.
+	 * @param osFullPath full file to load path using correct path separator.
+	 * @param dfsFullPath internal representation, better use dot separator rather than actual file separator.
+	 * @return the file representation of the loaded file, null if the file was not existing.
 	 */
 	public File loadFile(String osFullPath, String dfsFullPath) {
 		// TODO Really load the file from os, duplicate in chunkfiles for local chunk storing
-		
-		return new File(dfsFullPath, 100);
+		String sep = java.io.File.separator;
+		int chunkCount = 0;
+		try {
+			BufferedReader in = new BufferedReader(new FileReader(osFullPath));
+			String destDir = System.getProperty("user.home") + sep + FileManagerConstants.DFS_DIR + sep + dfsFullPath;
+			java.io.File fileDir = new java.io.File(destDir);
+			fileDir.mkdir();
+			BufferedWriter out = null;
+			String line = null;
+			int chunkSize = -1;
+			while ((line = in.readLine()) != null) {
+				if (chunkSize == -1) {
+					out = new BufferedWriter(new FileWriter (new java.io.File(fileDir, chunkCount + ".chunk")));
+					chunkSize = 0;
+				}
+				out.write(line);
+				out.newLine();
+				chunkSize += line.length() *2; // assuming two bytes per char
+				if (chunkSize >= NetworkConstants.CHUNK_SIZE) {
+					chunkCount ++;
+					out.close();
+					chunkSize = -1;
+				}
+			}
+			// detects last unfinised chunk (smaller size)
+			if (chunkCount < NetworkConstants.CHUNK_SIZE) {
+				chunkCount ++;
+				out.close();
+			}
+		} catch (FileNotFoundException e) {
+			System.err.println("file " + osFullPath + " not found.");
+			return null;
+		} catch (IOException e) {
+			System.err.println("something went wrong loading " + osFullPath + ".");
+			clean(dfsFullPath);
+			e.printStackTrace();
+			return null;
+		}
+		return new File(dfsFullPath, chunkCount);
 	}
 	
 	public boolean rmFile(File f) {
-		// TODO erase all chunkfiles stored in OS.
-		return index.remove(f);
+		// TODO malicious injection possible here : filename = ../../../ => will remove the whole filesystem
+		if (index.remove(f)) {
+			clean(f.name);
+			return true;
+		} else return false;
 	}
 
 	public File getFile(String fName) {
@@ -70,10 +125,9 @@ public class FileManager {
 		for (File oldF: index.files()) {
 			if (!newIndex.contains(oldF)) oldFiles.add(oldF);
 		}
-		// TODO rm oldfiles from filesystem
 		
 		for (File oldF: oldFiles) {
-			index.remove(oldF);
+			rmFile(oldF);
 		}
 		
 		for (File newF: newIndex.files()) {
@@ -98,10 +152,51 @@ public class FileManager {
 		} else return false ;
 	}
 
-	// TODO add byte array as parameter for chunkfield data and store that data in os.
-	public void addChunk(String fName, int chunkId/*, byte[] chunkData*/) {
-		// TODO store chunkData
-		index.putChunk(fName, chunkId);
+	/**
+	 * Stores chunkData on FS.
+	 * @param fName full dfs path of file, using fake separator like dot.
+	 * @param chunkId
+	 * @param chunkData
+	 */
+	public void addChunk(String fName, int chunkId, byte[] chunkData) {
+		try {
+			FileWriter out = new FileWriter (new java.io.File(getChunkDir(fName), chunkId + CHUNK_EXT));
+			char[] charData = new char[(int) Math.ceil(chunkData.length/2.0)];
+			Arrays.fill(charData, (char) 0);
+			for (int i = 0; i < chunkData.length; i++) {
+				int data = chunkData[i];
+				if (i%2 == 0) data = data << 8; // TODO Check correct implementation about bytes (last odd byte !!!!)
+				charData[i/2] += data;
+			}
+			out.write(charData);
+			out.close();
+			index.putChunk(fName, chunkId);
+		} catch (IOException e) {
+			System.err.println("Could not write chunk " + chunkId + " for file " + fName + ".");
+		}
+	}
+	
+	public byte[] getChunkData(String fName, int chunkId) {
+		byte [] result = null;
+		try {
+			FileReader in = new FileReader (new java.io.File(getChunkDir(fName), chunkId + CHUNK_EXT));
+			List<Integer> read = new ArrayList<Integer>();
+			int r = 0;
+			while ((r = in.read()) != -1) read.add(r);
+			in.close();
+			result = new byte[read.size()*2];
+			for (int i = 0; i < read.size(); i++) {
+				result[i*2] = (byte) ((read.get(i) >> 8) & 0xFF);
+				result[i*2+1] = (byte) (read.get(i) & 0xFF);
+			}
+		} catch (FileNotFoundException e) {
+			System.err.println("unable to load chunk " + chunkId + " for file " + fName + ".");
+			e.printStackTrace();
+		} catch (IOException e) {
+			System.err.println("unable to load chunk " + chunkId + " for file " + fName + ".");
+			e.printStackTrace();
+		}
+		return result;
 	}
 
 	public void stabilize(String fName) {
@@ -111,4 +206,27 @@ public class FileManager {
 	public void print(String message) {
 		System.out.println("peer_" + peerId + ": " + message);
 	}
+	
+	// utility methods
+	
+	/*
+	 * provides mapping between dfsFull path (full filename) and file system directory
+	 * storing the chunkfiles.
+	 */
+	private java.io.File getChunkDir(String dfsFullPath) {
+		return new java.io.File(System.getProperty("user.home") + FileManagerConstants.DFS_DIR + java.io.File.separator + dfsFullPath);
+	}
+	
+	/*
+	 * remove all chunks files associated to a filename and the storing directory
+	 */
+	private void clean(String dfsFullPath) {
+		try {
+			FileUtils.deleteDirectory(getChunkDir(dfsFullPath));
+		} catch (IOException e) {
+			System.err.println("cannot remove chunkfiles of file " + dfsFullPath);
+		}
+	}
+	
+	
 }

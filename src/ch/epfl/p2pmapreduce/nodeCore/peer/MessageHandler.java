@@ -129,7 +129,7 @@ public class MessageHandler implements MessageReceiver {
 	public void receive(SendChunk sendChunk) {
 		// only consider receiving chunks when actually requesting.
 		if (state.get() == PeerState.WAITINGCHUNKS) {
-			files.addChunk(sendChunk.fName(), sendChunk.chunkId());
+			files.addChunk(sendChunk.fName(), sendChunk.chunkId(), sendChunk.getChunkData());
 			// may not be necessary because of build global cf
 			cManager.resetGlobalChunkfield(files.getFile(sendChunk.fName()));
 			pendingChunkRequest--;

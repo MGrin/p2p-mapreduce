@@ -108,4 +108,8 @@ public class Index {
 	public void putChunk(String fName, int chunkId) {
 		files.get(getFile(fName)).putChunk(chunkId);
 	}
+
+	public void dropChunk(String fName, int chunkId) {
+		files.get(getFile(fName)).dropChunk(chunkId);
+	}
 }

@@ -358,7 +358,7 @@ public class Peer implements Runnable, MessageBuilder{
 	@Override
 	public SendChunk sendChunk(String fName, int chunkId) {
 		print("creating sendChunk message for file " + fName + ", chunk " + chunkId);
-		return new SendChunk(this.id, fName, chunkId);
+		return new SendChunk(this.id, fName, chunkId, fManager.getChunkData(fName, chunkId));
 	}
 
 	@Override
