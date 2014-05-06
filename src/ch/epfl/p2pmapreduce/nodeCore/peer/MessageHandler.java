@@ -2,6 +2,7 @@ package ch.epfl.p2pmapreduce.nodeCore.peer;
 
 import java.util.LinkedList;
 
+import ch.epfl.p2pmapreduce.nodeCore.messages.FileRemoved;
 import ch.epfl.p2pmapreduce.nodeCore.messages.FileStabilized;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunk;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunkfield;
@@ -111,6 +112,12 @@ public class MessageHandler implements MessageReceiver {
 		if (files.addFile(new File(newfile.name(), newfile.chunkCount(), newfile.uid()))) {
 			state.set(PeerState.BUILDGLOBALCF);
 		}
+	}
+	
+	@Override
+	public void receive(FileRemoved updateIndex) {
+		// TODO Implement
+		
 	}
 
 	@Override

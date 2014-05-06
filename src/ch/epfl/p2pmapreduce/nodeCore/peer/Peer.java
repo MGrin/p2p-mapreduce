@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import ch.epfl.p2pmapreduce.networkCore.JxtaMessageListener;
 import ch.epfl.p2pmapreduce.nodeCore.messages.FileStabilized;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunk;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunkfield;
@@ -38,9 +37,6 @@ public class Peer implements Runnable, MessageBuilder{
 	private MessageHandler messages;
 	private FileManager fManager;
 	
-	//TODO: Should not be here
-	private static JxtaMessageListener jxtaMsgListener;
-	
 	private final int x;
 	private final int y;
 	private boolean verbose = false;
@@ -55,8 +51,6 @@ public class Peer implements Runnable, MessageBuilder{
 		cManager = new ConnectionManager(this.id);
 		messages = new MessageHandler(this, state, fManager, cManager);
 		System.out.println("Hello world, I'm " + peerName + " with id " + id);
-		
-		jxtaMsgListener = new JxtaMessageListener(this);
 		
 		verbose = id==0;
 	}
@@ -73,6 +67,7 @@ public class Peer implements Runnable, MessageBuilder{
 			case BOOTING:
 				print("fetching neighbors");
 				cManager.init();
+				cManager.initMessageListening(messages);
 				state.set(PeerState.GETINDEX);
 				break;
 			case GETINDEX:
@@ -244,17 +239,6 @@ public class Peer implements Runnable, MessageBuilder{
 	public boolean rm(File file) {
 		return fManager.rmFile(file);
 	}
-	
-	
-	/**
-	 * TODO: Should be removed, have to find another way to link JxtaCommunicator with Peer.
-	 * 
-	 * @return the message listener that is going to receive messages and enqueue them in the peer.
-	 */
-	public static JxtaMessageListener getMessageListener() {
-		return jxtaMsgListener;
-	}
-
 	
 	// state machine methods
 	

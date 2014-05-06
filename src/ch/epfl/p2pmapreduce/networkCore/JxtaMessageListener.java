@@ -9,19 +9,17 @@ import net.jxta.endpoint.Message;
 import net.jxta.pipe.PipeMsgEvent;
 import net.jxta.pipe.PipeMsgListener;
 import net.jxta.protocol.DiscoveryResponseMsg;
-import net.jxta.protocol.PeerGroupAdvertisement;
-import ch.epfl.p2pmapreduce.advertisement.IndexAdvertisement;
 import ch.epfl.p2pmapreduce.advertisement.PutIndexAdvertisement;
 import ch.epfl.p2pmapreduce.advertisement.RmIndexAdvertisement;
 import ch.epfl.p2pmapreduce.nodeCore.messages.MessageDecoder;
-import ch.epfl.p2pmapreduce.nodeCore.peer.Peer;
+import ch.epfl.p2pmapreduce.nodeCore.peer.MessageHandler;
 
 public class JxtaMessageListener implements PipeMsgListener, DiscoveryListener{
 
-	private Peer p;
+	private MessageHandler handler;
 	
-	public JxtaMessageListener(Peer p) {
-		this.p = p;
+	public JxtaMessageListener(MessageHandler handler) {
+		this.handler = handler;
 	}
 	
 	@Override
@@ -32,7 +30,7 @@ public class JxtaMessageListener implements PipeMsgListener, DiscoveryListener{
                 
         ch.epfl.p2pmapreduce.nodeCore.messages.Message message = MessageDecoder.decode(received);
         
-        p.enqueue(message);
+        handler.enqueue(message);
 	}
 
 	@Override

@@ -31,6 +31,7 @@ import ch.epfl.p2pmapreduce.advertisement.PutIndexAdvertisement;
 import ch.epfl.p2pmapreduce.advertisement.RmIndexAdvertisement;
 import ch.epfl.p2pmapreduce.nodeCore.network.INeighbourDiscoverer;
 import ch.epfl.p2pmapreduce.nodeCore.network.Neighbour;
+import ch.epfl.p2pmapreduce.nodeCore.peer.MessageHandler;
 import ch.epfl.p2pmapreduce.nodeCore.peer.Peer;
 import ch.epfl.p2pmapreduce.nodeCore.utils.NetworkConstants;
 import ch.epfl.p2pmapreduce.nodeCore.utils.UidGenerator;
@@ -51,8 +52,8 @@ public class JxtaCommunicator {
 
 	private NetworkManager networkManager;
 	private NetworkConfigurator networkConfigurator;
-	private PeerGroup netPeerGroup;
-	private PeerGroup dfsPeerGroup = null;
+	public PeerGroup netPeerGroup;
+	private PeerGroup dfsPeerGroup;
 	
 	private PipeAdvertisement pipeAdvertisement = null;
 
@@ -126,7 +127,6 @@ public class JxtaCommunicator {
 			return false;
 		}
 
-		initMessageListener(netPeerGroup);
 		
 		/*
 		DiscoveryService discoveryService = netPeerGroup.getDiscoveryService();
@@ -156,7 +156,7 @@ public class JxtaCommunicator {
 		*/
 
 
-		return false;
+		return true;
 	}
 
 	/**
@@ -186,7 +186,7 @@ public class JxtaCommunicator {
 	 * 
 	 * @param pg the PeerGroup our Advertisement will be published in.
 	 */
-	private void initMessageListener(PeerGroup pg) {
+	public void initMessageListener(MessageHandler mh, PeerGroup pg) {
 		
 		 // Instantiating the Pipe Advertisement
         pipeAdvertisement = (PipeAdvertisement) AdvertisementFactory.newAdvertisement(PipeAdvertisement.getAdvertisementType());
@@ -201,7 +201,11 @@ public class JxtaCommunicator {
         	// TODO: May have to start Thread to re-publish PipeAdvertisement! Otherwise it expires.
 			pg.getDiscoveryService().publish(pipeAdvertisement);
 			
-			pg.getPipeService().createInputPipe(pipeAdvertisement, Peer.getMessageListener());
+			JxtaMessageListener listener = new JxtaMessageListener(mh);
+			
+			//listener.start();
+			
+			pg.getPipeService().createInputPipe(pipeAdvertisement, listener);
 		} catch (IOException e) {
 
 			e.printStackTrace();
@@ -211,7 +215,7 @@ public class JxtaCommunicator {
 	public boolean isStarted() {
 		return networkManager.isStarted();
 	}
-
+	
 	/**
 	 * Send a JXTA-Encoded message to the corresponding JxtaNeighbour using its PipeAdvertisement,
 	 * and CURRENTLY the DFSPeerGroup.
@@ -245,7 +249,7 @@ public class JxtaCommunicator {
 		}
 	}
 	
-	public void publishAdvertisement(Advertisement adv, PeerGroup pg) {
+	public boolean publishAdvertisement(Advertisement adv, PeerGroup pg) {
 		
 		DiscoveryService discoveryService = pg.getDiscoveryService();
 		
@@ -255,8 +259,10 @@ public class JxtaCommunicator {
 			
 			System.err.println("Could not publish Advertisement " + adv.getAdvType());
 			e.printStackTrace();
+			return false;
 		}
 		
+		return true;
 	}
 	
 	public PipeAdvertisement getPipeAdvertisement() {
@@ -279,9 +285,9 @@ public class JxtaCommunicator {
 		@Override
 		public List<Neighbour> getNeighbors() {
 
-			if(dfsPeerGroup != null) {
+			if(netPeerGroup != null) {
 
-				DiscoveryService discoveryService = dfsPeerGroup.getDiscoveryService();
+				DiscoveryService discoveryService = netPeerGroup.getDiscoveryService();
 
 				neighbours = new LinkedList<Neighbour>();
 				//discoveryService.getRemoteAdvertisements(null, DiscoveryService.PEER, null, null, NetworkConstants.CANDIDATE_SIZE);

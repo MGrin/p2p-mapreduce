@@ -12,6 +12,7 @@ import ch.epfl.p2pmapreduce.nodeCore.messages.GetIndex;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendChunk;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendChunkfield;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendIndex;
+import ch.epfl.p2pmapreduce.nodeCore.peer.MessageHandler;
 import ch.epfl.p2pmapreduce.nodeCore.utils.NetworkConstants;
 import ch.epfl.p2pmapreduce.nodeCore.volume.Chunkfield;
 import ch.epfl.p2pmapreduce.nodeCore.volume.File;
@@ -45,6 +46,7 @@ public class ConnectionManager {
 
 		if(couldStart) {
 			neighbors = nD.getNeighbors();
+			
 		} else {
 			System.err.println("Could not start JXTA network.. Exiting");
 			System.exit(-1);
@@ -54,6 +56,13 @@ public class ConnectionManager {
 	public void stop() {
 		// TODO Auto-generated method stub
 
+	}
+	
+	public void initMessageListening(MessageHandler handler) {
+		
+		communicator.initMessageListener(handler, communicator.netPeerGroup);
+	
+		
 	}
 
 	/**

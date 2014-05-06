@@ -7,6 +7,7 @@ public interface MessageReceiver {
 	void receive(GetIndex message);
 	void receive(SendIndex sendIndex);
 	void receive(NewFile updateIndex);
+	void receive(FileRemoved updateIndex);
 	void receive(GetChunk getChunk);
 	void receive(SendChunk sendChunk);
 	void receive(FileStabilized fileSabilized);
