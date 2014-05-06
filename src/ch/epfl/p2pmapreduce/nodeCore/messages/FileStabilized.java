@@ -3,15 +3,15 @@ package ch.epfl.p2pmapreduce.nodeCore.messages;
 public class FileStabilized extends IndexUpdate {
 
 	private int from;
-	private int fileId;
+	private String fName;
 	
-	public FileStabilized(int from, int fileId) {
+	public FileStabilized(int from, String fname) {
 		super(from);
 		this.from = from;
-		this.fileId = fileId;
+		this.fName = fName;
 	}
 	
-	public int file() { return fileId; }
+	public String file() { return fName; }
 
 	@Override
 	public void visit(MessageReceiver messageReceiver) {

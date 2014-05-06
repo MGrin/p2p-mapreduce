@@ -5,12 +5,12 @@ import ch.epfl.p2pmapreduce.nodeCore.volume.File;
 public class GetChunk implements Message {
 
 	private int from;
-	private File file;
+	private String fName;
 	private int chunkId;
 	
-	public GetChunk(int from, File file, int chunkId) {
+	public GetChunk(int from, String fName, int chunkId) {
 		this.from = from;
-		this.file = file;
+		this.fName = fName;
 		this.chunkId = chunkId;
 	}
 	@Override
@@ -21,12 +21,12 @@ public class GetChunk implements Message {
 		messageReceiver.receive(this);
 	}
 	
-	public File file() { return file; }
+	public String fName() { return fName; }
 	
 	public int chunkId() { return chunkId; }
 
 
 	public String toString() {
-		return "get chunk message for file " + file.uid + ", chunk " + chunkId + " from peer " + from;
+		return "get chunk message for file " + fName + ", chunk " + chunkId + " from peer " + from;
 	}
 }

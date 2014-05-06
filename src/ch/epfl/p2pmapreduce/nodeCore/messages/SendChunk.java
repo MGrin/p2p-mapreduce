@@ -1,25 +1,27 @@
 package ch.epfl.p2pmapreduce.nodeCore.messages;
 
+import ch.epfl.p2pmapreduce.nodeCore.volume.File;
+
 public class SendChunk implements Message {
 
 	private int from;
-	private int fileId;
+	private String fName;
 	private int chunkId;
 	
 	private byte[] chunkData;
 	
 	
-	public SendChunk(int from, int fileId, int chunkId, byte[] chunkData) {
+	public SendChunk(int from, String fName, int chunkId, byte[] chunkData) {
 		this.from = from;
-		this.fileId = fileId;
+		this.fName = fName;
 		this.chunkId = chunkId;
 		
 		//TODO: Copy?
 		this.chunkData = chunkData;
 	}
 	
-	public SendChunk(int from, int fileId, int chunkId) {
-		this(from, fileId, chunkId, null);
+	public SendChunk(int from, String fName, int chunkId) {
+		this(from, fName, chunkId, null);
 	}
 	@Override
 	public int sender() { return from; }
@@ -30,10 +32,10 @@ public class SendChunk implements Message {
 	}
 
 	public String toString() {
-		return "get chunk message for file " + fileId + ", chunk " + chunkId + " from peer " + from;
+		return "get chunk message for file " + fName + ", chunk " + chunkId + " from peer " + from;
 	}
 	
-	public int fileId() { return fileId; }
+	public String fName() { return fName; }
 	
 	public int chunkId() { return chunkId; }
 	

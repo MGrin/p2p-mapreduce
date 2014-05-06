@@ -11,17 +11,17 @@ public class Neighbour {
 	public final int id;
 	//private PeerID peerID;
 	
-	private final Map<File, Chunkfield> chunkfields = new HashMap<File, Chunkfield>();
+	private final Map<String, Chunkfield> chunkfields = new HashMap<String, Chunkfield>();
 	
 	public Neighbour(int peerId) {
 		id = peerId;
 	}
 	
-	public Chunkfield getChunkfield(File f) {
-		return chunkfields.get(f);
+	public Chunkfield getChunkfield(String fName) {
+		return chunkfields.get(fName);
 	}
 
-	public void setChunkfield(File file, Chunkfield c) {
-		chunkfields.put(file, c);
+	public void setChunkfield(String fName, Chunkfield c) {
+		chunkfields.put(fName, c);
 	}
 }

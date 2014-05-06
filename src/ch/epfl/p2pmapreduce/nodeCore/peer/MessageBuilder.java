@@ -17,9 +17,9 @@ public interface MessageBuilder {
 	GetChunkfield getChunkfield();
 	SendChunkfield sendChunkfield();
 	
-	GetChunk getChunk(int fileId, int chunkId);
-	SendChunk sendChunk(int fileId, int chunkId);
+	GetChunk getChunk(String fileName, int chunkId);
+	SendChunk sendChunk(String fileName, int chunkId);
 	
-	NewFile newFile(int fileId, String fileName, int chunkCount);
-	FileStabilized fileStabilized(int fileId);
+	NewFile newFile(String fileName, int chunkCount);
+	FileStabilized fileStabilized(String fName);
 }
