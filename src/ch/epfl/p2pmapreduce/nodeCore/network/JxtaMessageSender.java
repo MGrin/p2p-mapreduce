@@ -117,8 +117,6 @@ public class JxtaMessageSender implements IMessageSender {
 			Object key= iterator.next();
 			Chunkfield chunkfield = map.get(key);
 			String value = chunkfield.toBitString();
-			//to test
-			//String value = map.get(key);
 			result += key+":"+value+"/";
 		}
 		return result;
@@ -140,10 +138,7 @@ public class JxtaMessageSender implements IMessageSender {
 		}
 		return map;
 	}
-	//test TO DELETE !!!!!
-	public static void main(String[] args){
-		
-	}
+	
 	@Override
 	public boolean send(GetChunk getChunk, Neighbour receiver) {
 
