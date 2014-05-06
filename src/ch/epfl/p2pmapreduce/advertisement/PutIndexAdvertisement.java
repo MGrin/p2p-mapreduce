@@ -91,6 +91,8 @@ public class PutIndexAdvertisement extends Advertisement {
 			return;
 
 		}
+		
+		//TODO: ADD SIZE TAG
 	}
 
 	@Override

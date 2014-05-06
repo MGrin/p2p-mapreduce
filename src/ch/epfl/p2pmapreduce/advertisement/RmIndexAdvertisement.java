@@ -27,6 +27,8 @@ public class RmIndexAdvertisement extends Advertisement {
     private final static String IDTag = "MyIDTag";
     private final String fileNameTag = "MyfileNameTag";
  
+    //TODO: Add DATE!
+    
     private final static String[] IndexableFields = { IDTag};
     
     public RmIndexAdvertisement() {

@@ -68,7 +68,7 @@ public class JxtaMessageSender implements IMessageSender {
 //		TextDocumentMessageElement from = new TextDocumentMessageElement("from", (XMLDocument) getChunkfield.sender().getDocument(MimeMediaType.XMLUTF8), null);
 //		message.addMessageElement(from);
 
-		communicator.sendMessage(message, (JxtaNeighbour) receiver);
+		communicator.sendMessage(message, receiver);
 		
 		return false;
 	}
@@ -88,7 +88,7 @@ public class JxtaMessageSender implements IMessageSender {
 				convertMapToBytes(sendChunkfield.chunkfields()), null);
 		message.addMessageElement(chunkfield);
 
-		communicator.sendMessage(message, (JxtaNeighbour) receiver);
+		communicator.sendMessage(message, receiver);
 
 		return false;
 	}
@@ -108,7 +108,7 @@ public class JxtaMessageSender implements IMessageSender {
 				String.valueOf(getChunk.chunkId()), null);
 		message.addMessageElement(chunkId);
 
-		communicator.sendMessage(message, (JxtaNeighbour) receiver);
+		communicator.sendMessage(message, receiver);
 
 		return false;
 	}
@@ -133,7 +133,7 @@ public class JxtaMessageSender implements IMessageSender {
 				null);
 		message.addMessageElement(chunk);
 
-		communicator.sendMessage(message, (JxtaNeighbour) receiver);
+		communicator.sendMessage(message, receiver);
 
 		return false;
 	}
@@ -152,7 +152,7 @@ public class JxtaMessageSender implements IMessageSender {
 				MimeMediaType.XML_DEFAULTENCODING, array, null);
 		message.addMessageElement(file);
 
-		communicator.sendMessage(message, (JxtaNeighbour) receiver);
+		communicator.sendMessage(message, receiver);
 
 		return false;
 	}
@@ -166,7 +166,7 @@ public class JxtaMessageSender implements IMessageSender {
 //		TextDocumentMessageElement from = new TextDocumentMessageElement("from", (XMLDocument) getChunkfield.sender().getDocument(MimeMediaType.XMLUTF8), null);
 //		message.addMessageElement(from);
 
-		communicator.sendMessage(message, (JxtaNeighbour) receiver);
+		communicator.sendMessage(message, receiver);
 
 		return false;
 	}

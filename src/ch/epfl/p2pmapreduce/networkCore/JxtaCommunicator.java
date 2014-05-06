@@ -4,9 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import net.jxta.discovery.DiscoveryEvent;
 import net.jxta.discovery.DiscoveryListener;
@@ -29,10 +30,10 @@ import net.jxta.protocol.PipeAdvertisement;
 import ch.epfl.p2pmapreduce.advertisement.PutIndexAdvertisement;
 import ch.epfl.p2pmapreduce.advertisement.RmIndexAdvertisement;
 import ch.epfl.p2pmapreduce.nodeCore.network.INeighbourDiscoverer;
-import ch.epfl.p2pmapreduce.nodeCore.network.JxtaNeighbour;
 import ch.epfl.p2pmapreduce.nodeCore.network.Neighbour;
 import ch.epfl.p2pmapreduce.nodeCore.peer.Peer;
 import ch.epfl.p2pmapreduce.nodeCore.utils.NetworkConstants;
+import ch.epfl.p2pmapreduce.nodeCore.utils.UidGenerator;
 
 public class JxtaCommunicator {
 
@@ -56,9 +57,10 @@ public class JxtaCommunicator {
 	private PipeAdvertisement pipeAdvertisement = null;
 
 	//All the Peer Groups this Peer belongs to.
-	private Set<PeerGroup> peerGroups;
+	//private Set<PeerGroup> peerGroups;
 
-
+	private Map<Integer, PipeAdvertisement> peerPipes = new HashMap<Integer, PipeAdvertisement>();
+	
 	// Will have a PeerID per PeerGroup.. to rethink
 
 	public JxtaCommunicator(String name, int port) {
@@ -219,7 +221,7 @@ public class JxtaCommunicator {
 	 * @param m net.jxta.endpoint.Message to be sent on the OutputPipe
 	 * @param neighbour neighbour we are sending the message to
 	 */
-	public void sendMessage(Message m, JxtaNeighbour neighbour) {
+	public void sendMessage(Message m, Neighbour neighbour) {
 
 		PeerGroup pg = netPeerGroup;
 		//pg = neighbour.getPeerGroup();
@@ -228,7 +230,7 @@ public class JxtaCommunicator {
 			PipeService pipeService = pg.getPipeService();
 			OutputPipe op = null;
 			try {
-				op = pipeService.createOutputPipe(neighbour.getPipeAdvertisement(), PIPE_RESOLVING_TIMEOUT);
+				op = pipeService.createOutputPipe(peerPipes.get(neighbour.id) , PIPE_RESOLVING_TIMEOUT);
 
 				op.send(m);
 				
@@ -241,7 +243,20 @@ public class JxtaCommunicator {
 
 
 		}
-
+	}
+	
+	public void publishAdvertisement(Advertisement adv, PeerGroup pg) {
+		
+		DiscoveryService discoveryService = pg.getDiscoveryService();
+		
+		try {
+			discoveryService.publish(adv, 5 * 60 * 1000, 2 * 60 * 1000 );
+		} catch (IOException e) {
+			
+			System.err.println("Could not publish Advertisement " + adv.getAdvType());
+			e.printStackTrace();
+		}
+		
 	}
 	
 	public PipeAdvertisement getPipeAdvertisement() {
@@ -268,7 +283,7 @@ public class JxtaCommunicator {
 
 				DiscoveryService discoveryService = dfsPeerGroup.getDiscoveryService();
 
-				neighbours.clear();
+				neighbours = new LinkedList<Neighbour>();
 				//discoveryService.getRemoteAdvertisements(null, DiscoveryService.PEER, null, null, NetworkConstants.CANDIDATE_SIZE);
 
 				// Only one PipeAdvertisement should be returned from each Peer in the DFS.
@@ -316,7 +331,11 @@ public class JxtaCommunicator {
 
 							PipeAdvertisement pipeAdv = (PipeAdvertisement) adv;
 
-							JxtaNeighbour neighbour = new JxtaNeighbour(pipeAdv.hashCode(), pipeAdv);
+							int neighbourId = UidGenerator.freshId();
+							
+							peerPipes.put(neighbourId, pipeAdv);
+							
+							Neighbour neighbour = new Neighbour(neighbourId);
 
 							neighbours.add(neighbour);
 						}
