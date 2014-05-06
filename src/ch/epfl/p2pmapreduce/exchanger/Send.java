@@ -1,8 +1,6 @@
 package ch.epfl.p2pmapreduce.exchanger;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -26,18 +24,6 @@ import net.jxta.pipe.PipeID;
 import net.jxta.pipe.PipeService;
 import net.jxta.protocol.PipeAdvertisement;
 import ch.epfl.p2pmapreduce.index.Metadata;
-
-
-//TODO
-//LECTURE des ByteArrayMessageElement example 430
-//Encodage des int et long dans les StringMessageElement
-//ProcessElement dans les Advertisements
-//reussir a envoyer le chunkfield d'une autre manière genre en String
-
-
-
-
-
 
 public class Send {
 	private static PipeID id;

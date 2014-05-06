@@ -2,6 +2,7 @@ package ch.epfl.p2pmapreduce.nodeCore.messages;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
@@ -30,24 +31,10 @@ public class MessageDecoder {
 		Message message = null;
 		MessageElement messageElement = jxtaMessage.getMessageElement("from",
 				"from");
-		PipeAdvertisement from = null;
-		XMLDocument doc;
-		try {
-			doc = (XMLDocument) StructuredDocumentFactory
-					.newStructuredDocument(messageElement.getMimeType(),
-							messageElement.getStream());
-
-			from = (PipeAdvertisement) AdvertisementFactory
-					.newAdvertisement(doc.getRoot());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		PipeAdvertisement from = getPipeAdvertisement(messageElement);;
+		
 		if (name.compareTo(JxtaMessageSender.SEND_INDEX) == 0) {
-			byte[] index = jxtaMessage.getMessageElement("index").getBytes(true);
-			byte[] newFile = jxtaMessage.getMessageElement("data").getBytes(
-					true);
+			byte[] newFile = jxtaMessage.getMessageElement("index").getBytes(true);
 			Metadata.SaveNewVersion(newFile);
 			// message = new SendIndex(from, index);
 
@@ -55,29 +42,23 @@ public class MessageDecoder {
 			// message = new GetChunkfield(from);
 
 		} else if (name.compareTo(JxtaMessageSender.SEND_CHUNKFIELD) == 0) {
-			
-			
-			//TODO: DO NOT READ THAT WAY! (Alban)
-			Map<Integer, Chunkfield> chunkfields = convertBytesToMap(jxtaMessage
-					.getMessageElement("chunkfield").getBytes(true));
+			Map<Integer, Chunkfield> chunkfields = JxtaMessageSender.convertStringToMap(new String(jxtaMessage
+					.getMessageElement("chunkfield").getBytes(true)));
 			// message = new SendChunkfield(from, chunkfields);
 
 		} else if (name.compareTo(JxtaMessageSender.GET_CHUNK) == 0) {
-			String fileId = jxtaMessage.getMessageElement("fileId")
-					.getBytes(true).toString();
-			String chunkId = jxtaMessage.getMessageElement("chunkId")
-					.getBytes(true).toString();
+			String fileId = new String(jxtaMessage.getMessageElement("fileId")
+					.getBytes(true));
+			String chunkId = new String(jxtaMessage.getMessageElement("chunkId")
+					.getBytes(true));
 			// message = new GetChunk(from, fileId, chunkId);
 
 		} else if (name.compareTo(JxtaMessageSender.SEND_CHUNK) == 0) {
-			String fileId = jxtaMessage.getMessageElement("fileId")
-					.getBytes(true).toString();
-			String chunkId = jxtaMessage.getMessageElement("chunkId")
-					.getBytes(true).toString();
-			
-			
-			//TODO: DO NOT READ THAT WAY!
-			byte[] chunk; // = jxtaMessage.getMessageElement("chunk")
+			String fileId = new String(jxtaMessage.getMessageElement("fileId")
+					.getBytes(true));
+			String chunkId = new String(jxtaMessage.getMessageElement("chunkId")
+					.getBytes(true));
+			byte[] chunk = jxtaMessage.getMessageElement("chunk").getBytes(true);
 					
 			// message = new SendChunk(from, fileId, chunkId, chunk);
 
@@ -92,6 +73,23 @@ public class MessageDecoder {
 		return message;
 	}
 
+	private static PipeAdvertisement getPipeAdvertisement(
+			MessageElement messageElement) {
+		PipeAdvertisement from = null;
+		XMLDocument doc;
+		try {
+			doc = (XMLDocument) StructuredDocumentFactory
+					.newStructuredDocument(messageElement.getMimeType(),
+							messageElement.getStream());
+
+			from = (PipeAdvertisement) AdvertisementFactory
+					.newAdvertisement(doc.getRoot());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return from;
+	}
+
 	public static Map<Integer, Chunkfield> convertBytesToMap(byte[] bytes) {
 		ByteArrayInputStream b = new ByteArrayInputStream(bytes);
 		ObjectInputStream o;
@@ -100,7 +98,6 @@ public class MessageDecoder {
 			o = new ObjectInputStream(b);
 			map = (Map<Integer, Chunkfield>) o.readObject();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -118,8 +115,11 @@ public class MessageDecoder {
 	}
 
 	public static byte[] intToByteArray(int value) {
-		return new byte[] { (byte) (value >>> 24), (byte) (value >>> 16),
-				(byte) (value >>> 8), (byte) value };
+		return new byte[] { 
+				(byte) (value >>> 24),
+				(byte) (value >>> 16),
+				(byte) (value >>> 8),
+				(byte) value };
 	}
 
 	public static String byteArrayToString(byte[] b) {

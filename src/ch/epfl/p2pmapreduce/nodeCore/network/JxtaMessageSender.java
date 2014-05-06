@@ -151,10 +151,10 @@ public class JxtaMessageSender implements IMessageSender {
 		MessageElement name = new StringMessageElement("name", GET_CHUNK, null);
 		message.addMessageElement(name);
 		MessageElement fileId = new StringMessageElement("fileId",
-				String.valueOf(getChunk.file().uid), null);
+				Integer.toString(getChunk.file().uid), null);
 		message.addMessageElement(fileId);
 		MessageElement chunkId = new StringMessageElement("chunkId",
-				String.valueOf(getChunk.chunkId()), null);
+				Integer.toString(getChunk.chunkId()), null);
 		message.addMessageElement(chunkId);
 
 		communicator.sendMessage(message, receiver);
@@ -172,13 +172,13 @@ public class JxtaMessageSender implements IMessageSender {
 		//		TextDocumentMessageElement from = new TextDocumentMessageElement("from", (XMLDocument) getChunkfield.sender().getDocument(MimeMediaType.XMLUTF8), null);
 		//		message.addMessageElement(from);
 		MessageElement fileId = new StringMessageElement("fileId",
-				String.valueOf(sendChunk.fileId()), null);
+				Integer.toString(sendChunk.fileId()), null);
 		message.addMessageElement(fileId);
 		MessageElement chunkId = new StringMessageElement("chunkId",
-				String.valueOf(sendChunk.chunkId()), null);
+				Integer.toString(sendChunk.chunkId()), null);
 		message.addMessageElement(chunkId);
 		MessageElement chunk = new ByteArrayMessageElement("chunk",
-				MimeMediaType.XML_DEFAULTENCODING, sendChunk.getChunkData(),
+				MimeMediaType.AOS, sendChunk.getChunkData(),
 				null);
 		message.addMessageElement(chunk);
 
@@ -198,7 +198,7 @@ public class JxtaMessageSender implements IMessageSender {
 		//		message.addMessageElement(from);
 		byte[] array = metaFile(Metadata.file);
 		MessageElement file = new ByteArrayMessageElement("index",
-				MimeMediaType.XML_DEFAULTENCODING, array, null);
+				MimeMediaType.AOS, array, null);
 		message.addMessageElement(file);
 
 		communicator.sendMessage(message, receiver);

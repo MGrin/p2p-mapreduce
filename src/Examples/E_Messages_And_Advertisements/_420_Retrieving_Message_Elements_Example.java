@@ -40,6 +40,9 @@
 
 package Examples.E_Messages_And_Advertisements;
 
+import ch.epfl.p2pmapreduce.nodeCore.messages.MessageDecoder;
+import net.jxta.document.MimeMediaType;
+import net.jxta.endpoint.ByteArrayMessageElement;
 import net.jxta.endpoint.Message;
 import net.jxta.endpoint.StringMessageElement;
 import Examples.Z_Tools_And_Others.Tools;
@@ -71,11 +74,22 @@ public class _420_Retrieving_Message_Elements_Example {
         MyMessage.addMessageElement("MyNameSpace", MyOtherMessageElement);
         
         // Displaying message
-        Tools.DisplayMessageContent(Name, MyMessage);
+        //Tools.DisplayMessageContent(Name, MyMessage);
         
         // Retrieving message element
-        Tools.PopInformationMessage(Name, "Retrieving message element:\n\n" 
-                + MyMessage.getMessageElement("MyNameSpace", "AddressElement").toString());
+        //Tools.PopInformationMessage(Name, "Retrieving message element:\n\n" 
+               // + MyMessage.getMessageElement("MyNameSpace", "AddressElement").toString());
+        
+        
+        
+        byte[] yo = new byte[]{87, 79, 87, 46, 46, 46};
+        Message message = new Message();
+        ByteArrayMessageElement salut = new ByteArrayMessageElement("salut", MimeMediaType.AOS, yo, null);
+        message.addMessageElement(salut);
+        
+        Tools.PopInformationMessage("moi", MessageDecoder.byteArrayToString(yo));
+        
+        Tools.PopInformationMessage("moi",MessageDecoder.byteArrayToString(message.getMessageElement("salut").getBytes(true)));
         
     }
 
