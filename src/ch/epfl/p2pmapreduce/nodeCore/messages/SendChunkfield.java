@@ -8,16 +8,16 @@ import ch.epfl.p2pmapreduce.nodeCore.volume.Chunkfield;
 public class SendChunkfield implements Message {
 	
 	private int from;
-	private Map<Integer, Chunkfield> chunkfields;
+	private Map<String, Chunkfield> chunkfields;
 	
-	public SendChunkfield(int from, Map<Integer, Chunkfield> chunkfields) {
+	public SendChunkfield(int from, Map<String, Chunkfield> chunkfields) {
 		this.from = from;
 		this.chunkfields = chunkfields;
 	}
 	
 	public int sender() { return from; }
 	
-	public Map<Integer, Chunkfield> chunkfields() { return chunkfields; }
+	public Map<String, Chunkfield> chunkfields() { return chunkfields; }
 	
 	@Override
 	public void visit(MessageReceiver messageVisitor) {

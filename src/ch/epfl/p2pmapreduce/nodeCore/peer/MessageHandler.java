@@ -83,8 +83,8 @@ public class MessageHandler implements MessageReceiver {
 
 	@Override
 	public void receive(SendChunkfield message) {
-		for (int fileUid : message.chunkfields().keySet()) {
-			cManager.update(message.sender(), files.getFile(fileUid), message.chunkfields().get(fileUid));
+		for (String fName : message.chunkfields().keySet()) {
+			cManager.update(message.sender(), files.getFile(fName), message.chunkfields().get(fName));
 		}
 		state.set(PeerState.CHECKGLOBALCF);
 	}
@@ -108,23 +108,23 @@ public class MessageHandler implements MessageReceiver {
 
 	@Override
 	public void receive(NewFile newfile) {
-		if (files.addFile(new File(newfile.name(), newfile.chunkCount(), newfile.uid()))) {
+		if (files.addFile(new File(newfile.name(), newfile.chunkCount()))) {
 			state.set(PeerState.BUILDGLOBALCF);
 		}
 	}
 
 	@Override
 	public void receive(GetChunk getChunk) {
-		cManager.send(builder.sendChunk(getChunk.file().uid, getChunk.chunkId()), getChunk.sender());
+		cManager.send(builder.sendChunk(getChunk.fName(), getChunk.chunkId()), getChunk.sender());
 	}
 
 	@Override
 	public void receive(SendChunk sendChunk) {
 		// only consider receiving chunks when actually requesting.
 		if (state.get() == PeerState.WAITINGCHUNKS) {
-			files.addChunk(sendChunk.fileId(), sendChunk.chunkId());
+			files.addChunk(sendChunk.fName(), sendChunk.chunkId());
 			// may not be necessary because of build global cf
-			cManager.resetGlobalChunkfield(files.getFile(sendChunk.fileId()));
+			cManager.resetGlobalChunkfield(files.getFile(sendChunk.fName()));
 			pendingChunkRequest--;
 			if (pendingChunkRequest <= 0) {
 				pendingChunkRequest = 0;

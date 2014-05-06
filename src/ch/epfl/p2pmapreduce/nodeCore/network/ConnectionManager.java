@@ -70,7 +70,7 @@ public class ConnectionManager {
 		if (globalChunkfields.get(file) == null) {
 			result = new GlobalChunkfield(peerId, c, file.chunkCount);
 			for (Neighbour n : neighbors) {
-				result.update(n.id, neighbors.get(n.id).getChunkfield(file));
+				result.update(n.id, neighbors.get(n.id).getChunkfield(file.name));
 			}
 		}
 		return result;
@@ -78,7 +78,7 @@ public class ConnectionManager {
 
 	public void update(int peerId, File file, Chunkfield c) {
 		for (Neighbour n: neighbors) {
-			if (n.id == peerId) n.setChunkfield(file, c);
+			if (n.id == peerId) n.setChunkfield(file.name, c);
 		}
 	}
 
@@ -106,7 +106,7 @@ public class ConnectionManager {
 		Neighbour owner = null;
 		// finds a neighbor owning the selected chunk
 		for (Neighbour n : neighbors) {
-			if (n.getChunkfield(getChunk.file()).hasChunk(getChunk.chunkId())) {
+			if (n.getChunkfield(getChunk.fName()).hasChunk(getChunk.chunkId())) {
 				owner = n;
 				break;
 			}

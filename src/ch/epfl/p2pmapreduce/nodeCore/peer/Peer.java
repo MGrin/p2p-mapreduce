@@ -266,14 +266,14 @@ public class Peer implements Runnable, MessageBuilder{
 		for (File f : fManager.getFiles()) {
 			tempGC = cManager.getGlobalChunkfield(f, this.id, fManager.getChunkfield(f));
 			print("current local chunkfield: " + fManager.getChunkfield(f));
-			print("GlobalChunkfield of file " + f.uid + ": " + tempGC);
+			print("GlobalChunkfield of file " + f.name + ": " + tempGC);
 			tempLowChunks = tempGC.lowChunks();
 			if (f.isPeerResponsible() && tempLowChunks.size() > 0) {
 				// duplication required
 				// selects only chunks that are not owned yet
 				notOwnedLowChunks = new ArrayList<Integer>();
 				for (Integer chunk : tempLowChunks) {
-					if (! fManager.containsChunk(f.uid, chunk)) {
+					if (! fManager.containsChunk(f.name, chunk)) {
 						notOwnedLowChunks.add(chunk);
 					}
 				}
@@ -329,7 +329,7 @@ public class Peer implements Runnable, MessageBuilder{
 			int chunkIndex = (int) (Math.random() * chunksOfFile.size());
 			chunkId = chunksOfFile.remove(chunkIndex);
 			if (chunksOfFile.size() == 0) chunksToGet.remove(file);
-		} while (!cManager.send(getChunk(file.uid, chunkId)));
+		} while (!cManager.send(getChunk(file.name, chunkId)));
 		
 		return true;
 	}
@@ -360,27 +360,27 @@ public class Peer implements Runnable, MessageBuilder{
 	}
 
 	@Override
-	public NewFile newFile(int fileId, String fileName, int chunkCount) {
+	public NewFile newFile(String fileName, int chunkCount) {
 		print("creating newFile message");
-		return new NewFile(this.id, fileId, fileName, chunkCount);
+		return new NewFile(this.id, fileName, chunkCount);
 	}
 
 	@Override
-	public GetChunk getChunk(int fileId, int chunkId) {
-		print("creating getChunk message for file " + fileId + ", chunk " + chunkId);
-		return new GetChunk(this.id, fManager.getFile(fileId), chunkId);
+	public GetChunk getChunk(String fName, int chunkId) {
+		print("creating getChunk message for file " + fName + ", chunk " + chunkId);
+		return new GetChunk(this.id, fName, chunkId);
 	}
 
 	@Override
-	public SendChunk sendChunk(int fileId, int chunkId) {
-		print("creating sendChunk message for file " + fileId + ", chunk " + chunkId);
-		return new SendChunk(this.id, fileId, chunkId);
+	public SendChunk sendChunk(String fName, int chunkId) {
+		print("creating sendChunk message for file " + fName + ", chunk " + chunkId);
+		return new SendChunk(this.id, fName, chunkId);
 	}
 
 	@Override
-	public FileStabilized fileStabilized(int fileId) {
-		print("creating fileStablilized message for file " + fileId);
-		return new FileStabilized(this.id, fileId);
+	public FileStabilized fileStabilized(String fName) {
+		print("creating fileStablilized message for file " + fName);
+		return new FileStabilized(this.id, fName);
 	}
 	
 	public MessageHandler getMessageHandler() {

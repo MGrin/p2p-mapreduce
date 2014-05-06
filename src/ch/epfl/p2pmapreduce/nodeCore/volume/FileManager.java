@@ -44,8 +44,8 @@ public class FileManager {
 		return index.remove(f);
 	}
 
-	public File getFile(int fileUid) {
-		return index.getFile(fileUid);
+	public File getFile(String fName) {
+		return index.getFile(fName);
 	}
 	
 	public Index getIndex() {
@@ -60,7 +60,7 @@ public class FileManager {
 	 * For sending all chunkfields over network
 	 * @return map of filesUid to chunkfields
 	 */
-	public Map<Integer, Chunkfield> getChunkfields() {
+	public Map<String, Chunkfield> getChunkfields() {
 		return index.getChunkfields();
 	}
 	
@@ -91,21 +91,21 @@ public class FileManager {
 		return index.size();
 	}
 	
-	public boolean containsChunk(int fileId, int chunkId) {
-		Chunkfield cf = index.getChunkfield(fileId);
+	public boolean containsChunk(String fName, int chunkId) {
+		Chunkfield cf = index.getChunkfield(fName);
 		if (cf != null) {
 			return cf.hasChunk(chunkId);
 		} else return false ;
 	}
 
 	// TODO add byte array as parameter for chunkfield data and store that data in os.
-	public void addChunk(int fileId, int chunkId/*, byte[] chunkData*/) {
+	public void addChunk(String fName, int chunkId/*, byte[] chunkData*/) {
 		// TODO store chunkData
-		index.putChunk(fileId, chunkId);
+		index.putChunk(fName, chunkId);
 	}
 
-	public void stabilize(int file) {
-		index.stabilize(file);
+	public void stabilize(String fName) {
+		index.stabilize(fName);
 	}
 	
 	public void print(String message) {
