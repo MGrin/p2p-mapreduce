@@ -26,6 +26,9 @@ public class Chunkfield {
 	public Chunkfield(File f) {
 		this(f, false);
 	}
+	public Chunkfield(boolean[] field){
+		this.field = field;
+	}
 	
 	public void putChunk(int i) {
 		if (i < field.length) {
