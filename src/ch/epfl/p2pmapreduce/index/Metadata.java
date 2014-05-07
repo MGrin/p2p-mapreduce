@@ -191,8 +191,9 @@ public class Metadata {
 		JxtaMessageSender.metaFile(file);
 	}
 	
-	public static List<File> XMLtoFiles(String xmlContent) {
+	public static List<File> toFiles() {
 		
+		//TODO:Implement!
 		return null;
 	}
 

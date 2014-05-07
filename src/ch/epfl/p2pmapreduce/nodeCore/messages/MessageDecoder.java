@@ -2,9 +2,7 @@ package ch.epfl.p2pmapreduce.nodeCore.messages;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 import net.jxta.document.AdvertisementFactory;
@@ -15,7 +13,6 @@ import net.jxta.protocol.PipeAdvertisement;
 import ch.epfl.p2pmapreduce.index.Metadata;
 import ch.epfl.p2pmapreduce.nodeCore.network.JxtaMessageSender;
 import ch.epfl.p2pmapreduce.nodeCore.volume.Chunkfield;
-import ch.epfl.p2pmapreduce.nodeCore.volume.Index;
 
 public class MessageDecoder {
 
@@ -46,9 +43,11 @@ public class MessageDecoder {
 		} else if (name.compareTo(JxtaMessageSender.SEND_CHUNKFIELD) == 0) {
 			Map<Integer, Chunkfield> chunkfields = JxtaMessageSender.convertStringToMap(new String(jxtaMessage
 					.getMessageElement("chunkfield").getBytes(true)));
+			
 			// message = new SendChunkfield(from, chunkfields);
 
 		} else if (name.compareTo(JxtaMessageSender.GET_CHUNK) == 0) {
+			//TODO: Change, it's fName now not fileId
 			String fileId = new String(jxtaMessage.getMessageElement("fileId")
 					.getBytes(true));
 			String chunkId = new String(jxtaMessage.getMessageElement("chunkId")
@@ -56,6 +55,7 @@ public class MessageDecoder {
 			// message = new GetChunk(from, fileId, chunkId);
 
 		} else if (name.compareTo(JxtaMessageSender.SEND_CHUNK) == 0) {
+			//TODO: Change, it's fName now not fileId
 			String fileId = new String(jxtaMessage.getMessageElement("fileId")
 					.getBytes(true));
 			String chunkId = new String(jxtaMessage.getMessageElement("chunkId")
@@ -75,6 +75,7 @@ public class MessageDecoder {
 		return message;
 	}
 
+	@SuppressWarnings("rawtypes")
 	private static PipeAdvertisement getPipeAdvertisement(
 			MessageElement messageElement) {
 		PipeAdvertisement from = null;
@@ -109,28 +110,28 @@ public class MessageDecoder {
 
 	// UTILS
 
-	public static int convertByteToInt(byte[] b) {
-		int value = 0;
-		for (int i = 0; i < b.length; i++)
-			value = (value << 8) | b[i];
-		return value;
-	}
-
-	public static byte[] intToByteArray(int value) {
-		return new byte[] { 
-				(byte) (value >>> 24),
-				(byte) (value >>> 16),
-				(byte) (value >>> 8),
-				(byte) value };
-	}
-
-	public static String byteArrayToString(byte[] b) {
-		String s = null;
-		try {
-			s = new String(b, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		return s;
-	}
+//	public static int convertByteToInt(byte[] b) {
+//		int value = 0;
+//		for (int i = 0; i < b.length; i++)
+//			value = (value << 8) | b[i];
+//		return value;
+//	}
+//
+//	public static byte[] intToByteArray(int value) {
+//		return new byte[] { 
+//				(byte) (value >>> 24),
+//				(byte) (value >>> 16),
+//				(byte) (value >>> 8),
+//				(byte) value };
+//	}
+//
+//	public static String byteArrayToString(byte[] b) {
+//		String s = null;
+//		try {
+//			s = new String(b, "UTF-8");
+//		} catch (UnsupportedEncodingException e) {
+//			e.printStackTrace();
+//		}
+//		return s;
+//	}
 }

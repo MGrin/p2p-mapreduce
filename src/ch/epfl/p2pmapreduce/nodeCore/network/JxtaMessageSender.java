@@ -1,16 +1,11 @@
 package ch.epfl.p2pmapreduce.nodeCore.network;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import net.jxta.document.MimeMediaType;
 import net.jxta.document.XMLDocument;
@@ -22,7 +17,6 @@ import net.jxta.endpoint.TextDocumentMessageElement;
 import net.jxta.protocol.PipeAdvertisement;
 import ch.epfl.p2pmapreduce.advertisement.PutIndexAdvertisement;
 import ch.epfl.p2pmapreduce.advertisement.RmIndexAdvertisement;
-import ch.epfl.p2pmapreduce.exchanger.Send;
 import ch.epfl.p2pmapreduce.index.Metadata;
 import ch.epfl.p2pmapreduce.networkCore.JxtaCommunicator;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunk;
@@ -95,47 +89,13 @@ public class JxtaMessageSender implements IMessageSender {
 				SEND_CHUNKFIELD, null);
 		message.addMessageElement(name);
 		
+		MessageElement chunkField = new StringMessageElement("chunkfield",
+				convertMapToString(sendChunkfield.chunkfields()), null);		
+		message.addMessageElement(chunkField);
 		
-		//TODO: Send Chunkfield?
-		//		MessageElement chunkfield = new ByteArrayMessageElement("chunkfield",
-//				MimeMediaType.XML_DEFAULTENCODING,
-//				convertMapToBytes(sendChunkfield.chunkfields()), null);
-//		
-//		message.addMessageElement(chunkfield);
-
 		communicator.sendMessage(message, receiver);
 
 		return false;
-	}
-	
-	public static String convertMapToString(Map<Integer,Chunkfield> map){
-		StringBuilder builder = new StringBuilder();
-	
-		for (Integer i : map.keySet())
-			builder.append(i + ":" + map.get(i).toBitString() + "/"  );
-		
-		return builder.toString();
-	}
-	
-	public static Map<Integer, Chunkfield> convertStringToMap(String text){
-		
-		Map<Integer, Chunkfield> map = new HashMap<Integer, Chunkfield>();
-		String[] elements = text.split("/");
-		
-		for (int i = 0; i< elements.length ;i++){
-			String[] keyValue = elements[i].split(":");
-			
-			int key = Integer.parseInt(keyValue[0]);
-			
-			boolean[] chunkField = new boolean[keyValue[1].length()];
-			
-			for(int j = 0; j < keyValue[1].length(); j++) {
-				chunkField[j] = (keyValue[1].charAt(j) == '1');
-			}
-			
-			map.put(key, new Chunkfield(chunkField));
-		}
-		return map;
 	}
 	
 	@Override
@@ -144,9 +104,8 @@ public class JxtaMessageSender implements IMessageSender {
 		Message message = messageBasis.clone();
 		MessageElement name = new StringMessageElement("name", GET_CHUNK, null);
 		message.addMessageElement(name);
-		MessageElement fileId = new StringMessageElement("fileId",
-				Integer.toString(getChunk.file().uid), null);
-		message.addMessageElement(fileId);
+		MessageElement fileName = new StringMessageElement("fName", getChunk.fName(), null);
+		message.addMessageElement(fileName);
 		MessageElement chunkId = new StringMessageElement("chunkId",
 				Integer.toString(getChunk.chunkId()), null);
 		message.addMessageElement(chunkId);
@@ -163,11 +122,8 @@ public class JxtaMessageSender implements IMessageSender {
 		MessageElement name = new StringMessageElement("name", SEND_CHUNK,
 				null);
 		message.addMessageElement(name);
-		//		TextDocumentMessageElement from = new TextDocumentMessageElement("from", (XMLDocument) getChunkfield.sender().getDocument(MimeMediaType.XMLUTF8), null);
-		//		message.addMessageElement(from);
-		MessageElement fileId = new StringMessageElement("fileId",
-				Integer.toString(sendChunk.fileId()), null);
-		message.addMessageElement(fileId);
+		MessageElement fileName = new StringMessageElement("fName", sendChunk.fName(), null);
+		message.addMessageElement(fileName);
 		MessageElement chunkId = new StringMessageElement("chunkId",
 				Integer.toString(sendChunk.chunkId()), null);
 		message.addMessageElement(chunkId);
@@ -188,9 +144,7 @@ public class JxtaMessageSender implements IMessageSender {
 
 		MessageElement name = new StringMessageElement("name", SEND_INDEX, null);
 		message.addMessageElement(name);
-		//		TextDocumentMessageElement from = new TextDocumentMessageElement("from", (XMLDocument) getChunkfield.sender().getDocument(MimeMediaType.XMLUTF8), null);
-		//		message.addMessageElement(from);
-		byte[] array = metaFile(Metadata.file);
+		byte[] array = getRawFile(Metadata.file);
 		MessageElement file = new ByteArrayMessageElement("index",
 				MimeMediaType.AOS, array, null);
 		message.addMessageElement(file);
@@ -227,8 +181,38 @@ public class JxtaMessageSender implements IMessageSender {
 	}
 
 	// UTILS
+	
+	public static String convertMapToString(Map<String,Chunkfield> map){
+		StringBuilder builder = new StringBuilder();
+	
+		for (String s : map.keySet())
+			builder.append(s + ":" + map.get(s).toBitString() + "/"  );
+		
+		return builder.toString();
+	}
+	
+	public static Map<Integer, Chunkfield> convertStringToMap(String text){
+		
+		Map<Integer, Chunkfield> map = new HashMap<Integer, Chunkfield>();
+		String[] elements = text.split("/");
+		
+		for (int i = 0; i< elements.length ;i++){
+			String[] keyValue = elements[i].split(":");
+			
+			int key = Integer.parseInt(keyValue[0]);
+			
+			boolean[] chunkField = new boolean[keyValue[1].length()];
+			
+			for(int j = 0; j < keyValue[1].length(); j++) {
+				chunkField[j] = (keyValue[1].charAt(j) == '1');
+			}
+			
+			map.put(key, new Chunkfield(chunkField));
+		}
+		return map;
+	}
 
-	public static byte[] metaFile(File fileToSend) {
+	public static byte[] getRawFile(File fileToSend) {
 		byte[] array = null;
 		if (fileToSend != null) {
 			FileInputStream fis = null;
