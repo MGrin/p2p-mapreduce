@@ -15,6 +15,7 @@ import net.jxta.protocol.PipeAdvertisement;
 import ch.epfl.p2pmapreduce.index.Metadata;
 import ch.epfl.p2pmapreduce.nodeCore.network.JxtaMessageSender;
 import ch.epfl.p2pmapreduce.nodeCore.volume.Chunkfield;
+import ch.epfl.p2pmapreduce.nodeCore.volume.Index;
 
 public class MessageDecoder {
 
@@ -31,12 +32,13 @@ public class MessageDecoder {
 		Message message = null;
 		MessageElement messageElement = jxtaMessage.getMessageElement("from",
 				"from");
-		PipeAdvertisement from = getPipeAdvertisement(messageElement);;
+		PipeAdvertisement from = getPipeAdvertisement(messageElement);
 		
 		if (name.compareTo(JxtaMessageSender.SEND_INDEX) == 0) {
 			byte[] newFile = jxtaMessage.getMessageElement("index").getBytes(true);
 			Metadata.SaveNewVersion(newFile);
-			// message = new SendIndex(from, index);
+			
+			//message = new SendIndex(from, index);
 
 		} else if (name.compareTo(JxtaMessageSender.GET_CHUNKFIELD) == 0) {
 			// message = new GetChunkfield(from);

@@ -1,10 +1,9 @@
 package ch.epfl.p2pmapreduce.CLI;
 
-import ch.epfl.p2pmapreduce.exchanger.Send;
+import java.util.Scanner;
+
 import ch.epfl.p2pmapreduce.index.Metadata;
 import ch.epfl.p2pmapreduce.nodeCore.peer.Peer;
-
-import java.util.Scanner;
 
 public class Mishell {
 	

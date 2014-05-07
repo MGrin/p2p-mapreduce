@@ -13,7 +13,6 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
-import ch.epfl.p2pmapreduce.exchanger.Send;
 import ch.epfl.p2pmapreduce.nodeCore.network.JxtaMessageSender;
 
 public class Metadata {

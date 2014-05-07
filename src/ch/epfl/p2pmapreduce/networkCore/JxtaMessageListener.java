@@ -57,7 +57,7 @@ public class JxtaMessageListener implements PipeMsgListener, DiscoveryListener{
 
 						System.out.println("Received " + putAdvertisement.getClass().getSimpleName() + " with id : " + putAdvertisement.getID());
 
-						NewFile newFileMessage = new NewFile(-1, -1, putAdvertisement.getDFSFileName(), (int)Math.ceil( 1.0 * putAdvertisement.getFileSize() / NetworkConstants.CHUNK_SIZE));
+						NewFile newFileMessage = new NewFile(-1, putAdvertisement.getDFSFileName(), (int)Math.ceil( 1.0 * putAdvertisement.getFileSize() / NetworkConstants.CHUNK_SIZE));
 						handler.enqueue(newFileMessage);
 						
 					} else if (adv.getClass().equals(RmIndexAdvertisement.class)) {
