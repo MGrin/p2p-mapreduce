@@ -34,7 +34,6 @@ public class IndexAdvertisement extends Advertisement {
 	public IndexAdvertisement() {
 
 		// Accepting default values
-
 	}
 
 	public IndexAdvertisement(Element Root) {

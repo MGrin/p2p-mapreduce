@@ -43,7 +43,7 @@ public class JxtaMessageSender implements IMessageSender {
 
 	private Message messageBasis;
 
-	//types of messages
+	// types of messages
 	public static final String SEND_INDEX = "SENDINDEX";
 	public static final String GET_INDEX = "GETINDEX";
 	public static final String RM = "RM";
@@ -62,12 +62,11 @@ public class JxtaMessageSender implements IMessageSender {
 
 		// Creating the message element and adding it
 		TextDocumentMessageElement senderAdvertisementElement = new TextDocumentMessageElement(
-				"from", 
-				(XMLDocument) senderPipeAdvertisement.getDocument(MimeMediaType.XMLUTF8),
-				null);
+				"from",
+				(XMLDocument) senderPipeAdvertisement
+					.getDocument(MimeMediaType.XMLUTF8), null);
 
 		messageBasis.addMessageElement(senderAdvertisementElement);
-
 	}
 
 	@Override
@@ -85,26 +84,27 @@ public class JxtaMessageSender implements IMessageSender {
 	@Override
 	public boolean send(SendChunkfield sendChunkfield, Neighbour receiver) {
 		Message message = messageBasis.clone();
-		MessageElement name = new StringMessageElement("name",
-				SEND_CHUNKFIELD, null);
+		MessageElement name = new StringMessageElement("name", SEND_CHUNKFIELD,
+				null);
 		message.addMessageElement(name);
-		
+
 		MessageElement chunkField = new StringMessageElement("chunkfield",
-				convertMapToString(sendChunkfield.chunkfields()), null);		
+				convertMapToString(sendChunkfield.chunkfields()), null);
 		message.addMessageElement(chunkField);
-		
+
 		communicator.sendMessage(message, receiver);
 
 		return false;
 	}
-	
+
 	@Override
 	public boolean send(GetChunk getChunk, Neighbour receiver) {
 
 		Message message = messageBasis.clone();
 		MessageElement name = new StringMessageElement("name", GET_CHUNK, null);
 		message.addMessageElement(name);
-		MessageElement fileName = new StringMessageElement("fName", getChunk.fName(), null);
+		MessageElement fileName = new StringMessageElement("fName",
+				getChunk.fName(), null);
 		message.addMessageElement(fileName);
 		MessageElement chunkId = new StringMessageElement("chunkId",
 				Integer.toString(getChunk.chunkId()), null);
@@ -119,17 +119,16 @@ public class JxtaMessageSender implements IMessageSender {
 	public boolean send(SendChunk sendChunk, Neighbour receiver) {
 
 		Message message = messageBasis.clone();
-		MessageElement name = new StringMessageElement("name", SEND_CHUNK,
-				null);
+		MessageElement name = new StringMessageElement("name", SEND_CHUNK, null);
 		message.addMessageElement(name);
-		MessageElement fileName = new StringMessageElement("fName", sendChunk.fName(), null);
+		MessageElement fileName = new StringMessageElement("fName",
+				sendChunk.fName(), null);
 		message.addMessageElement(fileName);
 		MessageElement chunkId = new StringMessageElement("chunkId",
 				Integer.toString(sendChunk.chunkId()), null);
 		message.addMessageElement(chunkId);
 		MessageElement chunk = new ByteArrayMessageElement("chunk",
-				MimeMediaType.AOS, sendChunk.getChunkData(),
-				null);
+				MimeMediaType.AOS, sendChunk.getChunkData(), null);
 		message.addMessageElement(chunk);
 
 		communicator.sendMessage(message, receiver);
@@ -160,8 +159,11 @@ public class JxtaMessageSender implements IMessageSender {
 		Message message = messageBasis.clone();
 		MessageElement name = new StringMessageElement("name", GET_INDEX, null);
 		message.addMessageElement(name);
-		//		TextDocumentMessageElement from = new TextDocumentMessageElement("from", (XMLDocument) getChunkfield.sender().getDocument(MimeMediaType.XMLUTF8), null);
-		//		message.addMessageElement(from);
+		//TODO ? why these comments ? from is encapsulated to the message at the very beginning
+		// TextDocumentMessageElement from = new
+		// TextDocumentMessageElement("from", (XMLDocument)
+		// getChunkfield.sender().getDocument(MimeMediaType.XMLUTF8), null);
+		// message.addMessageElement(from);
 
 		communicator.sendMessage(message, receiver);
 
@@ -171,42 +173,44 @@ public class JxtaMessageSender implements IMessageSender {
 	@Override
 	public boolean send(PutIndexAdvertisement putIndex) {
 
-		return communicator.publishAdvertisement(putIndex, communicator.netPeerGroup);
+		return communicator.publishAdvertisement(putIndex,
+				communicator.netPeerGroup);
 	}
 
 	@Override
 	public boolean send(RmIndexAdvertisement rmIndex) {
 
-		return communicator.publishAdvertisement(rmIndex, communicator.netPeerGroup);
+		return communicator.publishAdvertisement(rmIndex,
+				communicator.netPeerGroup);
 	}
 
 	// UTILS
-	
-	public static String convertMapToString(Map<String,Chunkfield> map){
+
+	public static String convertMapToString(Map<String, Chunkfield> map) {
 		StringBuilder builder = new StringBuilder();
-	
+
 		for (String s : map.keySet())
-			builder.append(s + ":" + map.get(s).toBitString() + "/"  );
-		
+			builder.append(s + ":" + map.get(s).toBitString() + "/");
+
 		return builder.toString();
 	}
-	
-	public static Map<Integer, Chunkfield> convertStringToMap(String text){
-		
+
+	public static Map<Integer, Chunkfield> convertStringToMap(String text) {
+
 		Map<Integer, Chunkfield> map = new HashMap<Integer, Chunkfield>();
 		String[] elements = text.split("/");
-		
-		for (int i = 0; i< elements.length ;i++){
+
+		for (int i = 0; i < elements.length; i++) {
 			String[] keyValue = elements[i].split(":");
-			
+
 			int key = Integer.parseInt(keyValue[0]);
-			
+
 			boolean[] chunkField = new boolean[keyValue[1].length()];
-			
-			for(int j = 0; j < keyValue[1].length(); j++) {
+
+			for (int j = 0; j < keyValue[1].length(); j++) {
 				chunkField[j] = (keyValue[1].charAt(j) == '1');
 			}
-			
+
 			map.put(key, new Chunkfield(chunkField));
 		}
 		return map;

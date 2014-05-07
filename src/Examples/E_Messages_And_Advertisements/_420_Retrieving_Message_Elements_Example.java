@@ -82,15 +82,15 @@ public class _420_Retrieving_Message_Elements_Example {
         
         
         
-        byte[] yo = new byte[]{87, 79, 87, 46, 46, 46};
-        Message message = new Message();
-        ByteArrayMessageElement salut = new ByteArrayMessageElement("salut", MimeMediaType.AOS, yo, null);
-        message.addMessageElement(salut);
-        
-        Tools.PopInformationMessage("moi", MessageDecoder.byteArrayToString(yo));
-        
-        Tools.PopInformationMessage("moi",MessageDecoder.byteArrayToString(message.getMessageElement("salut").getBytes(true)));
-        
+//        byte[] yo = new byte[]{87, 79, 87, 46, 46, 46};
+//        Message message = new Message();
+//        ByteArrayMessageElement salut = new ByteArrayMessageElement("salut", MimeMediaType.AOS, yo, null);
+//        message.addMessageElement(salut);
+//        
+//        Tools.PopInformationMessage("moi", MessageDecoder.byteArrayToString(yo));
+//        
+//        Tools.PopInformationMessage("moi",MessageDecoder.byteArrayToString(message.getMessageElement("salut").getBytes(true)));
+//        
     }
 
 }

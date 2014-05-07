@@ -24,6 +24,7 @@ public class MessageDecoder {
 	 * @param jxtaMessage
 	 * @return
 	 */
+	
 	public static Message decode(net.jxta.endpoint.Message jxtaMessage) {
 		String name = new String(jxtaMessage.getMessageElement("name").getBytes(true));
 		Message message = null;
@@ -35,7 +36,7 @@ public class MessageDecoder {
 			byte[] newFile = jxtaMessage.getMessageElement("index").getBytes(true);
 			Metadata.SaveNewVersion(newFile);
 			
-			//message = new SendIndex(from, index);
+			//message = new SendIndex(from, newFile);
 
 		} else if (name.compareTo(JxtaMessageSender.GET_CHUNKFIELD) == 0) {
 			// message = new GetChunkfield(from);
@@ -47,22 +48,20 @@ public class MessageDecoder {
 			// message = new SendChunkfield(from, chunkfields);
 
 		} else if (name.compareTo(JxtaMessageSender.GET_CHUNK) == 0) {
-			//TODO: Change, it's fName now not fileId
-			String fileId = new String(jxtaMessage.getMessageElement("fileId")
+			String fileName = new String(jxtaMessage.getMessageElement("fName")
 					.getBytes(true));
 			String chunkId = new String(jxtaMessage.getMessageElement("chunkId")
 					.getBytes(true));
-			// message = new GetChunk(from, fileId, chunkId);
+			// message = new GetChunk(from, fileName, chunkId);
 
 		} else if (name.compareTo(JxtaMessageSender.SEND_CHUNK) == 0) {
-			//TODO: Change, it's fName now not fileId
-			String fileId = new String(jxtaMessage.getMessageElement("fileId")
+			String fileName = new String(jxtaMessage.getMessageElement("fName")
 					.getBytes(true));
 			String chunkId = new String(jxtaMessage.getMessageElement("chunkId")
 					.getBytes(true));
 			byte[] chunk = jxtaMessage.getMessageElement("chunk").getBytes(true);
 					
-			// message = new SendChunk(from, fileId, chunkId, chunk);
+			// message = new SendChunk(from, fileName, chunkId, chunk);
 
 		} else if (name.compareTo(JxtaMessageSender.GET_INDEX) == 0) {
 			if (!isConnected) {
