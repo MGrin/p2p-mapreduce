@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import ch.epfl.p2pmapreduce.index.Metadata;
 import ch.epfl.p2pmapreduce.nodeCore.peer.Peer;
+import ch.epfl.p2pmapreduce.nodeCore.volume.File;
 
 public class Mishell {
 	
@@ -24,15 +25,18 @@ public class Mishell {
 	public static Peer p;
 	
 	public static void main(String[] args) throws java.io.IOException {
+		
+		if(args.length != 1) {
+			System.err.println("You need to specify your name! (No spaces)");
+		} 
+		
+		String name = args[0];
+		
 		Scanner scanner = new Scanner(System.in);
 		String line;
 		String[] tok;
-
-		String name = "Jeremy-Test";
 		
 		p = new Peer(name, 0);
-		
-		p.start();
 		
 		// Ctrl + C
 		Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -142,24 +146,38 @@ public class Mishell {
 		}
 	}
 
-	public static void put(String input1, String input2) {
-		System.out.println("with the file (local): " + input1 + " (DFS): "
-				+ input2);
-		p.sendIndex();
+	public static void put(String osFullPath, String dfsFullPath) {
+		System.out.println("with the file (local): " + osFullPath + " (DFS): "
+				+ dfsFullPath);
+		
+		Metadata.metaPut(dfsFullPath);
+		
+		File f = p.rootPut(osFullPath, dfsFullPath);
+		boolean success = p.remotePut(f);
+		
+		System.out.println("Succedded in putting file " + f.name + " on DFS? " + success);
+		
+		if(success) Metadata.metaPut(dfsFullPath);
+
 	}
 
 	public static void get(String input) {
 		System.out.println("with the file : " + input);
+		
+		//TODO: Implement get
 	}
 
 	public static void rm(String input) {
-		//TODO
-		//Send.rm(input);
+		
+		System.out.println("Removing " + input + " from DFS..");
+		
+		//TODO: Find a way to create File object here
+		//boolean p.rm(new File())
+		
 	}
 
 	public static void connect() {
-		//TODO
-		//Send.connect();
+		p.start();
 	}
 
 	public static void help(String input) {

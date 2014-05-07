@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ch.epfl.p2pmapreduce.advertisement.PutIndexAdvertisement;
+import ch.epfl.p2pmapreduce.advertisement.RmIndexAdvertisement;
 import ch.epfl.p2pmapreduce.networkCore.JxtaCommunicator;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunk;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunkfield;
@@ -21,9 +23,7 @@ import ch.epfl.p2pmapreduce.nodeCore.volume.GlobalChunkfield;
 
 public class ConnectionManager {
 
-	// TODO replace by concrete implementation of those interfaces !!!!
 	private final INeighbourDiscoverer nD ;
-	// TODO replace by concrete implementation of those interfaces !!!!
 	private final IMessageSender sender ;
 
 	private final JxtaCommunicator communicator;
@@ -141,8 +141,6 @@ public class ConnectionManager {
 	}
 
 	public void broadcast(GetChunkfield getChunkfield) {
-		// TODO Discuss if Broadcast should be done in JXTAMessager or here
-		// sender.broadcast(getChunkfield)
 
 		for (Neighbour n: neighbors) {
 			sender.send(getChunkfield, n);
@@ -160,6 +158,14 @@ public class ConnectionManager {
 	// temporary, until index messages gestion in miShell is integrated
 	public boolean send(GetIndex getIndex) {
 		return sender.send(getIndex, neighbors.get(0));
+	}
+	
+	public void send(RmIndexAdvertisement rmAdvertisement) {
+		sender.send(rmAdvertisement);
+	}
+	
+	public void send(PutIndexAdvertisement putAdvertisement) {
+		sender.send(putAdvertisement);
 	}
 
 	// utilities

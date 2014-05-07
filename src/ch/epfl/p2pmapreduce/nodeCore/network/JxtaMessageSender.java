@@ -159,11 +159,6 @@ public class JxtaMessageSender implements IMessageSender {
 		Message message = messageBasis.clone();
 		MessageElement name = new StringMessageElement("name", GET_INDEX, null);
 		message.addMessageElement(name);
-		//TODO ? why these comments ? from is encapsulated to the message at the very beginning
-		// TextDocumentMessageElement from = new
-		// TextDocumentMessageElement("from", (XMLDocument)
-		// getChunkfield.sender().getDocument(MimeMediaType.XMLUTF8), null);
-		// message.addMessageElement(from);
 
 		communicator.sendMessage(message, receiver);
 

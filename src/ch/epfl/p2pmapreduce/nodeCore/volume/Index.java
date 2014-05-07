@@ -44,7 +44,6 @@ public class Index {
 		boolean existF = files.containsKey(f);
 		files.remove(f);
 
-		// TODO: push notif rmIndex
 		return existF;
 	}
 	
@@ -53,7 +52,6 @@ public class Index {
 			files.put(f, new Chunkfield(f));
 			return true;
 		} else return false;
-		//TODO: push notif putIndex done by peer
 	}
 	
 	public boolean contains(File f) {

@@ -1,5 +1,8 @@
 package ch.epfl.p2pmapreduce.nodeCore.messages;
 
+import ch.epfl.p2pmapreduce.nodeCore.network.IMessageSender;
+import ch.epfl.p2pmapreduce.nodeCore.network.Neighbour;
+
 
 public class FileRemoved extends IndexUpdate {
 
@@ -26,6 +29,7 @@ public class FileRemoved extends IndexUpdate {
 	public String toString() {
 		return "new file message from peer " + from;
 	}
+
 
 }
 

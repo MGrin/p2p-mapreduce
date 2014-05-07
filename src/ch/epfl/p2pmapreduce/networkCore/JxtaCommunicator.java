@@ -116,17 +116,17 @@ public class JxtaCommunicator {
 			return false;
 		}
 
-		// TODO: Registering our customized advertisement instances
 		AdvertisementFactory.registerAdvertisementInstance(PutIndexAdvertisement.getAdvertisementType(), new PutIndexAdvertisement.Instantiator());
 		AdvertisementFactory.registerAdvertisementInstance(RmIndexAdvertisement.getAdvertisementType(), new RmIndexAdvertisement.Instantiator());
 
 
-		// TODO: Connect and try to join DFS Peer Group.
+		// Connect
 		if(!connectToRDV(60000)) {
 			System.err.println("Unable to connect to " + MAIN_RENDEZ_VOUS_ADDRESS);
 			return false;
 		}
 
+		// Try to join DFS Peer Group
 		
 		/*
 		DiscoveryService discoveryService = netPeerGroup.getDiscoveryService();

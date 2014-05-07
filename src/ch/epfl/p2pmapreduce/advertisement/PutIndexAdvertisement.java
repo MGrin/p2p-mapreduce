@@ -48,7 +48,6 @@ public class PutIndexAdvertisement extends Advertisement {
 
 	public PutIndexAdvertisement() {
 
-		// TODO ?
 		// Accepting default values
 	}
 

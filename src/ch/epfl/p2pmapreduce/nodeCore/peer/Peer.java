@@ -6,6 +6,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import net.jxta.document.AdvertisementFactory;
+import net.jxta.id.ID;
+import ch.epfl.p2pmapreduce.advertisement.PutIndexAdvertisement;
+import ch.epfl.p2pmapreduce.advertisement.RmIndexAdvertisement;
 import ch.epfl.p2pmapreduce.nodeCore.messages.FileStabilized;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunk;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunkfield;
@@ -227,6 +231,16 @@ public class Peer implements Runnable, MessageBuilder{
 	 * @return true if the file was added (not already existing in local index) false otherwise
 	 */
 	public boolean remotePut(File file) {
+		
+		PutIndexAdvertisement putAdvertisement = (PutIndexAdvertisement) AdvertisementFactory.newAdvertisement(PutIndexAdvertisement.getAdvertisementType());
+	
+		putAdvertisement.setDFSFileName(file.name);
+		putAdvertisement.setFileCreationTime(System.currentTimeMillis());
+		putAdvertisement.setFileSize(file.chunkCount * NetworkConstants.CHUNK_SIZE);
+		putAdvertisement.setID(ID.nullID);
+		
+		cManager.send(putAdvertisement);
+		
 		return fManager.addFile(file);
 	}
 	
@@ -237,6 +251,15 @@ public class Peer implements Runnable, MessageBuilder{
 	 * @return true if the file existed false if no such file
 	 */
 	public boolean rm(File file) {
+		
+		RmIndexAdvertisement rmAdvertisement = (RmIndexAdvertisement) AdvertisementFactory.newAdvertisement(RmIndexAdvertisement.getAdvertisementType());
+		
+		rmAdvertisement.setFileName(file.name);
+		rmAdvertisement.setFileDeletionTime(System.currentTimeMillis());
+		rmAdvertisement.setID(ID.nullID);
+		
+		cManager.send(rmAdvertisement);
+		
 		return fManager.rmFile(file);
 	}
 	
@@ -267,7 +290,7 @@ public class Peer implements Runnable, MessageBuilder{
 				}
 			}
 			if (! f.isStabilized() && tempLowChunks.size() == 0) {
-				// enough duplication archieved, file can be stabilized
+				// enough duplication achieved, file can be stabilized
 				f.stabilise();
 				// TODO Send message to miShell for index updating
 			}

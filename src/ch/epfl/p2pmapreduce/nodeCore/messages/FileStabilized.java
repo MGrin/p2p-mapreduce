@@ -5,7 +5,7 @@ public class FileStabilized extends IndexUpdate {
 	private int from;
 	private String fName;
 	
-	public FileStabilized(int from, String fname) {
+	public FileStabilized(int from, String fName) {
 		super(from);
 		this.from = from;
 		this.fName = fName;

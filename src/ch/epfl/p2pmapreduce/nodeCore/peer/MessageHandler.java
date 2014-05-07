@@ -103,7 +103,6 @@ public class MessageHandler implements MessageReceiver {
 			
 			files.replaceIndex(sendIndex.index);
 			state.set(PeerState.BUILDGLOBALCF);
-			//TODO: Maybe now we can initialize our InputPipe to start receiving messages
 		}
 	}
 
@@ -116,7 +115,9 @@ public class MessageHandler implements MessageReceiver {
 	
 	@Override
 	public void receive(FileRemoved updateIndex) {
-		// TODO Implement
+		
+		//TODO: Implement | But same problem here! we only have the name so cannot instantiate
+		
 		
 	}
 
