@@ -74,5 +74,16 @@ public class Chunkfield {
 	public String toString() {
 		return Arrays.toString(field);
 	}
+	
+	public String toBitString() {
+		StringBuilder builder = new StringBuilder();
+		
+		for(int i = 0; i < field.length; i++) {
+			if(field[i]) builder.append("1");
+			else builder.append("0");
+		}
+		
+		return builder.toString();
+	}
 
 }

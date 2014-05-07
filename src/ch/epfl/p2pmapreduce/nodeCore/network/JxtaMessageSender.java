@@ -109,32 +109,31 @@ public class JxtaMessageSender implements IMessageSender {
 	}
 	
 	public static String convertMapToString(Map<Integer,Chunkfield> map){
-		String result = "";
-		Set listKeys = map.keySet(); 
-		Iterator iterator=listKeys.iterator();
-		while(iterator.hasNext())
-		{
-			Object key= iterator.next();
-			Chunkfield chunkfield = map.get(key);
-			String value = chunkfield.toBitString();
-			result += key+":"+value+"/";
-		}
-		return result;
+		StringBuilder builder = new StringBuilder();
+	
+		for (Integer i : map.keySet())
+			builder.append(i + ":" + map.get(i).toBitString() + "/"  );
+		
+		return builder.toString();
 	}
+	
 	public static Map<Integer, Chunkfield> convertStringToMap(String text){
+		
 		Map<Integer, Chunkfield> map = new HashMap<Integer, Chunkfield>();
-		List<String> list = Send.tokenize(text, "/");
-		for (int i = 0; i<list.size();i++){
-			List<String> tempList = Send.tokenize(list.get(i), ":");
-			int key = Integer.parseInt(tempList.get(0));
-			String temp = tempList.get(1);
-			int size = temp.length();
-			boolean[] field = new boolean[size];
-			for(int j = 0; j<field.length; j++){
-				field[j] = temp.charAt(j) == '1';
+		String[] elements = text.split("/");
+		
+		for (int i = 0; i< elements.length ;i++){
+			String[] keyValue = elements[i].split(":");
+			
+			int key = Integer.parseInt(keyValue[0]);
+			
+			boolean[] chunkField = new boolean[keyValue[1].length()];
+			
+			for(int j = 0; j < keyValue[1].length(); j++) {
+				chunkField[j] = (keyValue[1].charAt(j) == '1');
 			}
-			Chunkfield chunkfield = new Chunkfield(field);
-			map.put(key,chunkfield);
+			
+			map.put(key, new Chunkfield(chunkField));
 		}
 		return map;
 	}
