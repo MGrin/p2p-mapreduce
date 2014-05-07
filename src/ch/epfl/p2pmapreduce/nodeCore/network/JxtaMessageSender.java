@@ -6,7 +6,11 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import net.jxta.document.MimeMediaType;
 import net.jxta.document.XMLDocument;
@@ -18,6 +22,7 @@ import net.jxta.endpoint.TextDocumentMessageElement;
 import net.jxta.protocol.PipeAdvertisement;
 import ch.epfl.p2pmapreduce.advertisement.PutIndexAdvertisement;
 import ch.epfl.p2pmapreduce.advertisement.RmIndexAdvertisement;
+import ch.epfl.p2pmapreduce.exchanger.Send;
 import ch.epfl.p2pmapreduce.index.Metadata;
 import ch.epfl.p2pmapreduce.networkCore.JxtaCommunicator;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunk;
@@ -89,7 +94,8 @@ public class JxtaMessageSender implements IMessageSender {
 		MessageElement name = new StringMessageElement("name",
 				SEND_CHUNKFIELD, null);
 		message.addMessageElement(name);
-
+		
+		
 		//TODO: TO CHANGE! Chunkfield is not serializable..
 //		MessageElement chunkfield = new ByteArrayMessageElement("chunkfield",
 //				MimeMediaType.XML_DEFAULTENCODING,
@@ -101,7 +107,38 @@ public class JxtaMessageSender implements IMessageSender {
 
 		return false;
 	}
-
+	
+	public static String convertMapToString(Map<Integer,Chunkfield> map){
+		String result = "";
+		Set listKeys = map.keySet(); 
+		Iterator iterator=listKeys.iterator();
+		while(iterator.hasNext())
+		{
+			Object key= iterator.next();
+			Chunkfield chunkfield = map.get(key);
+			String value = chunkfield.toBitString();
+			result += key+":"+value+"/";
+		}
+		return result;
+	}
+	public static Map<Integer, Chunkfield> convertStringToMap(String text){
+		Map<Integer, Chunkfield> map = new HashMap<Integer, Chunkfield>();
+		List<String> list = Send.tokenize(text, "/");
+		for (int i = 0; i<list.size();i++){
+			List<String> tempList = Send.tokenize(list.get(i), ":");
+			int key = Integer.parseInt(tempList.get(0));
+			String temp = tempList.get(1);
+			int size = temp.length();
+			boolean[] field = new boolean[size];
+			for(int j = 0; j<field.length; j++){
+				field[j] = temp.charAt(j) == '1';
+			}
+			Chunkfield chunkfield = new Chunkfield(field);
+			map.put(key,chunkfield);
+		}
+		return map;
+	}
+	
 	@Override
 	public boolean send(GetChunk getChunk, Neighbour receiver) {
 
@@ -109,10 +146,10 @@ public class JxtaMessageSender implements IMessageSender {
 		MessageElement name = new StringMessageElement("name", GET_CHUNK, null);
 		message.addMessageElement(name);
 		MessageElement fileId = new StringMessageElement("fileId",
-				String.valueOf(getChunk.file().uid), null);
+				Integer.toString(getChunk.file().uid), null);
 		message.addMessageElement(fileId);
 		MessageElement chunkId = new StringMessageElement("chunkId",
-				String.valueOf(getChunk.chunkId()), null);
+				Integer.toString(getChunk.chunkId()), null);
 		message.addMessageElement(chunkId);
 
 		communicator.sendMessage(message, receiver);
@@ -130,13 +167,13 @@ public class JxtaMessageSender implements IMessageSender {
 		//		TextDocumentMessageElement from = new TextDocumentMessageElement("from", (XMLDocument) getChunkfield.sender().getDocument(MimeMediaType.XMLUTF8), null);
 		//		message.addMessageElement(from);
 		MessageElement fileId = new StringMessageElement("fileId",
-				String.valueOf(sendChunk.fileId()), null);
+				Integer.toString(sendChunk.fileId()), null);
 		message.addMessageElement(fileId);
 		MessageElement chunkId = new StringMessageElement("chunkId",
-				String.valueOf(sendChunk.chunkId()), null);
+				Integer.toString(sendChunk.chunkId()), null);
 		message.addMessageElement(chunkId);
 		MessageElement chunk = new ByteArrayMessageElement("chunk",
-				MimeMediaType.XML_DEFAULTENCODING, sendChunk.getChunkData(),
+				MimeMediaType.AOS, sendChunk.getChunkData(),
 				null);
 		message.addMessageElement(chunk);
 
@@ -156,7 +193,7 @@ public class JxtaMessageSender implements IMessageSender {
 		//		message.addMessageElement(from);
 		byte[] array = metaFile(Metadata.file);
 		MessageElement file = new ByteArrayMessageElement("index",
-				MimeMediaType.XML_DEFAULTENCODING, array, null);
+				MimeMediaType.AOS, array, null);
 		message.addMessageElement(file);
 
 		communicator.sendMessage(message, receiver);

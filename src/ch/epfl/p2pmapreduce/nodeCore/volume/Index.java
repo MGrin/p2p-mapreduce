@@ -64,15 +64,15 @@ public class Index {
 		return files.keySet();
 	}
 
-	public File getFile(int fileUid) {
+	public File getFile(String fName) {
 		for (File f : files.keySet()) {
-			if (f.uid == fileUid) return f;
+			if (f.name.equals(fName)) return f;
 		}
 		return null;
 	}
 
-	public void stabilize(int fileUid) {
-		File toStabilize = getFile(fileUid);
+	public void stabilize(String fName) {
+		File toStabilize = getFile(fName);
 		if (toStabilize != null) {
 			toStabilize.stabilise();
 		}
@@ -81,21 +81,21 @@ public class Index {
 	public Chunkfield getChunkfield(File f) {
 		return files.get(f);
 	}
-	public Chunkfield getChunkfield(int fileId) {
-		return files.get(getFile(fileId));
+	public Chunkfield getChunkfield(String fName) {
+		return files.get(getFile(fName));
 	}
 
 	public Map<File, Chunkfield> filesWithChunkfields() {
 		return files;
 	}
 
-	public Map<Integer, Chunkfield> getChunkfields() {
+	public Map<String, Chunkfield> getChunkfields() {
 		// TODO check implementation/ utility after reconsidering use of uID
-		Map<Integer, Chunkfield> result = new HashMap<Integer, Chunkfield>();
+		Map<String, Chunkfield> result = new HashMap<String, Chunkfield>();
 		for (File f : files.keySet()) {
 			Chunkfield temp = files.get(f);
 			if (! temp.isEmpty()) {
-				result.put(f.uid, new Chunkfield(files.get(f)));
+				result.put(f.name, new Chunkfield(files.get(f)));
 			}
 		}
 		return result;
@@ -105,7 +105,11 @@ public class Index {
 		return files.size();
 	}
 
-	public void putChunk(int fileId, int chunkId) {
-		files.get(getFile(fileId)).putChunk(chunkId);
+	public void putChunk(String fName, int chunkId) {
+		files.get(getFile(fName)).putChunk(chunkId);
+	}
+
+	public void dropChunk(String fName, int chunkId) {
+		files.get(getFile(fName)).dropChunk(chunkId);
 	}
 }

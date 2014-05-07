@@ -10,7 +10,6 @@ public class File {
 	
 	public final int chunkCount;
 	public final String name;
-	public final int uid;
 	
 	private boolean stabilized;
 	private boolean isPeerResponsible = false;
@@ -24,21 +23,6 @@ public class File {
 	public File(String name, int chunkCount) {
 		this.chunkCount = chunkCount;
 		this.name = name;
-		this.uid = UidGenerator.freshId();
-	}
-	
-	/**
-	 * create a new file with provided uid
-	 * 
-	 * @param name
-	 * @param chunkCount
-	 * @param uid
-	 */
-	public File(String name, int chunkCount, int uid) {
-		this.chunkCount = chunkCount;
-		this.name = name;
-		this.uid = uid;
-		stabilized = false;
 	}
 	
 	/**
@@ -48,7 +32,7 @@ public class File {
 	 * @param f the file to copy
 	 */
 	public File(File f) {
-		this(f.name, f.chunkCount, f.uid);
+		this(f.name, f.chunkCount);
 		this.stabilized = f.stabilized;
 	}
 
@@ -58,8 +42,7 @@ public class File {
 		else {
 			File that = (File) o;
 			return
-					this.uid == that.uid
-					&& this.chunkCount == that.chunkCount
+					this.chunkCount == that.chunkCount
 					&& this.name.equals(that.name);
 		}
 	}
@@ -67,7 +50,7 @@ public class File {
 	@Override
 	public int hashCode() {
 		// arbitrary
-		return name.hashCode() + chunkCount - uid;
+		return name.hashCode() + chunkCount;
 	}
 	
 	public void stabilise() { stabilized = true; }

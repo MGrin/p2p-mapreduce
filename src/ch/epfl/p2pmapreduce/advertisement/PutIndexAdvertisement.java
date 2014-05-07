@@ -53,6 +53,11 @@ public class PutIndexAdvertisement extends Advertisement {
 		}
 	}
 
+	public PutIndexAdvertisement() {
+		//TODO ?
+		// Accepting default values
+	}
+
 	private void ProcessElement(TextElement TheElement) {
 		String TheElementName = TheElement.getName();
 		String TheTextValue = TheElement.getTextValue();
@@ -92,7 +97,10 @@ public class PutIndexAdvertisement extends Advertisement {
 
 		}
 		
-		//TODO: ADD SIZE TAG
+		if ( TheElementName.compareTo(SizeTag) == 0) {
+			
+			fileSize = Long.parseLong(TheTextValue);
+		}
 	}
 
 	@Override
@@ -162,15 +170,15 @@ public class PutIndexAdvertisement extends Advertisement {
 	public static class Instantiator implements AdvertisementFactory.Instantiator {
 
 		public String getAdvertisementType() {
-			return RmIndexAdvertisement.getAdvertisementType();
+			return PutIndexAdvertisement.getAdvertisementType();
 		}
 
 		public Advertisement newInstance() {
-			return new RmIndexAdvertisement();
+			return new PutIndexAdvertisement();
 		}
 
 		public Advertisement newInstance(net.jxta.document.Element root) {
-			return new RmIndexAdvertisement(root);
+			return new PutIndexAdvertisement(root);
 		}
 
 	}

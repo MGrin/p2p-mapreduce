@@ -1,8 +1,6 @@
 package ch.epfl.p2pmapreduce.exchanger;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -26,7 +24,6 @@ import net.jxta.pipe.PipeID;
 import net.jxta.pipe.PipeService;
 import net.jxta.protocol.PipeAdvertisement;
 import ch.epfl.p2pmapreduce.index.Metadata;
-
 
 public class Send {
 	private static PipeID id;
