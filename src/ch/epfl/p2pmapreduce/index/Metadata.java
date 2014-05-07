@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -61,7 +63,7 @@ public class Metadata {
 		}
 		racine = document.getRootElement();
 
-		List<String> list = Send.tokenize(fileName, "/");
+		List<String> list = tokenize(fileName, "/");
 		Element current = racine;
 		List<Element> currentChildren = current.getChildren();
 		for (int i = 0; i <= list.size() - 1; i++) {
@@ -70,7 +72,7 @@ public class Metadata {
 				current = currentChildren.get(indice);
 				currentChildren = current.getChildren();
 			} else {
-				List<String> fileInfos = Send.tokenize(list.get(i), ",");
+				List<String> fileInfos = tokenize(list.get(i), ",");
 				Element added = new Element(fileInfos.get(0));
 				String text = "";
 				if (fileInfos.size() > 1) {
@@ -111,7 +113,7 @@ public class Metadata {
 
 	public static void metaRm(String fileName) {
 		SAXBuilder sxb = new SAXBuilder();
-		
+
 		try {
 			document = sxb.build(file);
 		} catch (JDOMException e) {
@@ -123,11 +125,11 @@ public class Metadata {
 		if (fileName == racine.getName()) {
 			System.err.println("Cannot delete the root");
 		} else {
-			List<String> list = Send.tokenize(fileName, "/");
+			List<String> list = tokenize(fileName, "/");
 			Element current = racine;
 			List<Element> currentChildren = current.getChildren();
 			for (int i = 0; i <= list.size() - 1; i++) {
-				List<String> fileInfos = Send.tokenize(list.get(i), ",");
+				List<String> fileInfos = tokenize(list.get(i), ",");
 				int indice = searchIndice(currentChildren, fileInfos.get(0));
 				if (indice != -1 && i == list.size() - 1) {
 					currentChildren.remove(indice);
@@ -164,7 +166,7 @@ public class Metadata {
 				System.out.println(toPrint.get(i).getName());
 			}
 		} else { // not the root
-			List<String> list = Send.tokenize(folder, "/");
+			List<String> list = tokenize(folder, "/");
 			Element current = racine;
 			List<Element> currentChildren = current.getChildren();
 			for (int i = 0; i <= list.size() - 1; i++) {
@@ -188,18 +190,32 @@ public class Metadata {
 	}
 
 	public static void metaConnect() {
-		JxtaMessageSender.metaFile(file);
+		JxtaMessageSender.getRawFile(file);
 	}
-	
+
 	public static List<File> toFiles() {
-		
-		//TODO:Implement!
+
+		// TODO:Implement!
 		return null;
 	}
 
 	public static void main(String[] args) {
-		//metaRm("DFS");
-		//Metadata meta = new Metadata();
-		//metaRm("boite/genou");
+		// metaRm("DFS");
+		// Metadata meta = new Metadata();
+		// metaRm("boite/genou");
+	}
+
+	public static List<String> tokenize(String input, String delim) {
+		List<String> output = null;
+		if (input != null) {
+			output = new ArrayList<String>();
+			StringTokenizer tok = new StringTokenizer(input, delim);
+			
+			while (tok.hasMoreTokens()) {
+				output.add(tok.nextToken());
+			}
+		}
+		
+		return output;
 	}
 }

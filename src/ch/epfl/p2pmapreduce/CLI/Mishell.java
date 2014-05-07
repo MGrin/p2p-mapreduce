@@ -126,48 +126,43 @@ public class Mishell {
 		}
 	}
 
-	public static String ls(String input) {
+	public static void ls(String input) {
 		Metadata.metaLs(input);
-		return "";
 	}
 
-	public static String cat(String input) {
+	public static void cat(String input) {
 		System.out.println("with the file : " + input);
-		return "";
 	}
 
-	public static String cd(String input) {
+	public static void cd(String input) {
 		if (input == null) {
 			System.out.println("without arguments");
-			;
 		} else {
 			System.out.println("with path : " + input);
 		}
-		return "";
 	}
 
-	public static String put(String input1, String input2) {
+	public static void put(String input1, String input2) {
 		System.out.println("with the file (local): " + input1 + " (DFS): "
 				+ input2);
 		p.sendIndex();
-		return "";
 	}
 
-	public static String get(String input) {
+	public static void get(String input) {
 		System.out.println("with the file : " + input);
-		return "";
 	}
 
-	public static String rm(String input) {
-		Send.rm(input);
-		return "";
+	public static void rm(String input) {
+		//TODO
+		//Send.rm(input);
 	}
 
 	public static void connect() {
-		Send.connect();
+		//TODO
+		//Send.connect();
 	}
 
-	public static String help(String input) {
+	public static void help(String input) {
 		if (input.compareTo("cd") == 0) {
 			System.out.println("Format : cd place_to_go");
 			System.out.println("No options for \"cd\"");
@@ -191,6 +186,5 @@ public class Mishell {
 			System.out.println("format : put file_to_send file_on_the_dfs.");
 			System.out.println("No options for \"put\".");
 		}
-		return "";
 	}
 }

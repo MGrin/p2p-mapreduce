@@ -19,49 +19,49 @@ import net.jxta.id.IDFactory;
 
 public class RmIndexAdvertisement extends Advertisement {
 	
-	public static final String Name = "RmIndexAdvertisement";
-	public final static String AdvertisementType = "jxta:CustomizedAdvertisement";
-	private ID AdvertisementID = ID.nullID;
+	public static final String name = "RmIndexAdvertisement";
+	public final static String advertisementType = "jxta:CustomizedAdvertisement";
+	private ID advertisementID = ID.nullID;
 	
 	private String fileName = "";
-    private final static String IDTag = "MyIDTag";
+    private final static String idTag = "MyIDTag";
     private final String fileNameTag = "MyfileNameTag";
  
     //TODO: Add DATE!
     
-    private final static String[] IndexableFields = { IDTag};
+    private final static String[] indexableFields = { idTag};
     
     public RmIndexAdvertisement() {
 
 		// Accepting default values
 
 	}
-    public RmIndexAdvertisement(Element Root) {
+    public RmIndexAdvertisement(Element root) {
         
         // Retrieving the elements
-        TextElement MyTextElement = (TextElement) Root;
+        TextElement myTextElement = (TextElement) root;
 
-        Enumeration TheElements = MyTextElement.getChildren();
+        Enumeration theElements = myTextElement.getChildren();
         
-        while (TheElements.hasMoreElements()) {
+        while (theElements.hasMoreElements()) {
             
-            TextElement TheElement = (TextElement) TheElements.nextElement();
+            TextElement theElement = (TextElement) theElements.nextElement();
             
-            ProcessElement(TheElement);
+            ProcessElement(theElement);
             
         }
     }
-    public void ProcessElement(TextElement TheElement) {
+    public void ProcessElement(TextElement theElement) {
         
-        String TheElementName = TheElement.getName();
-        String TheTextValue = TheElement.getTextValue();
+        String theElementName = theElement.getName();
+        String theTextValue = theElement.getTextValue();
         
-        if (TheElementName.compareTo(IDTag)==0) {
+        if (theElementName.compareTo(idTag)==0) {
             
             try {
                 
-                URI ReadID = new URI(TheTextValue);
-                AdvertisementID = IDFactory.fromURI(ReadID);
+                URI ReadID = new URI(theTextValue);
+                advertisementID = IDFactory.fromURI(ReadID);
                 return;
                 
             } catch (URISyntaxException Ex) {
@@ -78,40 +78,40 @@ public class RmIndexAdvertisement extends Advertisement {
             
         }
         
-        if (TheElementName.compareTo(fileNameTag)==0) {
+        if (theElementName.compareTo(fileNameTag)==0) {
             
-            fileName = TheTextValue;
+            fileName = theTextValue;
             return;
             
         }
     }
 	
-	public Document getDocument(MimeMediaType TheMimeMediaType) {
+	public Document getDocument(MimeMediaType theMimeMediaType) {
     
 		// Creating document
-		StructuredDocument TheResult = StructuredDocumentFactory.newStructuredDocument(
-        TheMimeMediaType, AdvertisementType);
+		StructuredDocument theResult = StructuredDocumentFactory.newStructuredDocument(
+        theMimeMediaType, advertisementType);
     
 		// Adding elements
-		Element MyTempElement;
+		Element myTempElement;
     
-		MyTempElement = TheResult.createElement(fileNameTag, fileName);
-		TheResult.appendChild(MyTempElement);
+		myTempElement = theResult.createElement(fileNameTag, fileName);
+		theResult.appendChild(myTempElement);
 
-		return TheResult;
+		return theResult;
     
 	}
 	
-	public void SetID(ID TheID) {
-        AdvertisementID = TheID;
+	public void setID(ID theID) {
+        advertisementID = theID;
     }
 	
 	public ID getID() {
-        return AdvertisementID;
+        return advertisementID;
     }
 	
 	public String[] getIndexFields() {
-		return IndexableFields;
+		return indexableFields;
 	}
 	
 	public void setFileName(String newName) {
@@ -127,7 +127,7 @@ public class RmIndexAdvertisement extends Advertisement {
         RmIndexAdvertisement Result =
                 (RmIndexAdvertisement) super.clone();
 
-        Result.AdvertisementID = this.AdvertisementID;
+        Result.advertisementID = this.advertisementID;
         Result.fileName = this.fileName;
         
         return Result;
@@ -142,7 +142,7 @@ public class RmIndexAdvertisement extends Advertisement {
     }
     
     public static String getAdvertisementType() {
-        return AdvertisementType;
+        return advertisementType;
     }    
     
     public static class Instantiator implements AdvertisementFactory.Instantiator {

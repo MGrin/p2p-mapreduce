@@ -20,23 +20,23 @@ import net.jxta.id.ID;
 import net.jxta.id.IDFactory;
 
 public class PutIndexAdvertisement extends Advertisement {
-	private ID AdvertisementID = ID.nullID;
+	private ID advertisementID = ID.nullID;
 
-	public static final String Name = "PutIndexAdvertisement";
-	public final static String AdvertisementType = "jxta:CustomizedAdvertisement";
+	public static final String name = "PutIndexAdvertisement";
+	public final static String advertisementType = "jxta:CustomizedAdvertisement";
 
-	private String DFSFileName = "";
+	private String dfsFileName = "";
 	private long fileSize = 0;
 	private long fileCreationTime = 0;
 
-	private final static String NameTag = "MyNameTag";
-	private final static String IDTag = "MyIDTag";
-	private final static String DateTag = "MyDateTag";
+	private final static String nameTag = "MyNameTag";
+	private final static String idTag = "MyIDTag";
+	private final static String dateTag = "MyDateTag";
 	// new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.FRANCE).format(new
 	// Date());
-	private final static String SizeTag = "MySizeTag";
+	private final static String sizeTag = "MySizeTag";
 
-	private final static String[] IndexableFields = { NameTag, IDTag, DateTag };
+	private final static String[] indexableFields = { nameTag, idTag, dateTag };
 
 	public PutIndexAdvertisement(Element Root) {
 		// Retrieving the elements
@@ -48,7 +48,7 @@ public class PutIndexAdvertisement extends Advertisement {
 
 			TextElement TheElement = (TextElement) TheElements.nextElement();
 
-			ProcessElement(TheElement);
+			processElement(TheElement);
 
 		}
 	}
@@ -58,16 +58,16 @@ public class PutIndexAdvertisement extends Advertisement {
 		// Accepting default values
 	}
 
-	private void ProcessElement(TextElement TheElement) {
-		String TheElementName = TheElement.getName();
-		String TheTextValue = TheElement.getTextValue();
+	private void processElement(TextElement TheElement) {
+		String theElementName = TheElement.getName();
+		String theTextValue = TheElement.getTextValue();
 
-		if (TheElementName.compareTo(IDTag) == 0) {
+		if (theElementName.compareTo(idTag) == 0) {
 
 			try {
 
-				URI ReadID = new URI(TheTextValue);
-				AdvertisementID = IDFactory.fromURI(ReadID);
+				URI ReadID = new URI(theTextValue);
+				advertisementID = IDFactory.fromURI(ReadID);
 				return;
 
 			} catch (URISyntaxException Ex) {
@@ -83,64 +83,64 @@ public class PutIndexAdvertisement extends Advertisement {
 			}
 		}
 
-		if (TheElementName.compareTo(NameTag) == 0) {
+		if (theElementName.compareTo(nameTag) == 0) {
 
-			DFSFileName = TheTextValue;
+			dfsFileName = theTextValue;
 			return;
 
 		}
 
-		if (TheElementName.compareTo(DateTag) == 0) {
+		if (theElementName.compareTo(dateTag) == 0) {
 
-			fileCreationTime = Long.parseLong(TheTextValue);
+			fileCreationTime = Long.parseLong(theTextValue);
 			return;
 
 		}
 		
-		if ( TheElementName.compareTo(SizeTag) == 0) {
+		if ( theElementName.compareTo(sizeTag) == 0) {
 			
-			fileSize = Long.parseLong(TheTextValue);
+			fileSize = Long.parseLong(theTextValue);
 		}
 	}
 
 	@Override
-	public Document getDocument(MimeMediaType TheMimeMediaType) {
+	public Document getDocument(MimeMediaType theMimeMediaType) {
 		// Creating document
-		StructuredDocument TheResult = StructuredDocumentFactory
-				.newStructuredDocument(TheMimeMediaType, AdvertisementType);
+		StructuredDocument theResult = StructuredDocumentFactory
+				.newStructuredDocument(theMimeMediaType, advertisementType);
 
 		// Adding elements
-		Element MyTempElement;
+		Element myTempElement;
 
-		MyTempElement = TheResult.createElement(DateTag, fileCreationTime);
-		TheResult.appendChild(MyTempElement);
+		myTempElement = theResult.createElement(dateTag, fileCreationTime);
+		theResult.appendChild(myTempElement);
 
-		MyTempElement = TheResult.createElement(SizeTag,
+		myTempElement = theResult.createElement(sizeTag,
 				Long.toString(fileSize));
-		TheResult.appendChild(MyTempElement);
+		theResult.appendChild(myTempElement);
 
-		MyTempElement = TheResult.createElement(NameTag, DFSFileName);
-		TheResult.appendChild(MyTempElement);
+		myTempElement = theResult.createElement(nameTag, dfsFileName);
+		theResult.appendChild(myTempElement);
 
-		return TheResult;
+		return theResult;
 	}
 
-	public void SetID(ID TheID) {
-		AdvertisementID = TheID;
+	public void setID(ID theID) {
+		advertisementID = theID;
 	}
 
 	@Override
 	public ID getID() {
-		return AdvertisementID;
+		return advertisementID;
 	}
 
 	@Override
 	public String[] getIndexFields() {
-		return IndexableFields;
+		return indexableFields;
 	}
 
 	public static String getAdvertisementType() {
-		return AdvertisementType;
+		return advertisementType;
 	}
 
 	public long getFileSize() {
@@ -160,11 +160,11 @@ public class PutIndexAdvertisement extends Advertisement {
 	}
 
 	public String getDFSFileName() {
-		return DFSFileName;
+		return dfsFileName;
 	}
 
 	public void setDFSFileName(String name) {
-		DFSFileName = name;
+		dfsFileName = name;
 	}
 
 	public static class Instantiator implements AdvertisementFactory.Instantiator {
