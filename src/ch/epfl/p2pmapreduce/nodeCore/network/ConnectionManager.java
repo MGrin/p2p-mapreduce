@@ -24,7 +24,7 @@ import ch.epfl.p2pmapreduce.nodeCore.volume.GlobalChunkfield;
 public class ConnectionManager {
 
 	private final INeighbourDiscoverer nD ;
-	private final IMessageSender sender ;
+	private IMessageSender sender ;
 
 	private final JxtaCommunicator communicator;
 
@@ -37,7 +37,6 @@ public class ConnectionManager {
 		this.peerId = peerId;
 		this.communicator = new JxtaCommunicator("Peer" + peerId, NetworkConstants.generatePortNumber());
 		this.nD = communicator.new JxtaNeighbourDiscoverer();
-		this.sender = new JxtaMessageSender(communicator);
 	}
 
 	public void init() {
@@ -60,8 +59,7 @@ public class ConnectionManager {
 	public void initMessageListening(MessageHandler handler) {
 		
 		communicator.initMessageListener(handler, communicator.netPeerGroup);
-	
-		
+		this.sender = new JxtaMessageSender(communicator);		
 	}
 
 	/**

@@ -260,6 +260,7 @@ public class Peer implements Runnable, MessageBuilder{
 		
 		cManager.send(rmAdvertisement);
 		
+		//TODO: Not going to work because chunkCount is -1! Have to compare only with file names.
 		return fManager.rmFile(file);
 	}
 	

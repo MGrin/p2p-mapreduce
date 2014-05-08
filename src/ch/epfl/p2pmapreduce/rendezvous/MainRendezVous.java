@@ -23,8 +23,8 @@ import net.jxta.protocol.ModuleImplAdvertisement;
 
 public class MainRendezVous {
 
-	public static final String CENTRAL_NAME = "Central Seed";
-	public static final int PORT = 9711;
+	public static final String CENTRAL_NAME = "DFS Tracker";
+	public static final int PORT = 9710;
 
 	public static final String PeerGroupName = "RAIDFS";
 	public static final PeerGroupID CustPeerGroupID = IDFactory.newPeerGroupID(PeerGroupID.defaultNetPeerGroupID, PeerGroupName.getBytes());

@@ -39,7 +39,7 @@ import ch.epfl.p2pmapreduce.nodeCore.utils.UidGenerator;
 
 public class JxtaCommunicator {
 
-	private final static int MAIN_RENDEZVOUS_PORT = 9711;
+	private final static int MAIN_RENDEZVOUS_PORT = 9710;
 
 	private final static String MAIN_RENDEZ_VOUS_ADDRESS = "tcp://icdatasrv2.epfl.ch:" + MAIN_RENDEZVOUS_PORT;
 
@@ -318,7 +318,7 @@ public class JxtaCommunicator {
 					wait();
 				} catch (InterruptedException e) {
 
-					System.err.println("Wait for Neighbour Discovery interrupted!");
+					System.err.println("Wait for Neighbour Discovery was interrupted!");
 					e.printStackTrace();
 				}
 
