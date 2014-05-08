@@ -43,6 +43,8 @@ public class Mishell {
 			@Override
 			public void run() {
 				System.out.println("Shutdown hook ran!");
+				System.out.println("Stopping Peer..");
+				p.kill();
 			}
 		});
 		System.out.println("Root of the DFS is \"DFS\"");
@@ -171,9 +173,11 @@ public class Mishell {
 		
 		System.out.println("Removing " + input + " from DFS..");
 		
-		//TODO: Find a way to create File object here
-		//boolean p.rm(new File())
+		boolean success = p.rm(new File(input, -1));
 		
+		System.out.println("Succedded in removing file " + input + " on DFS? " + success);
+
+		if(success) Metadata.metaRm(input);
 	}
 
 	public static void connect() {

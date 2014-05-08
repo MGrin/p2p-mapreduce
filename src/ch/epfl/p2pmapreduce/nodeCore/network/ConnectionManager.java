@@ -54,8 +54,7 @@ public class ConnectionManager {
 	}
 
 	public void stop() {
-		// TODO Auto-generated method stub
-
+		communicator.stop();
 	}
 	
 	public void initMessageListening(MessageHandler handler) {

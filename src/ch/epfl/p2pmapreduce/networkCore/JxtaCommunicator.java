@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import net.jxta.discovery.DiscoveryEvent;
 import net.jxta.discovery.DiscoveryListener;
@@ -32,7 +34,6 @@ import ch.epfl.p2pmapreduce.advertisement.RmIndexAdvertisement;
 import ch.epfl.p2pmapreduce.nodeCore.network.INeighbourDiscoverer;
 import ch.epfl.p2pmapreduce.nodeCore.network.Neighbour;
 import ch.epfl.p2pmapreduce.nodeCore.peer.MessageHandler;
-import ch.epfl.p2pmapreduce.nodeCore.peer.Peer;
 import ch.epfl.p2pmapreduce.nodeCore.utils.NetworkConstants;
 import ch.epfl.p2pmapreduce.nodeCore.utils.UidGenerator;
 
@@ -54,14 +55,15 @@ public class JxtaCommunicator {
 	private NetworkConfigurator networkConfigurator;
 	public PeerGroup netPeerGroup;
 	private PeerGroup dfsPeerGroup;
-	
+
 	private PipeAdvertisement pipeAdvertisement = null;
+	private Timer pipeAdvertisementPublisher;
 
 	//All the Peer Groups this Peer belongs to.
 	//private Set<PeerGroup> peerGroups;
 
 	private Map<Integer, PipeAdvertisement> peerPipes = new HashMap<Integer, PipeAdvertisement>();
-	
+
 	// Will have a PeerID per PeerGroup.. to rethink
 
 	public JxtaCommunicator(String name, int port) {
@@ -89,7 +91,7 @@ public class JxtaCommunicator {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * This method tries to:
 	 * 
@@ -107,7 +109,7 @@ public class JxtaCommunicator {
 		try {
 			netPeerGroup = networkManager.startNetwork();
 		} catch (PeerGroupException e) {
-			
+
 			e.printStackTrace();
 			return false;
 		} catch (IOException e) {
@@ -127,7 +129,7 @@ public class JxtaCommunicator {
 		}
 
 		// Try to join DFS Peer Group
-		
+
 		/*
 		DiscoveryService discoveryService = netPeerGroup.getDiscoveryService();
 
@@ -140,20 +142,20 @@ public class JxtaCommunicator {
 
 			if(pgj.isJoined("RAIDFS")) {
 				dfsPeerGroup = pgj.getJoinedGroup("RAIDFS");
-				
+
 				initMessageListener(dfsPeerGroup);
-				
+
 				return true;
 			} else {
 				return false;
 			}
 
 		} catch (InterruptedException e) {
-			
+
 			System.err.println("Interruption while trying to discover and join RAIDFS Peer Group");
 			e.printStackTrace();
 		}
-		*/
+		 */
 
 
 		return true;
@@ -178,7 +180,7 @@ public class JxtaCommunicator {
 		}
 
 	}
-	
+
 
 	/**
 	 * Create a PipeAdvertisement, publish it on the PeerGroup passed in parameter, and create an input pipe that will handle connection and
@@ -186,36 +188,53 @@ public class JxtaCommunicator {
 	 * 
 	 * @param pg the PeerGroup our Advertisement will be published in.
 	 */
-	public void initMessageListener(MessageHandler mh, PeerGroup pg) {
-		
-		 // Instantiating the Pipe Advertisement
-        pipeAdvertisement = (PipeAdvertisement) AdvertisementFactory.newAdvertisement(PipeAdvertisement.getAdvertisementType());
-        PipeID pipeID = IDFactory.newPipeID(pg.getPeerGroupID(), name.getBytes());
+	public void initMessageListener(MessageHandler mh, final PeerGroup pg) {
 
-        pipeAdvertisement.setPipeID(pipeID);
-        pipeAdvertisement.setType(PipeService.UnicastType);
-        pipeAdvertisement.setName("Incoming Pipe for " + this.name);
-        pipeAdvertisement.setDescription("Created by " + name);
-        
-        try {
-        	// TODO: May have to start Thread to re-publish PipeAdvertisement! Otherwise it expires.
-			pg.getDiscoveryService().publish(pipeAdvertisement);
-			
-			JxtaMessageListener listener = new JxtaMessageListener(mh);
-			
-			//listener.start();
-			
+		// Instantiating the Pipe Advertisement
+		pipeAdvertisement = (PipeAdvertisement) AdvertisementFactory.newAdvertisement(PipeAdvertisement.getAdvertisementType());
+		PipeID pipeID = IDFactory.newPipeID(pg.getPeerGroupID(), name.getBytes());
+
+		pipeAdvertisement.setPipeID(pipeID);
+		pipeAdvertisement.setType(PipeService.UnicastType);
+		pipeAdvertisement.setName("Incoming Pipe for " + this.name);
+		pipeAdvertisement.setDescription("Created by " + name);
+
+		pipeAdvertisementPublisher = new Timer();
+
+		pipeAdvertisementPublisher.scheduleAtFixedRate(new TimerTask() {
+
+			@Override
+			public void run() {
+				
+				try {
+					pg.getDiscoveryService().publish(pipeAdvertisement);
+				} catch (IOException e) {
+					System.err.println("Could not publish PipeAdvertisement! Peers are not going to be able to send us messages then..");
+					e.printStackTrace();
+				}
+			}
+		}, 0, NetworkConstants.PIPE_ADVERTISEMENT_LIFETIME - 30 * 1000);
+
+		JxtaMessageListener listener = new JxtaMessageListener(mh);
+
+
+		try {
 			pg.getPipeService().createInputPipe(pipeAdvertisement, listener);
-		} catch (IOException e) {
-
-			e.printStackTrace();
+		} catch(IOException e) {
+			System.err.println("Did not manage to create input pipe.. Exiting then");
+			System.exit(-1);
 		}
+	}
+
+	public void stop() {
+		networkManager.stopNetwork();
+		pipeAdvertisementPublisher.cancel();
 	}
 
 	public boolean isStarted() {
 		return networkManager.isStarted();
 	}
-	
+
 	/**
 	 * Send a JXTA-Encoded message to the corresponding JxtaNeighbour using its PipeAdvertisement,
 	 * and CURRENTLY the DFSPeerGroup.
@@ -237,7 +256,7 @@ public class JxtaCommunicator {
 				op = pipeService.createOutputPipe(peerPipes.get(neighbour.id) , PIPE_RESOLVING_TIMEOUT);
 
 				op.send(m);
-				
+
 				op.close();
 			} catch (IOException e) {
 
@@ -248,23 +267,23 @@ public class JxtaCommunicator {
 
 		}
 	}
-	
+
 	public boolean publishAdvertisement(Advertisement adv, PeerGroup pg) {
-		
+
 		DiscoveryService discoveryService = pg.getDiscoveryService();
-		
+
 		try {
 			discoveryService.publish(adv, 5 * 60 * 1000, 2 * 60 * 1000 );
 		} catch (IOException e) {
-			
+
 			System.err.println("Could not publish Advertisement " + adv.getAdvType());
 			e.printStackTrace();
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	public PipeAdvertisement getPipeAdvertisement() {
 		return pipeAdvertisement;
 	}
@@ -338,9 +357,9 @@ public class JxtaCommunicator {
 							PipeAdvertisement pipeAdv = (PipeAdvertisement) adv;
 
 							int neighbourId = UidGenerator.freshId();
-							
+
 							peerPipes.put(neighbourId, pipeAdv);
-							
+
 							Neighbour neighbour = new Neighbour(neighbourId);
 
 							neighbours.add(neighbour);

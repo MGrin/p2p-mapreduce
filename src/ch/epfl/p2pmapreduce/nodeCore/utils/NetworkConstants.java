@@ -16,6 +16,7 @@ public class NetworkConstants {
 	public static final int GC_OPT = 2;
 	public static final int GC_MAX = 2;
 	
+	
 	// number of peers fetched for selecting best peers
 	public static final int CANDIDATE_SIZE = 1;
 	
@@ -26,6 +27,9 @@ public class NetworkConstants {
 	
 	// chunk size (bytes)
 	public static final int CHUNK_SIZE = 256;
+	
+	//
+	public static final int PIPE_ADVERTISEMENT_LIFETIME = 5 * 60 * 1000;
 	
 	// just for simulation
 	
