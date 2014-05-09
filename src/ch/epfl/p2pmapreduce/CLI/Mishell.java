@@ -182,6 +182,7 @@ public class Mishell {
 
 	public static void connect() {
 		p.start();
+		Metadata.create();
 	}
 
 	public static void help(String input) {
