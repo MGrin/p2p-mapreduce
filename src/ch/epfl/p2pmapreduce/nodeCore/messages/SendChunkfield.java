@@ -5,7 +5,7 @@ import java.util.Map;
 import ch.epfl.p2pmapreduce.nodeCore.volume.Chunkfield;
 
 
-public class SendChunkfield implements Message {
+public class SendChunkfield implements Message, SendMessage {
 	
 	private int from;
 	private Map<String, Chunkfield> chunkfields;

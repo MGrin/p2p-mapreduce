@@ -2,7 +2,7 @@ package ch.epfl.p2pmapreduce.nodeCore.messages;
 
 import ch.epfl.p2pmapreduce.nodeCore.volume.File;
 
-public class SendChunk implements Message {
+public class SendChunk implements Message, SendMessage {
 
 	private int from;
 	private String fName;

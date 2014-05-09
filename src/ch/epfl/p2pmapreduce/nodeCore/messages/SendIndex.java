@@ -2,7 +2,7 @@ package ch.epfl.p2pmapreduce.nodeCore.messages;
 
 import ch.epfl.p2pmapreduce.nodeCore.volume.Index;
 
-public class SendIndex implements Message {
+public class SendIndex implements Message, SendMessage {
 
 	private final int from;
 	public final Index index;
