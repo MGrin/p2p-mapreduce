@@ -5,6 +5,7 @@ import ch.epfl.p2pmapreduce.advertisement.RmIndexAdvertisement;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunk;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunkfield;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetIndex;
+import ch.epfl.p2pmapreduce.nodeCore.messages.RefreshIndex;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendChunk;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendChunkfield;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendIndex;
@@ -22,11 +23,11 @@ public interface IMessageSender {
 	boolean send(GetChunk getChunk, Neighbour receiver);
 	boolean send(SendChunk sendChunk, Neighbour receiver);
 	
-	// Should be removed with index messages done by miShell
 	boolean send(SendIndex sendIndex, Neighbour receiver);
-	// Should be removed with index messages done by miShell
 	boolean send(GetIndex getIndex, Neighbour receiver);
 	
 	boolean send(PutIndexAdvertisement putIndex);
 	boolean send(RmIndexAdvertisement rmIndex);
+	
+	boolean send(RefreshIndex refreshIndex);
 }

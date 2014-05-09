@@ -98,6 +98,7 @@ public class FileManager {
 			return true;
 		} else return false;
 	}
+	
 
 	public File getFile(String fName) {
 		return index.getFile(fName);
@@ -227,6 +228,5 @@ public class FileManager {
 			System.err.println("cannot remove chunkfiles of file " + dfsFullPath);
 		}
 	}
-	
 	
 }

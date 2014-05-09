@@ -1,6 +1,6 @@
 package ch.epfl.p2pmapreduce.nodeCore.messages;
 
-public abstract class IndexUpdate implements Message, SendMessage{
+public abstract class IndexUpdate implements Message {
 
 	private int from;
 	

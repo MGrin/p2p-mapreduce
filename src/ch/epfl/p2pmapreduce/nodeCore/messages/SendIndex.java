@@ -26,4 +26,6 @@ public class SendIndex implements Message, SendMessage {
 		return "send index message from peer " + from;
 	}
 
+	@Override
+	public MessageType getType() { return MessageType.SEND_INDEX; }
 }

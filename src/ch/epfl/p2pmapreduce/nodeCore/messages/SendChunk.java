@@ -43,4 +43,7 @@ public class SendChunk implements Message, SendMessage {
 		return chunkData;
 	}
 
+	@Override
+	public MessageType getType() { return MessageType.SEND_CHUNK; }
+
 }
