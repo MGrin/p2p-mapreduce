@@ -16,7 +16,7 @@
 		</MCID>
 		<Parm>
 			<jxta:TransportAdvertisement xmlns:jxta="http://jxta.org" xml:space="preserve" type="jxta:TCPTransportAdvertisement">
-<Protocol>tcp</Protocol><ConfigMode>auto</ConfigMode><Port>8339</Port>			</jxta:TransportAdvertisement>
+<Protocol>tcp</Protocol><ConfigMode>auto</ConfigMode><Port>8315</Port>			</jxta:TransportAdvertisement>
 		</Parm>
 	</Svc>
 	<Svc>
