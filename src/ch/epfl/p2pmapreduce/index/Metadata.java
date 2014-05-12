@@ -258,6 +258,7 @@ public class Metadata {
 
 	public static void main(String[] args) {
 		//Metadata meta = new Metadata();
+		create();
 		//metaLs("boite");
 		//metaPut("boite/caillou/chameau,8000,12-12-1222 12:12:12");
 		//metaPut("choux/fichier,1234,12-12-1222 12:12:12");
