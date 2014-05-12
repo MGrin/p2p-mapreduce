@@ -20,15 +20,18 @@ import ch.epfl.p2pmapreduce.nodeCore.network.JxtaMessageSender;
 import ch.epfl.p2pmapreduce.nodeCore.utils.NetworkConstants;
 
 public class Metadata {
+	//File containing the index, wich will be update accordingly with the events on  the DFS 
 	private static Element racine = new Element("DFS");
 	public static File file = new File("meta.xml");
 	private static Document document = new Document(racine);
+	
 	static List<String> fullpaths = new ArrayList<String>();
-
+	
+	//Create the meta.xml file
 	public static void create() {
 		updateMeta(document, file.getAbsolutePath());
 	}
-
+	//When connecting on the DFS we receive a new File which will be our index
 	public static void SaveNewVersion(byte[] newFile) {
 		FileOutputStream fos = null;
 		try {
@@ -49,7 +52,7 @@ public class Metadata {
 		}
 	}
 
-	
+	//When a file is add in the DFS, the index should be update
 	public static void metaPut(String fileName) {
 		if (!file.exists()) {
 			Metadata.create();
@@ -94,7 +97,7 @@ public class Metadata {
 		updateMeta(document, file.getAbsolutePath());
 	}
 
-	// utility function for metaPut
+	// utility function for finding an Element in the XML file
 	public static int searchIndice(List<Element> list, String text) {
 		int index = -1;
 		for (int i = 0; i < list.size(); i++) {
@@ -115,7 +118,8 @@ public class Metadata {
 			System.out.println("Cannot update the file");
 		}
 	}
-
+	
+	//When a file is remove from the DFS, the index should be update
 	public static void metaRm(String fileName) {
 		SAXBuilder sxb = new SAXBuilder();
 
@@ -150,7 +154,8 @@ public class Metadata {
 			updateMeta(document, file.getAbsolutePath());
 		}
 	}
-
+	
+	//ls function
 	public static void metaLs(String folder) {
 		SAXBuilder sxb = new SAXBuilder();
 		try {
@@ -193,12 +198,13 @@ public class Metadata {
 			}
 		}
 	}
-
+	
+	//To respond to a connect and sending our index file
 	public static void metaConnect() {
 		JxtaMessageSender.getRawFile(file);
 	}
 	
-	
+	//Transforming the index in a list of files
 	public static List<ch.epfl.p2pmapreduce.nodeCore.volume.File> toFiles() {
 		List<ch.epfl.p2pmapreduce.nodeCore.volume.File> files = new ArrayList<ch.epfl.p2pmapreduce.nodeCore.volume.File>();
 		if (!file.exists()) {
@@ -225,13 +231,14 @@ public class Metadata {
 				files.add(new ch.epfl.p2pmapreduce.nodeCore.volume.File(tokenize(fullpaths.get(i),":").get(0), chunkCount));
 			}
 			//test
-			for(int i = 0; i<files.size(); i++){
-				System.out.println((files.get(i).name));
-				System.out.println((files.get(i).chunkCount));
-			}
+			//for(int i = 0; i<files.size(); i++){
+			//	System.out.println((files.get(i).name));
+			//	System.out.println((files.get(i).chunkCount));
+			//}
 			return files;
 		}
 	}
+	
 	//Methode used by toFiles() to get full path of each file
 	public static void searchFiles(List<Element> childrens){
 		for(int i = 0; i < childrens.size(); i++){
@@ -255,16 +262,17 @@ public class Metadata {
 	}
 	
 	
-
+	//Tests
 	public static void main(String[] args) {
 		//Metadata meta = new Metadata();
-		create();
+		//create();
 		//metaLs("boite");
 		//metaPut("boite/caillou/chameau,8000,12-12-1222 12:12:12");
 		//metaPut("choux/fichier,1234,12-12-1222 12:12:12");
 		//toFiles();
 	}
-
+	
+	//Utility function used to tokenize a string with a particular delimiteur
 	public static List<String> tokenize(String input, String delim) {
 		List<String> output = null;
 		if (input != null) {
