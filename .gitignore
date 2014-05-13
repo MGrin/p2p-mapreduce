@@ -6,16 +6,25 @@ target/
 Central Seed/
 IndexBroadcaster/
 IndexDiscoverer/
+
+Ananas/
+Peer0/
+test-onlocal/
  
 # OS Files #
 .DS_Store
  
 *.class
  
+meta.xml
+
+
 # Package Files #
 *.war
 *.ear
 *.db
+
+meta.xml
  
 ######################
 # Windows
