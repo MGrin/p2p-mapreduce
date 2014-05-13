@@ -53,32 +53,46 @@ public class FileManager {
 		String sep = java.io.File.separator;
 		int chunkCount = 0;
 		try {
-			BufferedReader in = new BufferedReader(new FileReader(osFullPath));
+			FileReader fr = new FileReader(osFullPath);
+			BufferedReader in = new BufferedReader(fr);
 			String destDir = System.getProperty("user.home") + sep + FileManagerConstants.DFS_DIR + sep + dfsFullPath;
 			java.io.File fileDir = new java.io.File(destDir);
-			fileDir.mkdir();
-			BufferedWriter out = null;
-			String line = null;
-			int chunkSize = -1;
-			while ((line = in.readLine()) != null) {
-				if (chunkSize == -1) {
-					out = new BufferedWriter(new FileWriter (new java.io.File(fileDir, chunkCount + ".chunk")));
-					chunkSize = 0;
+			//check if we succeded in creating the dir
+			if(fileDir.mkdirs()){
+				BufferedWriter out = null;
+				String line = null;
+				int chunkSize = -1;
+				while ((line = in.readLine()) != null) {
+					if (chunkSize == -1) {
+						java.io.File dfsFile = new java.io.File(fileDir, chunkCount + ".chunk");
+						
+						out = new BufferedWriter(new FileWriter (dfsFile));
+						chunkSize = 0;
+					}
+					out.write(line);
+					out.newLine();
+					chunkSize += line.length() *2; // assuming two bytes per char
+					if (chunkSize >= NetworkConstants.CHUNK_SIZE) {
+						chunkCount ++;
+						out.close();
+						chunkSize = -1;
+					}
 				}
-				out.write(line);
-				out.newLine();
-				chunkSize += line.length() *2; // assuming two bytes per char
-				if (chunkSize >= NetworkConstants.CHUNK_SIZE) {
+				// detects last unfinised chunk (smaller size)
+				if (chunkCount < NetworkConstants.CHUNK_SIZE) {
 					chunkCount ++;
-					out.close();
-					chunkSize = -1;
+					if(out != null){
+						out.close();
+					}else{
+						System.err.println("the file " + osFullPath + " is empty");
+					}
+
 				}
+			}else {
+				System.err.println("the folder " + destDir + " couldn't be created"); 
+				return null;
 			}
-			// detects last unfinised chunk (smaller size)
-			if (chunkCount < NetworkConstants.CHUNK_SIZE) {
-				chunkCount ++;
-				out.close();
-			}
+			
 		} catch (FileNotFoundException e) {
 			System.err.println("file " + osFullPath + " not found.");
 			return null;
