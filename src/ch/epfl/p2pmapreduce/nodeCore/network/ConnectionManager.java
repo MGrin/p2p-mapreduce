@@ -39,17 +39,24 @@ public class ConnectionManager {
 		this.nD = communicator.new JxtaNeighbourDiscoverer();
 	}
 
-	public void init() {
+	public boolean init(MessageHandler handler) {
 
 		boolean couldStart = communicator.start();
 
 		if(couldStart) {
+			
+			initMessageListening(handler);
+			
 			neighbors = nD.getNeighbors();
+			
+			if(neighbors == null || neighbors.size() == 0) return false;
 			
 		} else {
 			System.err.println("Could not start JXTA network.. Exiting");
 			System.exit(-1);
 		}
+		
+		return true;
 	}
 
 	public void stop() {
