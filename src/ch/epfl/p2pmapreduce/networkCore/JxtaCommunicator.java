@@ -74,6 +74,7 @@ public class JxtaCommunicator {
 		this.port = port;
 		this.peerID = IDFactory.newPeerID(PeerGroupID.defaultNetPeerGroupID, name.getBytes());
 		configFile = new File("." + System.getProperty("file.separator") + name);
+		NetworkManager.RecursiveDelete(configFile);
 		try {
 			networkManager = new NetworkManager(NetworkManager.ConfigMode.EDGE, name, configFile.toURI());
 			networkConfigurator = networkManager.getConfigurator();
