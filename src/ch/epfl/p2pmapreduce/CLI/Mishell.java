@@ -1,5 +1,6 @@
 package ch.epfl.p2pmapreduce.CLI;
 
+import java.text.SimpleDateFormat;
 import java.util.Scanner;
 
 import ch.epfl.p2pmapreduce.index.Metadata;
@@ -7,37 +8,39 @@ import ch.epfl.p2pmapreduce.nodeCore.peer.Peer;
 import ch.epfl.p2pmapreduce.nodeCore.volume.File;
 
 public class Mishell {
-	
+
 	/*
 	 * What need to be implemented for compatibility with Peer class
 	 * 
-	 * TODO when requesting index at connection, has to initialise Peer with data contained in meta.xml
-	 * What need to be done : meta.xml -> List<nodeCore.volume.File> (already done by Jeremy ?)
+	 * TODO when requesting index at connection, has to initialise Peer with
+	 * data contained in meta.xml What need to be done : meta.xml ->
+	 * List<nodeCore.volume.File> (already done by Jeremy ?)
 	 * 
-	 * TODO file overwriting does not occur in Peer. calling twice rootPut() with same parameter will result in
-	 * loading same file twice under different references. Overwritting put must be controlled by miShell
+	 * TODO file overwriting does not occur in Peer. calling twice rootPut()
+	 * with same parameter will result in loading same file twice under
+	 * different references. Overwritting put must be controlled by miShell
 	 * 
-	 * TODO remotePut will have to transmit information under same format as in index initialisation (see first todo)
-	 * data received from network has to be parsed and put in a nodeCore.volume.File class
+	 * TODO remotePut will have to transmit information under same format as in
+	 * index initialisation (see first todo) data received from network has to
+	 * be parsed and put in a nodeCore.volume.File class
 	 */
-	
-	
+
 	public static Peer p;
-	
+
 	public static void main(String[] args) throws java.io.IOException {
-		
-		if(args.length != 1) {
+
+		if (args.length != 1) {
 			System.err.println("You need to specify your name! (No spaces)");
-		} 
-		
+		}
+
 		String name = args[0];
-		
+
 		Scanner scanner = new Scanner(System.in);
 		String line;
 		String[] tok;
-		
+
 		p = new Peer(name, 0);
-		
+
 		// Ctrl + C
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
@@ -75,7 +78,7 @@ public class Mishell {
 					if (tok.length > 1) {
 						System.out.println("handle ls");
 						ls(tok[1]);
-					} else if (tok.length == 1){
+					} else if (tok.length == 1) {
 						ls("DFS");
 					} else {
 						System.out.println("not enough arguments");
@@ -152,39 +155,46 @@ public class Mishell {
 		boolean success = false;
 		System.out.println("with the file (local): " + osFullFilePath + " (DFS): "
 				+ dfsFullFolderPath);
-		
+		String infos = getFileInfos(osFullFilePath, dfsFullFolderPath);
+		if (infos != null) {
+			Metadata.metaPut(infos);
+		}
 		//Metadata.metaPut(dfsFullPath);
 		
 		File f = p.rootPut(osFullFilePath, dfsFullFolderPath);
 		success = p.remotePut(f);
-		
-		System.out.println("Succedded in putting file " + f.name + " on DFS? " + success);
-		
 		if(success) Metadata.metaPut(dfsFullFolderPath);
+
+		System.out.println("Succedded in putting file " + f.name + " on DFS? "
+				+ success);
+
+		if (success)
+			Metadata.metaPut(dfsFullPath);
 
 	}
 
 	public static void get(String input) {
 		System.out.println("with the file : " + input);
-		
-		//TODO: Implement get
+
+		// TODO: Implement get
 	}
 
 	public static void rm(String input) {
-		
-		System.out.println("Removing " + input + " from DFS..");
-		
-		boolean success = p.rm(new File(input, -1));
-		
-		System.out.println("Succedded in removing file " + input + " on DFS? " + success);
 
-		if(success) Metadata.metaRm(input);
+		System.out.println("Removing " + input + " from DFS..");
+
+		boolean success = p.rm(new File(input, -1));
+
+		System.out.println("Succedded in removing file " + input + " on DFS? "
+				+ success);
+
+		if (success)
+			Metadata.metaRm(input);
 	}
 
 	public static void connect() {
 		p.start();
 		Metadata.create();
-		System.out.println("connection handled");
 	}
 
 	public static void help(String input) {
@@ -211,5 +221,20 @@ public class Mishell {
 			System.out.println("format : put file_to_send file_on_the_dfs.");
 			System.out.println("No options for \"put\".");
 		}
+	}
+	
+	private static String getFileInfos(String osFullPath, String DFSFullPath) {
+		java.io.File file = new java.io.File(osFullPath);
+
+		if (file.exists()) {
+			long fileSize = file.length();
+			SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
+			String fileDate = sdf.format(file.lastModified());
+			String infos = DFSFullPath + "," + fileSize + "," + fileDate;
+			return infos;
+		} else {
+			System.err.println("File " + osFullPath + " doesn't exist.");
+		}
+		return null;
 	}
 }

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -16,18 +17,21 @@ import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
 import ch.epfl.p2pmapreduce.nodeCore.network.JxtaMessageSender;
+import ch.epfl.p2pmapreduce.nodeCore.utils.NetworkConstants;
 
 public class Metadata {
+	//File containing the index, wich will be update accordingly with the events on  the DFS 
 	private static Element racine = new Element("DFS");
 	public static File file = new File("meta.xml");
 	private static Document document = new Document(racine);
-
-	// Constructor for Metadata, use only by the "creator" of the DFS to create
-	// a metadata file.
+	
+	static List<String> fullpaths = new ArrayList<String>();
+	
+	//Create the meta.xml file
 	public static void create() {
 		updateMeta(document, file.getAbsolutePath());
 	}
-
+	//When connecting on the DFS we receive a new File which will be our index
 	public static void SaveNewVersion(byte[] newFile) {
 		FileOutputStream fos = null;
 		try {
@@ -48,7 +52,7 @@ public class Metadata {
 		}
 	}
 
-	// Methode metaPut to add a file in the xml (arborescence of the DFS)
+	//When a file is add in the DFS, the index should be update
 	public static void metaPut(String fileName) {
 		if (!file.exists()) {
 			Metadata.create();
@@ -73,23 +77,27 @@ public class Metadata {
 				currentChildren = current.getChildren();
 			} else {
 				List<String> fileInfos = tokenize(list.get(i), ",");
-				Element added = new Element(fileInfos.get(0));
-				String text = "";
-				if (fileInfos.size() > 1) {
-					for (int j = 1; j < fileInfos.size(); j++) {
-						text = text.concat(fileInfos.get(j) + ",");
+				if(searchIndice(currentChildren,fileInfos.get(0)) == -1){
+					Element added = new Element(fileInfos.get(0));
+					String text = "";
+					if (fileInfos.size() > 1) {
+						for (int j = 1; j < fileInfos.size(); j++) {
+							text = text.concat(fileInfos.get(j) + ",");
+						}
+						added.setText(text);
 					}
-					added.setText(text);
+					current.addContent(added);
+					current = added;
+					currentChildren = current.getChildren();
+				} else {
+					System.err.println("Already a file with this name");
 				}
-				current.addContent(added);
-				current = added;
-				currentChildren = current.getChildren();
 			}
 		}
 		updateMeta(document, file.getAbsolutePath());
 	}
 
-	// utility function for metaPut
+	// utility function for finding an Element in the XML file
 	public static int searchIndice(List<Element> list, String text) {
 		int index = -1;
 		for (int i = 0; i < list.size(); i++) {
@@ -101,7 +109,7 @@ public class Metadata {
 		return index;
 	}
 
-	// utility function for metaPut, update xml doc
+	// Update xml file
 	static void updateMeta(Document document, String file) {
 		try {
 			XMLOutputter sortie = new XMLOutputter(Format.getPrettyFormat());
@@ -110,7 +118,8 @@ public class Metadata {
 			System.out.println("Cannot update the file");
 		}
 	}
-
+	
+	//When a file is remove from the DFS, the index should be update
 	public static void metaRm(String fileName) {
 		SAXBuilder sxb = new SAXBuilder();
 
@@ -145,7 +154,8 @@ public class Metadata {
 			updateMeta(document, file.getAbsolutePath());
 		}
 	}
-
+	
+	//ls function
 	public static void metaLs(String folder) {
 		SAXBuilder sxb = new SAXBuilder();
 		try {
@@ -188,23 +198,81 @@ public class Metadata {
 			}
 		}
 	}
-
+	
+	//To respond to a connect and sending our index file
 	public static void metaConnect() {
 		JxtaMessageSender.getRawFile(file);
 	}
-
-	public static List<File> toFiles() {
-
-		// TODO:Implement! (David ?)
-		return null;
+	
+	//Transforming the index in a list of files
+	public static List<ch.epfl.p2pmapreduce.nodeCore.volume.File> toFiles() {
+		List<ch.epfl.p2pmapreduce.nodeCore.volume.File> files = new ArrayList<ch.epfl.p2pmapreduce.nodeCore.volume.File>();
+		if (!file.exists()) {
+			Metadata.create();
+			return null;
+		} else {
+			
+			SAXBuilder sxb = new SAXBuilder();
+			try {
+				document = sxb.build(file);
+			} catch (JDOMException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			racine = document.getRootElement();
+			fullpaths = new ArrayList<String>();
+			searchFiles(racine.getChildren());
+			for(int i = 0; i < fullpaths.size(); i++){
+				List<String> temp = tokenize(fullpaths.get(i), "/");
+				String tempo = temp.get(temp.size()-1);
+				//possible wrong value for the Integer because out-of-range
+				int chunkCount = (int) Math.ceil(((double)Integer.parseInt(tokenize(tempo,":").get(1))/(double)NetworkConstants.CHUNK_SIZE));
+				files.add(new ch.epfl.p2pmapreduce.nodeCore.volume.File(tokenize(fullpaths.get(i),":").get(0), chunkCount));
+			}
+			//test
+			//for(int i = 0; i<files.size(); i++){
+			//	System.out.println((files.get(i).name));
+			//	System.out.println((files.get(i).chunkCount));
+			//}
+			return files;
+		}
 	}
-
+	
+	//Methode used by toFiles() to get full path of each file
+	public static void searchFiles(List<Element> childrens){
+		for(int i = 0; i < childrens.size(); i++){
+			String fullpath = "";
+			String chunkCount = "";
+			String pathCount ="";
+			if (childrens.get(i).getChildren().size() == 0){
+				Element parent = childrens.get(i).getParentElement();
+				fullpath = childrens.get(i).getName();
+				chunkCount = tokenize(childrens.get(i).getText(),",").get(0);
+				pathCount = fullpath+":"+chunkCount;
+				while (parent != null){
+					pathCount = parent.getName() + "/" + pathCount;
+					parent = parent.getParentElement();
+				}
+				fullpaths.add(pathCount);
+			} else {
+				searchFiles(childrens.get(i).getChildren());
+			}
+		}
+	}
+	
+	
+	//Tests
 	public static void main(String[] args) {
-		// metaRm("DFS");
-		// Metadata meta = new Metadata();
-		// metaRm("boite/genou");
+		//Metadata meta = new Metadata();
+		//create();
+		//metaLs("boite");
+		//metaPut("boite/caillou/chameau,8000,12-12-1222 12:12:12");
+		//metaPut("choux/fichier,1234,12-12-1222 12:12:12");
+		//toFiles();
 	}
-
+	
+	//Utility function used to tokenize a string with a particular delimiteur
 	public static List<String> tokenize(String input, String delim) {
 		List<String> output = null;
 		if (input != null) {
