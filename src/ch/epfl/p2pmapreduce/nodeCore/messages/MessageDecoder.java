@@ -28,8 +28,7 @@ public class MessageDecoder {
 	public static Message decode(net.jxta.endpoint.Message jxtaMessage) {
 		String name = new String(jxtaMessage.getMessageElement("name").getBytes(true));
 		Message message = null;
-		MessageElement messageElement = jxtaMessage.getMessageElement("from",
-				"from");
+		MessageElement messageElement = jxtaMessage.getMessageElement("from");
 		PipeAdvertisement from = getPipeAdvertisement(messageElement);
 		
 		if (name.compareTo(JxtaMessageSender.SEND_INDEX) == 0) {
