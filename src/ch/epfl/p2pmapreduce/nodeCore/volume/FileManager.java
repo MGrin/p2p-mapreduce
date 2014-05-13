@@ -58,7 +58,7 @@ public class FileManager {
 			String destDir = /*System.getProperty("user.home") + sep +*/ FileManagerConstants.DFS_DIR + sep + dfsFullPath; // TODO Check path and rights
 			java.io.File fileDir = new java.io.File(destDir);
 			//check if we succeded in creating the dir
-			if(fileDir.mkdirs()){
+			if(fileDir.exists() || fileDir.mkdirs()){
 				BufferedWriter out = null;
 				String line = null;
 				int chunkSize = -1;

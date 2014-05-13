@@ -229,6 +229,8 @@ public class JxtaCommunicator {
 			@Override
 			public void run() {
 				
+				System.out.println("Discovering index update...");
+				
 				pg.getDiscoveryService().getRemoteAdvertisements(null, DiscoveryService.ADV, null, null, 10, listener);
 				
 			}
