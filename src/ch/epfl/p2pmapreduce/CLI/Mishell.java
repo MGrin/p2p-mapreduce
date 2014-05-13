@@ -151,22 +151,22 @@ public class Mishell {
 		}
 	}
 
-	public static void put(String osFullPath, String dfsFullPath) {
-		System.out.println("with the file (local): " + osFullPath + " (DFS): "
-				+ dfsFullPath);
-		String infos = getFileInfos(osFullPath, dfsFullPath);
+	public static void put(String osFullFilePath, String dfsFullFolderPath) {
+		boolean success = false;
+		System.out.println("with the file (local): " + osFullFilePath + " (DFS): "
+				+ dfsFullFolderPath);
+		String infos = getFileInfos(osFullFilePath, dfsFullFolderPath);
 		if (infos != null) {
 			Metadata.metaPut(infos);
 		}
+		//Metadata.metaPut(dfsFullPath);
 		
-		File f = p.rootPut(osFullPath, dfsFullPath);
-		boolean success = p.remotePut(f);
+		File f = p.rootPut(osFullFilePath, dfsFullFolderPath);
+		success = p.remotePut(f);
+		if(success) Metadata.metaPut(dfsFullFolderPath);
 
 		System.out.println("Succedded in putting file " + f.name + " on DFS? "
 				+ success);
-
-		if (success)
-			Metadata.metaPut(dfsFullPath);
 
 	}
 
