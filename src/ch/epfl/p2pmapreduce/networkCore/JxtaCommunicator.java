@@ -61,6 +61,7 @@ public class JxtaCommunicator {
 
 	private PipeAdvertisement pipeAdvertisement = null;
 	private Timer pipeAdvertisementPublisher;
+	private Timer indexAdvertisementDiscoverer;
 
 	//All the Peer Groups this Peer belongs to.
 	//private Set<PeerGroup> peerGroups;
@@ -217,8 +218,20 @@ public class JxtaCommunicator {
 				}
 			}
 		}, 0, NetworkConstants.PIPE_ADVERTISEMENT_LIFETIME - 30 * 1000);
-
-		JxtaMessageListener listener = new JxtaMessageListener(mh);
+		
+		final JxtaMessageListener listener = new JxtaMessageListener(mh);
+		
+		indexAdvertisementDiscoverer = new Timer();
+		
+		indexAdvertisementDiscoverer.schedule(new TimerTask() {
+			
+			@Override
+			public void run() {
+				
+				pg.getDiscoveryService().getRemoteAdvertisements(null, DiscoveryService.ADV, null, null, 10, listener);
+				
+			}
+		}, 0, NetworkConstants.INDEX_ADVERTISEMENT_DISCOVERY_RATE);
 
 
 		try {
