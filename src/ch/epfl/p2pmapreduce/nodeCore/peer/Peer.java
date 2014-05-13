@@ -251,7 +251,7 @@ public class Peer implements Runnable, MessageBuilder{
 	 * @return true if the file existed false if no such file
 	 */
 	public boolean rm(File file) {
-		
+		//FIXME cast exception : seems to generate a putAdvertisement
 		RmIndexAdvertisement rmAdvertisement = (RmIndexAdvertisement) AdvertisementFactory.newAdvertisement(RmIndexAdvertisement.getAdvertisementType());
 		
 		rmAdvertisement.setFileName(file.name);

@@ -137,7 +137,9 @@ public class Metadata {
 			List<String> list = tokenize(fileName, "/");
 			Element current = racine;
 			List<Element> currentChildren = current.getChildren();
-			for (int i = 0; i <= list.size() - 1; i++) {
+			int lSize = list.size();
+			System.out.println("listSize: "+lSize);
+			for (int i = 0; i <= lSize - 1; i++) {
 				List<String> fileInfos = tokenize(list.get(i), ",");
 				int indice = searchIndice(currentChildren, fileInfos.get(0));
 				if (indice != -1 && i == list.size() - 1) {

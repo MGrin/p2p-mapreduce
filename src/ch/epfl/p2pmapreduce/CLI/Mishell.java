@@ -180,13 +180,15 @@ public class Mishell {
 
 		System.out.println("Removing " + input + " from DFS..");
 
+		
 		boolean success = p.rm(new File(input, -1));
-
-		System.out.println("Succedded in removing file " + input + " on DFS? "
-				+ success);
 
 		if (success)
 			Metadata.metaRm(input);
+		System.out.println("Succedded in removing file " + input + " on DFS? "
+				+ success);
+
+		
 	}
 
 	public static void connect() {
