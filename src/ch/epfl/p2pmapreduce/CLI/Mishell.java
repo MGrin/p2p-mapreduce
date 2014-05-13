@@ -168,9 +168,6 @@ public class Mishell {
 		System.out.println("Succedded in putting file " + f.name + " on DFS? "
 				+ success);
 
-		if (success)
-			Metadata.metaPut(dfsFullPath);
-
 	}
 
 	public static void get(String input) {
