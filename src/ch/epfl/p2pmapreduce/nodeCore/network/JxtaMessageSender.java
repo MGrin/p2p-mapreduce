@@ -181,7 +181,7 @@ public class JxtaMessageSender implements IMessageSender {
 
 	// UTILS
 
-	public static String convertMapToString(Map<String, Chunkfield> map) {
+	private String convertMapToString(Map<String, Chunkfield> map) {
 		StringBuilder builder = new StringBuilder();
 
 		for (String s : map.keySet())
@@ -190,26 +190,6 @@ public class JxtaMessageSender implements IMessageSender {
 		return builder.toString();
 	}
 
-	public static Map<Integer, Chunkfield> convertStringToMap(String text) {
-
-		Map<Integer, Chunkfield> map = new HashMap<Integer, Chunkfield>();
-		String[] elements = text.split("/");
-
-		for (int i = 0; i < elements.length; i++) {
-			String[] keyValue = elements[i].split(":");
-
-			int key = Integer.parseInt(keyValue[0]);
-
-			boolean[] chunkField = new boolean[keyValue[1].length()];
-
-			for (int j = 0; j < keyValue[1].length(); j++) {
-				chunkField[j] = (keyValue[1].charAt(j) == '1');
-			}
-
-			map.put(key, new Chunkfield(chunkField));
-		}
-		return map;
-	}
 
 	public static byte[] getRawFile(File fileToSend) {
 		byte[] array = null;

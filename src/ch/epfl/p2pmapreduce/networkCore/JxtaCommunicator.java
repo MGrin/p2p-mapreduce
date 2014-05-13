@@ -66,7 +66,7 @@ public class JxtaCommunicator {
 	//All the Peer Groups this Peer belongs to.
 	//private Set<PeerGroup> peerGroups;
 
-	private Map<Integer, PipeAdvertisement> peerPipes = new HashMap<Integer, PipeAdvertisement>();
+	private static Map<Integer, PipeAdvertisement> peerPipes = new HashMap<Integer, PipeAdvertisement>();
 
 	// Will have a PeerID per PeerGroup.. to rethink
 
@@ -305,6 +305,15 @@ public class JxtaCommunicator {
 
 	public PipeAdvertisement getPipeAdvertisement() {
 		return pipeAdvertisement;
+	}
+	
+	public static int getIdForPipeAdv(PipeAdvertisement adv) {
+		
+		for(int i : peerPipes.keySet()) {
+			if(adv.equals( peerPipes.get(i) )) return i;
+		}
+		
+		return -1;
 	}
 
 	/**
