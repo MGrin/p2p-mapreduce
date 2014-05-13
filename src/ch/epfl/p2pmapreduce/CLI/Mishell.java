@@ -166,7 +166,7 @@ public class Mishell {
 		if (infos != null) {
 			Metadata.metaPut(infos);
 		}
-		// Metadata.metaPut(dfsFullPath);
+		Metadata.metaPut(dfsFullFolderPath);
 
 		File f = p.rootPut(osFullFilePath, dfsFullFolderPath);
 		success = p.remotePut(f);
