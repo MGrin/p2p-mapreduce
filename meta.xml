@@ -1,2 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<DFS />
+<DFS>
+  <boite>
+    <caillou />
+  </boite>
+  <DFS>
+    <lol />
+  </DFS>
+</DFS>
