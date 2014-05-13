@@ -70,7 +70,7 @@ public class Metadata {
 		List<String> list = tokenize(fileName, "/");
 		Element current = racine;
 		List<Element> currentChildren = current.getChildren();
-		for (int i = 0; i <= list.size() - 1; i++) {
+		for (int i = 1; i <= list.size() - 1; i++) {
 			int indice = searchIndice(currentChildren, list.get(i));
 			if (indice != -1) {
 				current = currentChildren.get(indice);
@@ -138,7 +138,7 @@ public class Metadata {
 			Element current = racine;
 			List<Element> currentChildren = current.getChildren();
 			int lSize = list.size();
-			for (int i = 0; i <= lSize - 1; i++) {
+			for (int i = 1; i <= lSize - 1; i++) {
 				List<String> fileInfos = tokenize(list.get(i), ",");
 				int indice = searchIndice(currentChildren, fileInfos.get(0));
 				if (indice != -1 && i == list.size() - 1) {
@@ -268,14 +268,15 @@ public class Metadata {
 		//Metadata meta = new Metadata();
 		//create();
 		//metaLs("boite");
-		metaPut("boite/caillou/chameau,8000,12-12-1222 12:12:12");
+		//metaPut("DFS/boite/caillou/chameau,8000,12-12-1222 12:12:12");
 		//metaPut("choux/fichier,1234,12-12-1222 12:12:12");
 		//toFiles();
-		metaLs("boite");
-		metaRm("boite/caillou/chameau");
-		metaLs("boite");
-		metaPut("DFS/lol");
-		metaLs("DFS");
+		//metaLs("boite");
+		metaRm("DFS/coucou/");
+		//metaPut("DFS/coucou,8000,12-12-1222 12:12:12");
+		//metaLs("boite");
+		//metaPut("DFS/lol");
+		//metaLs("DFS");
 	}
 	
 	//Utility function used to tokenize a string with a particular delimiteur
