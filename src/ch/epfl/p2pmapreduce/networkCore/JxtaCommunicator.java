@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import Examples.Z_Tools_And_Others.Tools;
 import net.jxta.discovery.DiscoveryEvent;
 import net.jxta.discovery.DiscoveryListener;
 import net.jxta.discovery.DiscoveryService;
@@ -125,7 +126,7 @@ public class JxtaCommunicator {
 
 
 		// Connect
-		if(!connectToRDV(60000)) {
+		if(!connectToRDV(20000)) { // TODO Change to 60000
 			System.err.println("Unable to connect to " + MAIN_RENDEZ_VOUS_ADDRESS);
 			return false;
 		}
@@ -314,15 +315,10 @@ public class JxtaCommunicator {
 				//discoveryService.getRemoteAdvertisements(null, DiscoveryService.PEER, null, null, NetworkConstants.CANDIDATE_SIZE);
 
 				// Only one PipeAdvertisement should be returned from each Peer in the DFS.
-				discoveryService.getRemoteAdvertisements(null, DiscoveryService.ADV, null, null, 1);
-
-				try {
-					wait();
-				} catch (InterruptedException e) {
-
-					System.err.println("Wait for Neighbour Discovery was interrupted!");
-					e.printStackTrace();
-				}
+				System.out.println("Discovering..");
+				discoveryService.getRemoteAdvertisements(null, DiscoveryService.ADV, null, null, 10, this);
+				
+//				Tools.GoToSleep(30);
 
 				return neighbours;
 			} else {
@@ -333,12 +329,12 @@ public class JxtaCommunicator {
 
 		@Override
 		public void discoveryEvent(DiscoveryEvent event) {
+			
+			//TODO: Handle limited number of neighbours
 
-			if(neighbours.size() >= NetworkConstants.CANDIDATE_SIZE) {
-				notify();
-				return;
-			}
-
+			System.out.println("Advertisement discovered!");
+			
+			
 			// Who triggered the event?
 			DiscoveryResponseMsg responseMsg = event.getResponse();
 
@@ -352,10 +348,13 @@ public class JxtaCommunicator {
 					try {
 
 						Advertisement adv = TheEnumeration.nextElement();
+						
+						System.out.println("Discovered Advertisement is a " + adv.getAdvType());
 
 						// We are only interested in the PipeAdvertisements.
 						if(adv.getAdvType().equals(PipeAdvertisement.getAdvertisementType())) {
 
+							System.out.println("We identified the PipeAdvertisement and handle it");
 							PipeAdvertisement pipeAdv = (PipeAdvertisement) adv;
 
 							int neighbourId = UidGenerator.freshId();

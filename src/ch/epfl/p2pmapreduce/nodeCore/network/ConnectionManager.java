@@ -27,15 +27,13 @@ public class ConnectionManager {
 	private IMessageSender sender ;
 
 	private final JxtaCommunicator communicator;
-
-	private int peerId;
+	
 	private List<Neighbour> neighbors = new ArrayList<Neighbour>();
 	// TODO think of resetting globalChunkfields entries when getting chunk !!
 	private Map<File, GlobalChunkfield> globalChunkfields = new HashMap<File, GlobalChunkfield>();
 
-	public ConnectionManager(int peerId) {
-		this.peerId = peerId;
-		this.communicator = new JxtaCommunicator("Peer" + peerId, NetworkConstants.generatePortNumber());
+	public ConnectionManager(String peerName) {
+		this.communicator = new JxtaCommunicator(peerName, NetworkConstants.generatePortNumber());
 		this.nD = communicator.new JxtaNeighbourDiscoverer();
 	}
 

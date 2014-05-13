@@ -52,7 +52,7 @@ public class Peer implements Runnable, MessageBuilder{
 		x = (int) (Math.random() * NetworkConstants.AREA_SIZE);
 		y = (int) (Math.random() * NetworkConstants.AREA_SIZE);
 		runner = new Thread(this);
-		cManager = new ConnectionManager(this.id);
+		cManager = new ConnectionManager(name);
 		messages = new MessageHandler(this, state, fManager, cManager);
 		System.out.println("Hello world, I'm " + peerName + " with id " + id);
 
