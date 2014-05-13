@@ -138,7 +138,6 @@ public class Metadata {
 			Element current = racine;
 			List<Element> currentChildren = current.getChildren();
 			int lSize = list.size();
-			System.out.println("listSize: "+lSize);
 			for (int i = 0; i <= lSize - 1; i++) {
 				List<String> fileInfos = tokenize(list.get(i), ",");
 				int indice = searchIndice(currentChildren, fileInfos.get(0));
@@ -269,9 +268,14 @@ public class Metadata {
 		//Metadata meta = new Metadata();
 		//create();
 		//metaLs("boite");
-		//metaPut("boite/caillou/chameau,8000,12-12-1222 12:12:12");
+		metaPut("boite/caillou/chameau,8000,12-12-1222 12:12:12");
 		//metaPut("choux/fichier,1234,12-12-1222 12:12:12");
 		//toFiles();
+		metaLs("boite");
+		metaRm("boite/caillou/chameau");
+		metaLs("boite");
+		metaPut("DFS/lol");
+		metaLs("DFS");
 	}
 	
 	//Utility function used to tokenize a string with a particular delimiteur

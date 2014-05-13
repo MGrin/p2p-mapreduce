@@ -66,13 +66,20 @@ public class Mishell {
 								.println("About what command do you need help ? (connect, cat, cd, ls, get, put, rm)");
 						System.out.println("Specify only one command.");
 					}
+				} else if (tok[0].compareTo("quit") == 0) {
+					if (tok.length == 1) {
+						System.out.println("handle quit");
+						quit();
+					} else {
+						System.out.println("too much arguments for \"quit\"");
+					}
 				} else if (tok[0].compareTo("connect") == 0) {
 					if (tok.length == 1) {
 						System.out.println("handle connect");
 						connect();
 					} else {
-						System.out.println("handle ls");
-						ls(tok[1]);
+						System.out
+								.println("too much arguments for \"connect\"");
 					}
 				} else if (tok[0].compareTo("ls") == 0) {
 					if (tok.length > 1) {
@@ -153,17 +160,18 @@ public class Mishell {
 
 	public static void put(String osFullFilePath, String dfsFullFolderPath) {
 		boolean success = false;
-		System.out.println("with the file (local): " + osFullFilePath + " (DFS): "
-				+ dfsFullFolderPath);
+		System.out.println("with the file (local): " + osFullFilePath
+				+ " (DFS): " + dfsFullFolderPath);
 		String infos = getFileInfos(osFullFilePath, dfsFullFolderPath);
 		if (infos != null) {
 			Metadata.metaPut(infos);
 		}
-		//Metadata.metaPut(dfsFullPath);
-		
+		// Metadata.metaPut(dfsFullPath);
+
 		File f = p.rootPut(osFullFilePath, dfsFullFolderPath);
 		success = p.remotePut(f);
-		if(success) Metadata.metaPut(dfsFullFolderPath);
+		if (success)
+			Metadata.metaPut(dfsFullFolderPath);
 
 		System.out.println("Succedded in putting file " + f.name + " on DFS? "
 				+ success);
@@ -180,20 +188,23 @@ public class Mishell {
 
 		System.out.println("Removing " + input + " from DFS..");
 
-		
 		boolean success = p.rm(new File(input, -1));
 
-		if (success)
+		if (success) {
 			Metadata.metaRm(input);
-		System.out.println("Succedded in removing file " + input + " on DFS? "
-				+ success);
+			System.out.println("Succedded in removing file " + input
+					+ " on DFS? " + success);
+		}
 
-		
 	}
 
 	public static void connect() {
 		p.start();
 		Metadata.create();
+	}
+
+	public static void quit() {
+		Runtime.getRuntime().exit(0);
 	}
 
 	public static void help(String input) {
@@ -203,6 +214,9 @@ public class Mishell {
 		} else if (input.compareTo("connect") == 0) {
 			System.out.println("Format : connect");
 			System.out.println("No options for \"connect\"");
+		} else if (input.compareTo("quit") == 0) {
+			System.out.println("Format : quit");
+			System.out.println("No options for \"quit\"");
 		} else if (input.compareTo("ls") == 0) {
 			System.out.println("Format : ls file_on_dfs");
 			System.out.println("No options for \"ls\"");
@@ -221,7 +235,7 @@ public class Mishell {
 			System.out.println("No options for \"put\".");
 		}
 	}
-	
+
 	private static String getFileInfos(String osFullPath, String DFSFullPath) {
 		java.io.File file = new java.io.File(osFullPath);
 
