@@ -10,9 +10,14 @@ IndexDiscoverer/
 Ananas/
 Peer0/
 test-onlocal/
+igz/
 
 .raidfs_data/
- 
+
+# Randomly generated folders #
+[0-9]*/
+-[0-9]*/
+
 # OS Files #
 .DS_Store
  

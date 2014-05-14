@@ -152,7 +152,9 @@ public class ConnectionManager {
 
 	// temporary, until index messages gestion in miShell is integrated 
 	public boolean send(SendIndex sendIndex, int receiverId) {
+		System.out.println("receiver id is " + receiverId);
 		Neighbour receiver = getFromId(receiverId);
+		System.out.println("receiver for index will be " + receiver);
 		if (receiver != null) {
 			return sender.send(sendIndex, receiver);
 		} else return false;
@@ -174,6 +176,10 @@ public class ConnectionManager {
 	// utilities
 
 	private Neighbour getFromId(int neighbourId) {
+		
+		System.out.println("getting neighbour for id " + neighbourId);
+		System.out.println(neighbors.size() + " neighbours discovered so far");
+		
 		for (Neighbour n: neighbors) {
 			if (n.id == neighbourId) return n;
 		}

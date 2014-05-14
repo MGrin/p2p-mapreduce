@@ -63,6 +63,8 @@ public class JxtaCommunicator {
 	private Timer pipeAdvertisementPublisher;
 	private Timer indexAdvertisementDiscoverer;
 
+	static List<Neighbour> neighbours = new LinkedList<Neighbour>();
+
 	//All the Peer Groups this Peer belongs to.
 	//private Set<PeerGroup> peerGroups;
 
@@ -268,6 +270,8 @@ public class JxtaCommunicator {
 
 		PeerGroup pg = netPeerGroup;
 		//pg = neighbour.getPeerGroup();
+		
+		System.out.println("attempt to send " + m.getMessageElement("name").toString());
 
 		if(pg != null) {
 			PipeService pipeService = pg.getPipeService();
@@ -276,7 +280,7 @@ public class JxtaCommunicator {
 				op = pipeService.createOutputPipe(peerPipes.get(neighbour.id) , PIPE_RESOLVING_TIMEOUT);
 
 				while(! op.send(m) ) {
-					System.out.println("attemp to send " + m.getMessageElement("name").toString());
+					System.out.println("attempt to send " + m.getMessageElement("name").toString());
 					try {
 						Thread.sleep(100);
 					} catch (InterruptedException e) {
@@ -319,10 +323,19 @@ public class JxtaCommunicator {
 	public static int getIdForPipeAdv(PipeAdvertisement adv) {
 
 		for(int i : peerPipes.keySet()) {
-			if(adv.equals( peerPipes.get(i) )) return i;
+			if(adv.getName().equals( peerPipes.get(i).getName() )) return i;
 		}
 
 		return -1;
+	}
+	
+	public static void putPipeAdvertisement(int id, PipeAdvertisement pa) {
+		peerPipes.put(id, pa);
+		System.out.println("linking " + id + " to " + pa.getName());
+		System.out.println("size of map is now " + peerPipes.size());
+		
+		Neighbour neighbour = new Neighbour(id);
+		neighbours.add(neighbour);
 	}
 
 	/**
@@ -335,8 +348,6 @@ public class JxtaCommunicator {
 	 *
 	 */
 	public class JxtaNeighbourDiscoverer implements INeighbourDiscoverer, DiscoveryListener {
-
-		List<Neighbour> neighbours = new LinkedList<Neighbour>();
 
 		@Override
 		public List<Neighbour> getNeighbors() {
@@ -354,7 +365,7 @@ public class JxtaCommunicator {
 
 				try {
 					synchronized(this) {
-						this.wait(20 * 1000);
+						this.wait(10 * 1000);
 					}
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
@@ -403,7 +414,7 @@ public class JxtaCommunicator {
 							int neighbourId = UidGenerator.freshId();
 
 							peerPipes.put(neighbourId, pipeAdv);
-
+							
 							Neighbour neighbour = new Neighbour(neighbourId);
 
 							neighbours.add(neighbour);

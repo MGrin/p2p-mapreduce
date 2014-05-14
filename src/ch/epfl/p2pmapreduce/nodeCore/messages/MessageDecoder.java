@@ -12,6 +12,7 @@ import net.jxta.protocol.PipeAdvertisement;
 import ch.epfl.p2pmapreduce.index.Metadata;
 import ch.epfl.p2pmapreduce.networkCore.JxtaCommunicator;
 import ch.epfl.p2pmapreduce.nodeCore.network.JxtaMessageSender;
+import ch.epfl.p2pmapreduce.nodeCore.utils.UidGenerator;
 import ch.epfl.p2pmapreduce.nodeCore.volume.Chunkfield;
 import ch.epfl.p2pmapreduce.nodeCore.volume.File;
 import ch.epfl.p2pmapreduce.nodeCore.volume.Index;
@@ -34,6 +35,12 @@ public class MessageDecoder {
 		PipeAdvertisement from = getPipeAdvertisement(messageElement);
 		
 		int intFrom = JxtaCommunicator.getIdForPipeAdv(from);
+		System.out.println("this peer id is " + intFrom);
+		if(intFrom == -1) {
+			System.out.println("we don't know this peer yet.. let's add it to our neighbours");
+			intFrom = UidGenerator.freshId();
+			JxtaCommunicator.putPipeAdvertisement(intFrom, from);
+		}
 		
 		if (name.compareTo(JxtaMessageSender.SEND_INDEX) == 0) {
 			byte[] newFile = jxtaMessage.getMessageElement("index").getBytes(true);

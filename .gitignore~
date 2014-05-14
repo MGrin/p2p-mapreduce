@@ -12,7 +12,11 @@ Peer0/
 test-onlocal/
 
 .raidfs_data/
- 
+
+# Randomly generated folders #
+[0-9]*/
+-[0-9]*/
+
 # OS Files #
 .DS_Store
  
