@@ -80,7 +80,6 @@ public class Metadata {
 				currentChildren = current.getChildren();	
 			} else {
 				List<String> fileInfos = tokenize(list.get(i), ",");
-				System.out.println(fileInfos.get(0));
 				if(searchIndice(currentChildren,fileInfos.get(0)) == -1){
 					Element added = new Element(fileInfos.get(0));
 					String text = "";
@@ -277,6 +276,10 @@ public class Metadata {
 		//metaPut("choux/pain,1234,12-12-1222 12:12:12");
 		//toFiles();
 		//metaLs("boite");
+		//metaPut("choux/fichier/kiki,80,12-12-1222 12:12:12");
+		//metaLs("choux/fichier");
+		//metaRm("choux/fichier/kiki", false);
+		//metaLs("choux/fichier");
 		//metaPut("choux/fichier/caculette,80,12-12-1222 12:12:12");
 		//metaPut("coucou/do/di,8000,12-12-1222 12:12:12");
 		//metaRm("coucou",true);

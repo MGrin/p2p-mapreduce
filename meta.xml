@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <DFS>
   <choux>
-    <pain>1234,12-12-1222 12:12:12,</pain>
     <fichier>
       <caculette>80,12-12-1222 12:12:12,</caculette>
     </fichier>
   </choux>
-  <coucou>8000,12-12-1222 12:12:12,</coucou>
 </DFS>

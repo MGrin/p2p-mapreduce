@@ -1,6 +1,7 @@
 package ch.epfl.p2pmapreduce.CLI;
 
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Scanner;
 
 import ch.epfl.p2pmapreduce.index.Metadata;
@@ -143,7 +144,9 @@ public class Mishell {
 		}
 	}
 
-	public static void put(String osFullFilePath, String dfsFullFolderPath) {
+	public static void put(String osFullFilePath, String dfsPath) {
+		List<String> temp = Metadata.tokenize(osFullFilePath, "/");
+		String dfsFullFolderPath = dfsPath.concat("/" + temp.get(temp.size() - 1));
 		boolean success = false;
 		System.out.println("with the file (local): " + osFullFilePath
 				+ " (DFS): " + dfsFullFolderPath);
@@ -214,7 +217,7 @@ public class Mishell {
 			System.out.println("Format : get file_to_get_on_dfs");
 			System.out.println("No options for \"get\"");
 		} else if (input.compareTo("put") == 0) {
-			System.out.println("format : put file_to_send file_on_the_dfs.");
+			System.out.println("format : put file_to_send path_on_dfs.");
 			System.out.println("No options for \"put\".");
 		}
 	}
