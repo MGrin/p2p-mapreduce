@@ -36,6 +36,13 @@ public class FileManager {
 	 * @return true if the file was not already present
 	 */
 	public boolean addFile(File f, boolean isOwned) {
+		if (! isOwned) {
+			java.io.File fileDir = new java.io.File(FileManagerConstants.DFS_DIR + java.io.File.separator + f.name);
+			if (!fileDir.exists()) {
+				fileDir.mkdirs();
+			}
+		}
+		
 		return index.put(f, isOwned);
 	}
 
@@ -64,7 +71,7 @@ public class FileManager {
 				int chunkSize = -1;
 				while ((line = in.readLine()) != null) {
 					if (chunkSize == -1) {
-						java.io.File dfsFile = new java.io.File(fileDir, chunkCount + ".chunk");
+						java.io.File dfsFile = new java.io.File(fileDir, chunkCount + CHUNK_EXT);
 						
 						out = new BufferedWriter(new FileWriter (dfsFile));
 						chunkSize = 0;
@@ -187,6 +194,7 @@ public class FileManager {
 			out.close();
 			index.putChunk(fName, chunkId);
 		} catch (IOException e) {
+			e.printStackTrace();
 			System.err.println("Could not write chunk " + chunkId + " for file " + fName + ".");
 		}
 	}
@@ -229,7 +237,8 @@ public class FileManager {
 	 * storing the chunkfiles.
 	 */
 	private java.io.File getChunkDir(String dfsFullPath) {
-		return new java.io.File(System.getProperty("user.home") + FileManagerConstants.DFS_DIR + java.io.File.separator + dfsFullPath);
+		//TODO: Get back to this!!
+		return new java.io.File(/*System.getProperty("user.home") + java.io.File.separator +*/ FileManagerConstants.DFS_DIR + java.io.File.separator + dfsFullPath);
 	}
 	
 	/*

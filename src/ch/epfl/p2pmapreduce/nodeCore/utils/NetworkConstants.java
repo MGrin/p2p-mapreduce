@@ -26,7 +26,7 @@ public class NetworkConstants {
 	// #chunk per peer ~ #chunk in file * GC_OPT / (N_OPT+1)
 	
 	// chunk size (bytes)
-	public static final int CHUNK_SIZE = 256;
+	public static final int CHUNK_SIZE = 1024;
 	
 	//
 	public static final int PIPE_ADVERTISEMENT_LIFETIME = 5 * 60 * 1000;
