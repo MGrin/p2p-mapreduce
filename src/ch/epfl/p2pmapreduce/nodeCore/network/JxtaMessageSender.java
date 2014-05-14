@@ -88,8 +88,11 @@ public class JxtaMessageSender implements IMessageSender {
 				null);
 		message.addMessageElement(name);
 
+		System.out.println("map to string is : " + convertMapToString(sendChunkfield.chunkfields()));
+		
 		MessageElement chunkField = new StringMessageElement("chunkfield",
 				convertMapToString(sendChunkfield.chunkfields()), null);
+		
 		message.addMessageElement(chunkField);
 
 		communicator.sendMessage(message, receiver);

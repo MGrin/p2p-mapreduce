@@ -244,7 +244,7 @@ public class Peer implements Runnable, MessageBuilder{
 
 		cManager.send(putAdvertisement);
 
-		return fManager.addFile(file);
+		return fManager.addFile(file, true);
 	}
 
 	/**

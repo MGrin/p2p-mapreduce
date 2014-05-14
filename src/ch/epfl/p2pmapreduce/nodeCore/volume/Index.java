@@ -53,9 +53,13 @@ public class Index {
 		}
 	}
 
-	public boolean put(File f) {
+	public boolean put(File f, boolean isOwned) {
 		if (!files.containsKey(f)) {
-			files.put(f, new Chunkfield(f));
+			
+			Chunkfield c = new Chunkfield(f, isOwned);
+			System.out.println(c.toString());
+			
+			files.put(f, new Chunkfield(f, isOwned));
 			return true;
 		} else return false;
 	}

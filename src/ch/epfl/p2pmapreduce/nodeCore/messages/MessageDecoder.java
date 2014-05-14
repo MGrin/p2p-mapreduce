@@ -2,6 +2,7 @@ package ch.epfl.p2pmapreduce.nodeCore.messages;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import net.jxta.document.AdvertisementFactory;
@@ -48,7 +49,7 @@ public class MessageDecoder {
 			
 			Index index = new Index();
 			for (File f : Metadata.toFiles()) {
-				index.put(f);
+				index.put(f, false);
 			}
 			
 			message = new SendIndex(intFrom, index);
@@ -57,6 +58,13 @@ public class MessageDecoder {
 			message = new GetChunkfield(intFrom);
 
 		} else if (name.compareTo(JxtaMessageSender.SEND_CHUNKFIELD) == 0) {
+			
+			Iterator<String> nameSpaceIterator = jxtaMessage.getMessageNamespaces();
+			
+			while( nameSpaceIterator.hasNext() ) {
+				System.out.println("SENDINDEX NameSpace : " + nameSpaceIterator.next());
+			}
+			
 			Map<String, Chunkfield> chunkfields = convertStringToMap(new String(jxtaMessage
 					.getMessageElement("chunkfield").getBytes(true)));
 			
@@ -117,9 +125,12 @@ public class MessageDecoder {
 
 		Map<String, Chunkfield> map = new HashMap<String, Chunkfield>();
 		String[] elements = text.split("/");
+		
+		System.out.println("Text : " + text);
 
 		for (int i = 0; i < elements.length; i++) {
 			String[] keyValue = elements[i].split(":");
+			System.out.println("Elements[" + i + "] : " + elements[i]);
 
 			String key = keyValue[0];
 

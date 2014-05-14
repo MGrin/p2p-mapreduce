@@ -35,8 +35,8 @@ public class FileManager {
 	 * @param f the file to add.
 	 * @return true if the file was not already present
 	 */
-	public boolean addFile(File f) {
-		return index.put(f);
+	public boolean addFile(File f, boolean isOwned) {
+		return index.put(f, isOwned);
 	}
 
 	/**
@@ -146,7 +146,7 @@ public class FileManager {
 		}
 		
 		for (File newF: newIndex.files()) {
-			if (! index.contains(newF)) index.put(newF);
+			if (! index.contains(newF)) index.put(newF, false);
 		}
 	}
 
