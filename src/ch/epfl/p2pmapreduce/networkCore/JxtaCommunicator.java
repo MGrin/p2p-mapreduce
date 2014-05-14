@@ -343,7 +343,12 @@ public class JxtaCommunicator {
 				System.out.println("Discovering..");
 				discoveryService.getRemoteAdvertisements(null, DiscoveryService.ADV, null, null, 10, this);
 				
-//				Tools.GoToSleep(30);
+				try {
+					this.wait(20 * 1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
 				return neighbours;
 			} else {

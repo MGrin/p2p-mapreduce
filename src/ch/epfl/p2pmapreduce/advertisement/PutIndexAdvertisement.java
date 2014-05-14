@@ -183,6 +183,6 @@ public class PutIndexAdvertisement extends Advertisement {
 
 	@Override
 	public String getAdvType() {
-		return RmIndexAdvertisement.class.getName();
+		return PutIndexAdvertisement.class.getName();
 	}
 }
