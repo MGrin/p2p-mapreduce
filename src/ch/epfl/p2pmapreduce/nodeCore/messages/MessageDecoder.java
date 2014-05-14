@@ -116,7 +116,7 @@ public class MessageDecoder {
 	private static Map<String, Chunkfield> convertStringToMap(String text) {
 
 		Map<String, Chunkfield> map = new HashMap<String, Chunkfield>();
-		String[] elements = text.split("|);
+		String[] elements = text.split("$");
 
 		for (int i = 0; i < elements.length; i++) {
 			String[] keyValue = elements[i].split(":");
