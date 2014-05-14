@@ -72,11 +72,15 @@ public class Metadata {
 		List<Element> currentChildren = current.getChildren();
 		for (int i = 0; i <= list.size() - 1; i++) {
 			int indice = searchIndice(currentChildren, list.get(i));
-			if (indice != -1) {
+			if (indice != -1 && !currentChildren.get(indice).getText().matches("^\\s*$")){
+				i = list.size();
+				System.err.println("File with this name already exist");
+			} else if (indice != -1) { 
 				current = currentChildren.get(indice);
-				currentChildren = current.getChildren();
+				currentChildren = current.getChildren();	
 			} else {
 				List<String> fileInfos = tokenize(list.get(i), ",");
+				System.out.println(fileInfos.get(0));
 				if(searchIndice(currentChildren,fileInfos.get(0)) == -1){
 					Element added = new Element(fileInfos.get(0));
 					String text = "";
@@ -120,7 +124,7 @@ public class Metadata {
 	}
 	
 	//When a file is remove from the DFS, the index should be update
-	public static void metaRm(String fileName) {
+	public static void metaRm(String fileName, boolean isD) {
 		SAXBuilder sxb = new SAXBuilder();
 
 		try {
@@ -142,6 +146,7 @@ public class Metadata {
 				List<String> fileInfos = tokenize(list.get(i), ",");
 				int indice = searchIndice(currentChildren, fileInfos.get(0));
 				if (indice != -1 && i == list.size() - 1) {
+					if (isD && currentChildren.get(indice).getText().matches("^\\s*$") || !isD && !currentChildren.get(indice).getText().matches("^\\s*$"))
 					currentChildren.remove(indice);
 					i = list.size();
 				} else if (indice != -1) {
@@ -266,14 +271,15 @@ public class Metadata {
 	//Tests
 	public static void main(String[] args) {
 		//Metadata meta = new Metadata();
-		create();
+		//create();
 		//metaLs("boite");
-		//metaPut("DFS/boite/caillou/chameau,8000,12-12-1222 12:12:12");
-		//metaPut("choux/fichier,1234,12-12-1222 12:12:12");
+		//metaPut("boite/caillou/chameau,8000,12-12-1222 12:12:12");
+		//metaPut("choux/pain,1234,12-12-1222 12:12:12");
 		//toFiles();
 		//metaLs("boite");
-		//metaRm("DFS/coucou/");
-		//metaPut("coucou,8000,12-12-1222 12:12:12");
+		//metaPut("choux/fichier/caculette,80,12-12-1222 12:12:12");
+		//metaPut("coucou/do/di,8000,12-12-1222 12:12:12");
+		//metaRm("coucou",true);
 		//metaLs("boite");
 		//metaPut("DFS/lol");
 		//metaLs("DFS");
