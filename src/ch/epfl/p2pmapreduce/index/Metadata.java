@@ -211,7 +211,9 @@ public class Metadata {
 	
 	//Transforming the index in a list of files
 	public static List<ch.epfl.p2pmapreduce.nodeCore.volume.File> toFiles() {
+		
 		List<ch.epfl.p2pmapreduce.nodeCore.volume.File> files = new ArrayList<ch.epfl.p2pmapreduce.nodeCore.volume.File>();
+		
 		if (!file.exists()) {
 			Metadata.create();
 			return null;
