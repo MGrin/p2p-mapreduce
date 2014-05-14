@@ -2,6 +2,7 @@ package ch.epfl.p2pmapreduce.nodeCore.peer;
 
 import java.util.LinkedList;
 
+import ch.epfl.p2pmapreduce.index.Metadata;
 import ch.epfl.p2pmapreduce.nodeCore.messages.FileRemoved;
 import ch.epfl.p2pmapreduce.nodeCore.messages.FileStabilized;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunk;
@@ -109,6 +110,7 @@ public class MessageHandler implements MessageReceiver {
 	@Override
 	public void receive(NewFile newfile) {
 		if (files.addFile(new File(newfile.name(), newfile.chunkCount()))) {
+			Metadata.metaPut(newfile.name());
 			state.set(PeerState.BUILDGLOBALCF);
 		}
 	}
