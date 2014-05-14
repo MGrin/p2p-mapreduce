@@ -185,7 +185,7 @@ public class JxtaMessageSender implements IMessageSender {
 		StringBuilder builder = new StringBuilder();
 
 		for (String s : map.keySet())
-			builder.append(s + ":" + map.get(s).toBitString() + "/");
+			builder.append(s + ":" + map.get(s).toBitString() + "|");
 
 		return builder.toString();
 	}
