@@ -116,7 +116,7 @@ public class Mishell {
 					} else if (tok.length == 3) {
 						if (tok[2].compareTo("-d") == 0) {
 							System.out.println("handle rm on the folder : " + tok[1]);
-							rm(tok[1], true)
+							rm(tok[1], true);
 						}
 					} else {
 						System.out
