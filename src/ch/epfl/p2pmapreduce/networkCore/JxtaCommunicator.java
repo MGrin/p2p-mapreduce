@@ -275,7 +275,15 @@ public class JxtaCommunicator {
 			try {
 				op = pipeService.createOutputPipe(peerPipes.get(neighbour.id) , PIPE_RESOLVING_TIMEOUT);
 
-				op.send(m);
+				while(! op.send(m) ) {
+					System.out.println("attemp to send " + m.getMessageElement("name").toString());
+					try {
+						Thread.sleep(100);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 
 				op.close();
 			} catch (IOException e) {
