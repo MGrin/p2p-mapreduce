@@ -1,8 +1,7 @@
 package ch.epfl.p2pmapreduce.nodeCore.messages;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
+import java.util.HashMap;
 import java.util.Map;
 
 import net.jxta.document.AdvertisementFactory;
@@ -11,8 +10,11 @@ import net.jxta.document.XMLDocument;
 import net.jxta.endpoint.MessageElement;
 import net.jxta.protocol.PipeAdvertisement;
 import ch.epfl.p2pmapreduce.index.Metadata;
+import ch.epfl.p2pmapreduce.networkCore.JxtaCommunicator;
 import ch.epfl.p2pmapreduce.nodeCore.network.JxtaMessageSender;
 import ch.epfl.p2pmapreduce.nodeCore.volume.Chunkfield;
+import ch.epfl.p2pmapreduce.nodeCore.volume.File;
+import ch.epfl.p2pmapreduce.nodeCore.volume.Index;
 
 public class MessageDecoder {
 
@@ -28,49 +30,61 @@ public class MessageDecoder {
 	public static Message decode(net.jxta.endpoint.Message jxtaMessage) {
 		String name = new String(jxtaMessage.getMessageElement("name").getBytes(true));
 		Message message = null;
-		MessageElement messageElement = jxtaMessage.getMessageElement("from",
-				"from");
+		MessageElement messageElement = jxtaMessage.getMessageElement("from");
 		PipeAdvertisement from = getPipeAdvertisement(messageElement);
+		
+		int intFrom = JxtaCommunicator.getIdForPipeAdv(from);
 		
 		if (name.compareTo(JxtaMessageSender.SEND_INDEX) == 0) {
 			byte[] newFile = jxtaMessage.getMessageElement("index").getBytes(true);
 			Metadata.SaveNewVersion(newFile);
 			
-			//message = new SendIndex(from, newFile);
+			Index index = new Index();
+			for (File f : Metadata.toFiles()) {
+				index.put(f);
+			}
+			
+			message = new SendIndex(intFrom, index);
 
 		} else if (name.compareTo(JxtaMessageSender.GET_CHUNKFIELD) == 0) {
-			// message = new GetChunkfield(from);
+			message = new GetChunkfield(intFrom);
 
 		} else if (name.compareTo(JxtaMessageSender.SEND_CHUNKFIELD) == 0) {
-			Map<Integer, Chunkfield> chunkfields = JxtaMessageSender.convertStringToMap(new String(jxtaMessage
+			Map<String, Chunkfield> chunkfields = convertStringToMap(new String(jxtaMessage
 					.getMessageElement("chunkfield").getBytes(true)));
 			
-			// message = new SendChunkfield(from, chunkfields);
+			message = new SendChunkfield(intFrom, chunkfields);
 
 		} else if (name.compareTo(JxtaMessageSender.GET_CHUNK) == 0) {
 			String fileName = new String(jxtaMessage.getMessageElement("fName")
 					.getBytes(true));
-			String chunkId = new String(jxtaMessage.getMessageElement("chunkId")
-					.getBytes(true));
-			// message = new GetChunk(from, fileName, chunkId);
+			int chunkId = Integer.parseInt(new String(jxtaMessage.getMessageElement("chunkId")
+					.getBytes(true)));
+			
+			message = new GetChunk(intFrom, fileName, chunkId);
 
 		} else if (name.compareTo(JxtaMessageSender.SEND_CHUNK) == 0) {
 			String fileName = new String(jxtaMessage.getMessageElement("fName")
 					.getBytes(true));
-			String chunkId = new String(jxtaMessage.getMessageElement("chunkId")
-					.getBytes(true));
+			int chunkId = Integer.parseInt(new String(jxtaMessage.getMessageElement("chunkId")
+					.getBytes(true)));
+			
 			byte[] chunk = jxtaMessage.getMessageElement("chunk").getBytes(true);
 					
-			// message = new SendChunk(from, fileName, chunkId, chunk);
+			message = new SendChunk(intFrom, fileName, chunkId, chunk);
 
 		} else if (name.compareTo(JxtaMessageSender.GET_INDEX) == 0) {
-			if (!isConnected) {
-				System.out.println("Visiting connect");
-				isConnected = true;
-				Metadata.metaConnect();
-			}
+			
+			//TODO: What is this piece of commented code for?
+//			if (!isConnected) {
+//				System.out.println("Visiting connect");
+//				isConnected = true;
+//				Metadata.metaConnect();
+				
+				message = new GetIndex(intFrom);
+//			}
 		}
-		// message = new GetIndex(from);
+		
 		return message;
 	}
 
@@ -92,17 +106,23 @@ public class MessageDecoder {
 		return from;
 	}
 
-	public static Map<Integer, Chunkfield> convertBytesToMap(byte[] bytes) {
-		ByteArrayInputStream b = new ByteArrayInputStream(bytes);
-		ObjectInputStream o;
-		Map<Integer, Chunkfield> map = null;
-		try {
-			o = new ObjectInputStream(b);
-			map = (Map<Integer, Chunkfield>) o.readObject();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+	private static Map<String, Chunkfield> convertStringToMap(String text) {
+
+		Map<String, Chunkfield> map = new HashMap<String, Chunkfield>();
+		String[] elements = text.split("/");
+
+		for (int i = 0; i < elements.length; i++) {
+			String[] keyValue = elements[i].split(":");
+
+			String key = keyValue[0];
+
+			boolean[] chunkField = new boolean[keyValue[1].length()];
+
+			for (int j = 0; j < keyValue[1].length(); j++) {
+				chunkField[j] = (keyValue[1].charAt(j) == '1');
+			}
+
+			map.put(key, new Chunkfield(chunkField));
 		}
 		return map;
 	}

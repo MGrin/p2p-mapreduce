@@ -16,15 +16,10 @@ test-onlocal/
  
 *.class
  
-meta.xml
-
-
 # Package Files #
 *.war
 *.ear
 *.db
-
-meta.xml
  
 ######################
 # Windows

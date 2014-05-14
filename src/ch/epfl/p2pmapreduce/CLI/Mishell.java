@@ -164,17 +164,16 @@ public class Mishell {
 				+ " (DFS): " + dfsFullFolderPath);
 		String infos = getFileInfos(osFullFilePath, dfsFullFolderPath);
 		if (infos != null) {
-			Metadata.metaPut(infos);
+			System.out.println("infos not null : with val : " + infos);
+			File f = p.rootPut(osFullFilePath, dfsFullFolderPath);
+			success = p.remotePut(f);
+			
+			if (success)
+				Metadata.metaPut(infos);
+			
+			System.out.println("Succedded in putting file " + f.name + " on DFS? "
+					+ success);
 		}
-		// Metadata.metaPut(dfsFullPath);
-
-		File f = p.rootPut(osFullFilePath, dfsFullFolderPath);
-		success = p.remotePut(f);
-		if (success)
-			Metadata.metaPut(dfsFullFolderPath);
-
-		System.out.println("Succedded in putting file " + f.name + " on DFS? "
-				+ success);
 
 	}
 

@@ -266,10 +266,10 @@ public class Metadata {
 	//Tests
 	public static void main(String[] args) {
 		//Metadata meta = new Metadata();
-		//create();
+		create();
 		//metaLs("boite");
 		//metaPut("DFS/boite/caillou/chameau,8000,12-12-1222 12:12:12");
-		metaPut("choux/fichier,1234,12-12-1222 12:12:12");
+		//metaPut("choux/fichier,1234,12-12-1222 12:12:12");
 		//toFiles();
 		//metaLs("boite");
 		//metaRm("DFS/coucou/");

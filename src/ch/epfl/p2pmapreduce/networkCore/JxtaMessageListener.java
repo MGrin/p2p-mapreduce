@@ -72,8 +72,8 @@ public class JxtaMessageListener implements PipeMsgListener, DiscoveryListener{
 						
 					} else {
 						
-						System.out.println("Received an Advertisement which is neither an IndexAdvertisement nor a PeerGroupAdvertisement..");
-						System.out.println("It is a " + adv.getAdvType());
+//						System.out.println("Received an Advertisement which is neither an IndexAdvertisement nor a PeerGroupAdvertisement..");
+//						System.out.println("It is a " + adv.getAdvType());
 					}
 
 				} catch (ClassCastException Ex) {

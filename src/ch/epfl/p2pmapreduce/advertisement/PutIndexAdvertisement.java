@@ -21,8 +21,8 @@ public class PutIndexAdvertisement extends Advertisement {
 
 	private ID advertisementID = ID.nullID;
 	private String dfsFileName = "";
-	private long fileSize = 0;
-	private long fileCreationTime = 0;
+	private String fileSize = "";
+	private String fileCreationTime = "";
 
 	private final static String nameTag = "MyNameTag";
 	private final static String idTag = "MyIDTag";
@@ -78,12 +78,12 @@ public class PutIndexAdvertisement extends Advertisement {
 		}
 
 		if (theElementName.compareTo(dateTag) == 0) {
-			fileCreationTime = Long.parseLong(theTextValue);
+			fileCreationTime = theTextValue;
 			return;
 		}
 
 		if (theElementName.compareTo(sizeTag) == 0) {
-			fileSize = Long.parseLong(theTextValue);
+			fileSize = theTextValue;
 			return;
 		}
 	}
@@ -102,7 +102,7 @@ public class PutIndexAdvertisement extends Advertisement {
 		theResult.appendChild(myTempElement);
 
 		myTempElement = theResult.createElement(sizeTag,
-				Long.toString(fileSize));
+				fileSize);
 		theResult.appendChild(myTempElement);
 
 		myTempElement = theResult.createElement(nameTag, dfsFileName);
@@ -130,19 +130,19 @@ public class PutIndexAdvertisement extends Advertisement {
 	}
 
 	public long getFileSize() {
-		return fileSize;
+		return Long.parseLong(fileSize);
 	}
 
 	public void setFileSize(long size) {
-		fileSize = size;
+		fileSize = Long.toString(size);
 	}
 
 	public long getFileCreationTime() {
-		return fileCreationTime;
+		return Long.parseLong(fileCreationTime);
 	}
 
 	public void setFileCreationTime(long time) {
-		fileCreationTime = time;
+		fileCreationTime = Long.toString(time);
 	}
 
 	public String getDFSFileName() {

@@ -1,7 +1,2 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<DFS>
-  <coucou>8000,12-12-1222 12:12:12,</coucou>
-  <choux>
-    <fichier>1234,12-12-1222 12:12:12,</fichier>
-  </choux>
-</DFS>
+<DFS />

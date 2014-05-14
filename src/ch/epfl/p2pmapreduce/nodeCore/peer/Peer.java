@@ -236,7 +236,7 @@ public class Peer implements Runnable, MessageBuilder{
 	public boolean remotePut(File file) {
 
 		PutIndexAdvertisement putAdvertisement = (PutIndexAdvertisement) AdvertisementFactory.newAdvertisement(PutIndexAdvertisement.getAdvertisementType());
-
+		
 		putAdvertisement.setDFSFileName(file.name);
 		putAdvertisement.setFileCreationTime(System.currentTimeMillis());
 		putAdvertisement.setFileSize(file.chunkCount * NetworkConstants.CHUNK_SIZE);

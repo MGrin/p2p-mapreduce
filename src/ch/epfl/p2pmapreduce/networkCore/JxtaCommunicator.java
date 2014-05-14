@@ -61,11 +61,12 @@ public class JxtaCommunicator {
 
 	private PipeAdvertisement pipeAdvertisement = null;
 	private Timer pipeAdvertisementPublisher;
+	private Timer indexAdvertisementDiscoverer;
 
 	//All the Peer Groups this Peer belongs to.
 	//private Set<PeerGroup> peerGroups;
 
-	private Map<Integer, PipeAdvertisement> peerPipes = new HashMap<Integer, PipeAdvertisement>();
+	private static Map<Integer, PipeAdvertisement> peerPipes = new HashMap<Integer, PipeAdvertisement>();
 
 	// Will have a PeerID per PeerGroup.. to rethink
 
@@ -74,6 +75,7 @@ public class JxtaCommunicator {
 		this.port = port;
 		this.peerID = IDFactory.newPeerID(PeerGroupID.defaultNetPeerGroupID, name.getBytes());
 		configFile = new File("." + System.getProperty("file.separator") + name);
+		NetworkManager.RecursiveDelete(configFile);
 		try {
 			networkManager = new NetworkManager(NetworkManager.ConfigMode.EDGE, name, configFile.toURI());
 			networkConfigurator = networkManager.getConfigurator();
@@ -217,8 +219,22 @@ public class JxtaCommunicator {
 				}
 			}
 		}, 0, NetworkConstants.PIPE_ADVERTISEMENT_LIFETIME - 30 * 1000);
-
-		JxtaMessageListener listener = new JxtaMessageListener(mh);
+		
+		final JxtaMessageListener listener = new JxtaMessageListener(mh);
+		
+		indexAdvertisementDiscoverer = new Timer();
+		
+		indexAdvertisementDiscoverer.schedule(new TimerTask() {
+			
+			@Override
+			public void run() {
+				
+				System.out.println("Discovering index update...");
+				
+				pg.getDiscoveryService().getRemoteAdvertisements(null, DiscoveryService.ADV, null, null, 10, listener);
+				
+			}
+		}, 0, NetworkConstants.INDEX_ADVERTISEMENT_DISCOVERY_RATE);
 
 
 		try {
@@ -289,6 +305,15 @@ public class JxtaCommunicator {
 
 	public PipeAdvertisement getPipeAdvertisement() {
 		return pipeAdvertisement;
+	}
+	
+	public static int getIdForPipeAdv(PipeAdvertisement adv) {
+		
+		for(int i : peerPipes.keySet()) {
+			if(adv.equals( peerPipes.get(i) )) return i;
+		}
+		
+		return -1;
 	}
 
 	/**

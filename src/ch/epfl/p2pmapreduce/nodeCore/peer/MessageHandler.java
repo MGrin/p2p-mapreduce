@@ -118,7 +118,6 @@ public class MessageHandler implements MessageReceiver {
 		
 		//TODO: Implement | But same problem here! we only have the name so cannot instantiate
 		
-		
 	}
 
 	@Override
