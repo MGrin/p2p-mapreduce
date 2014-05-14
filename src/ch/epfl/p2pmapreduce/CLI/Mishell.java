@@ -90,26 +90,6 @@ public class Mishell {
 					} else {
 						System.out.println("not enough arguments");
 					}
-				} else if (tok[0].compareTo("cat") == 0) {
-					if (tok.length == 2) {
-						System.out.println("handle cat");
-						cat(tok[1]);
-					} else if (tok.length > 2) {
-						System.out.println("Too much arguments for cat");
-					} else {
-						System.out
-								.println("We don't cat the standard input in this CLI, please specify a file to cat");
-					}
-				} else if (tok[0].compareTo("cd") == 0) {
-					if (tok.length == 2) {
-						System.out.println("handle cd");
-						cd(tok[1]);
-					} else if (tok.length == 1) {
-						System.out.println("handle cd");
-						cd(null);
-					} else {
-						System.out.println("Too much arguments for cd");
-					}
 				} else if (tok[0].compareTo("get") == 0) {
 					if (tok.length == 2) {
 						System.out.println("handle get");
@@ -132,7 +112,12 @@ public class Mishell {
 					if (tok.length == 2) {
 						System.out.println("handle rm");
 						System.out.println("on " + tok[1]);
-						rm(tok[1]);
+						rm(tok[1], false);
+					} else if (tok.length == 3) {
+						if (tok[2].compareTo("-d") == 0) {
+							System.out.println("handle rm on the folder : " + tok[1]);
+							rm(tok[1], true)
+						}
 					} else {
 						System.out
 								.println("Please specify a file/folder to delete");
@@ -183,18 +168,21 @@ public class Mishell {
 		// TODO: Implement get
 	}
 
-	public static void rm(String input) {
+	public static void rm(String input, boolean isDirectory) {
 
 		System.out.println("Removing " + input + " from DFS..");
 
 		boolean success = p.rm(new File(input, -1));
 
 		if (success) {
-			Metadata.metaRm(input);
+			if (isDirectory) {
+				Metadata.metaRm(input, true);
+			} else {
+				Metadata.metaRm(input, false);
+			}
 			System.out.println("Succedded in removing file " + input
 					+ " on DFS? " + success);
 		}
-
 	}
 
 	public static void connect() {
@@ -219,13 +207,9 @@ public class Mishell {
 		} else if (input.compareTo("ls") == 0) {
 			System.out.println("Format : ls file_on_dfs");
 			System.out.println("No options for \"ls\"");
-		} else if (input.compareTo("cat") == 0) {
-			System.out.println("Format : cat file_on_dfs");
-			System.out.println("No options for \"cat\"");
 		} else if (input.compareTo("rm") == 0) {
-			System.out.println("Format : rm file_to_delete_on_dfs ");
-			System.out
-					.println("Take care : if you select a folder, rm will delete all its containing files");
+			System.out.println("Format : rm file_to_delete_on_dfs argument");
+			System.out.println("arguments : \"-d\" to delete a directory");
 		} else if (input.compareTo("get") == 0) {
 			System.out.println("Format : get file_to_get_on_dfs");
 			System.out.println("No options for \"get\"");
