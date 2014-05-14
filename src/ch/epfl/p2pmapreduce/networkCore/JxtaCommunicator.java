@@ -44,8 +44,8 @@ public class JxtaCommunicator {
 
 	//private final static String MAIN_RENDEZ_VOUS_ADDRESS = "tcp://icdatasrv2.epfl.ch:" + MAIN_RENDEZVOUS_PORT;
 	private final static String MAIN_RENDEZ_VOUS_ADDRESS = "tcp://localhost:" + MAIN_RENDEZVOUS_PORT;
-	
-	
+
+
 	private final static int PIPE_RESOLVING_TIMEOUT = 30000;
 	private final static int DFS_JOIN_TIMEOUT = 60000;
 
@@ -197,11 +197,12 @@ public class JxtaCommunicator {
 
 		// Instantiating the Pipe Advertisement
 		pipeAdvertisement = (PipeAdvertisement) AdvertisementFactory.newAdvertisement(PipeAdvertisement.getAdvertisementType());
+		
 		PipeID pipeID = IDFactory.newPipeID(pg.getPeerGroupID(), name.getBytes());
 
 		pipeAdvertisement.setPipeID(pipeID);
 		pipeAdvertisement.setType(PipeService.UnicastType);
-		pipeAdvertisement.setName("Incoming Pipe for " + this.name);
+		pipeAdvertisement.setName("pipeAdv:" + this.name);
 		pipeAdvertisement.setDescription("Created by " + name);
 
 		pipeAdvertisementPublisher = new Timer();
@@ -210,7 +211,7 @@ public class JxtaCommunicator {
 
 			@Override
 			public void run() {
-				
+
 				try {
 					pg.getDiscoveryService().publish(pipeAdvertisement);
 				} catch (IOException e) {
@@ -219,20 +220,20 @@ public class JxtaCommunicator {
 				}
 			}
 		}, 0, NetworkConstants.PIPE_ADVERTISEMENT_LIFETIME - 30 * 1000);
-		
+
 		final JxtaMessageListener listener = new JxtaMessageListener(mh);
-		
+
 		indexAdvertisementDiscoverer = new Timer();
-		
+
 		indexAdvertisementDiscoverer.schedule(new TimerTask() {
-			
+
 			@Override
 			public void run() {
-				
+
 				System.out.println("Discovering index update...");
-				
+
 				pg.getDiscoveryService().getRemoteAdvertisements(null, DiscoveryService.ADV, null, null, 10, listener);
-				
+
 			}
 		}, 0, NetworkConstants.INDEX_ADVERTISEMENT_DISCOVERY_RATE);
 
@@ -306,13 +307,13 @@ public class JxtaCommunicator {
 	public PipeAdvertisement getPipeAdvertisement() {
 		return pipeAdvertisement;
 	}
-	
+
 	public static int getIdForPipeAdv(PipeAdvertisement adv) {
-		
+
 		for(int i : peerPipes.keySet()) {
 			if(adv.equals( peerPipes.get(i) )) return i;
 		}
-		
+
 		return -1;
 	}
 
@@ -341,10 +342,12 @@ public class JxtaCommunicator {
 
 				// Only one PipeAdvertisement should be returned from each Peer in the DFS.
 				System.out.println("Discovering..");
-				discoveryService.getRemoteAdvertisements(null, DiscoveryService.ADV, null, null, 10, this);
-				
+				discoveryService.getRemoteAdvertisements(null, DiscoveryService.ADV, "Name", "pipeAdv:*", 10, this);
+
 				try {
-					this.wait(20 * 1000);
+					synchronized(this) {
+						this.wait(20 * 1000);
+					}
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -359,12 +362,12 @@ public class JxtaCommunicator {
 
 		@Override
 		public void discoveryEvent(DiscoveryEvent event) {
-			
+
 			//TODO: Handle limited number of neighbours
 
 			System.out.println("Advertisement discovered!");
-			
-			
+
+
 			// Who triggered the event?
 			DiscoveryResponseMsg responseMsg = event.getResponse();
 
@@ -378,7 +381,7 @@ public class JxtaCommunicator {
 					try {
 
 						Advertisement adv = TheEnumeration.nextElement();
-						
+
 						System.out.println("Discovered Advertisement is a " + adv.getAdvType());
 
 						// We are only interested in the PipeAdvertisements.
