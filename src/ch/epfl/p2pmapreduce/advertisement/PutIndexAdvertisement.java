@@ -17,7 +17,7 @@ import net.jxta.id.IDFactory;
 
 public class PutIndexAdvertisement extends Advertisement {
 	public static final String name = "PutIndexAdvertisement";
-	public final static String advertisementType = "jxta:CustomizedAdvertisement";
+	public final static String advertisementType = "jxta:PutIndexAdvertisement";
 
 	private ID advertisementID = ID.nullID;
 	private String dfsFileName = "";

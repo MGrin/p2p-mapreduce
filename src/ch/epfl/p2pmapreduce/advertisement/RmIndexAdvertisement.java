@@ -18,7 +18,7 @@ import net.jxta.id.IDFactory;
 public class RmIndexAdvertisement extends Advertisement {
 
 	public static final String name = "RmIndexAdvertisement";
-	public static final String advertisementType = "jxta:CustomizedAdvertisement";
+	public static final String advertisementType = "jxta:RmIndexAdvertisement";
 
 	private ID advertisementID = ID.nullID;
 

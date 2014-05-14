@@ -107,7 +107,7 @@ public class FileManager {
 	
 	public boolean rmFile(File f) {
 		// TODO malicious injection possible here : filename = ../../../ => will remove the whole filesystem
-		
+				
 		if (index.remove(f)) {
 			clean(f.name);
 			return true;

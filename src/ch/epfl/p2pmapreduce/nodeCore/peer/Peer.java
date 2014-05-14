@@ -254,7 +254,6 @@ public class Peer implements Runnable, MessageBuilder{
 	 * @return true if the file existed false if no such file
 	 */
 	public boolean rm(File file) {
-		//FIXME cast exception : seems to generate a putAdvertisement
 		RmIndexAdvertisement rmAdvertisement = (RmIndexAdvertisement) AdvertisementFactory.newAdvertisement(RmIndexAdvertisement.getAdvertisementType());
 		rmAdvertisement.setFileName(file.name);
 		rmAdvertisement.setFileDeletionTime(System.currentTimeMillis());
@@ -262,7 +261,6 @@ public class Peer implements Runnable, MessageBuilder{
 
 		cManager.send(rmAdvertisement);
 
-		//TODO: Not going to work because chunkCount is -1! Have to compare only with file names.
 		return fManager.rmFile(file);
 	}
 

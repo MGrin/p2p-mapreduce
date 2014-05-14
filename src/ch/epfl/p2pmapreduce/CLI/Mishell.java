@@ -2,6 +2,7 @@ package ch.epfl.p2pmapreduce.CLI;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
 import ch.epfl.p2pmapreduce.index.Metadata;
@@ -30,11 +31,16 @@ public class Mishell {
 
 	public static void main(String[] args) throws java.io.IOException {
 
-		if (args.length != 1) {
+		String name = null;
+		
+		if(args.length == 0) {
+			name = Integer.toString(new Random().nextInt());
+		} else if (args.length == 1) {
+			name = args[0];
+		} else {
 			System.err.println("You need to specify your name! (No spaces)");
+			return;
 		}
-
-		String name = args[0];
 
 		Scanner scanner = new Scanner(System.in);
 		String line;
@@ -146,6 +152,7 @@ public class Mishell {
 
 	public static void put(String osFullFilePath, String dfsPath) {
 		List<String> temp = Metadata.tokenize(osFullFilePath, "/");
+		
 		String dfsFullFolderPath = dfsPath.concat("/" + temp.get(temp.size() - 1));
 		boolean success = false;
 		System.out.println("with the file (local): " + osFullFilePath
@@ -176,8 +183,10 @@ public class Mishell {
 		System.out.println("Removing " + input + " from DFS..");
 
 		boolean success = p.rm(new File(input, -1));
-
+		
 		if (success) {
+			System.out.println("Succeeded in removing from distant file System and publishing RmIndexAdvertisement");
+			
 			if (isDirectory) {
 				Metadata.metaRm(input, true);
 			} else {

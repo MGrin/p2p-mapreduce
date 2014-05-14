@@ -10,14 +10,13 @@ IndexDiscoverer/
 Ananas/
 Peer0/
 test-onlocal/
+
+.raidfs_data/
  
 # OS Files #
 .DS_Store
  
 *.class
- 
-meta.xml
-
 
 # Package Files #
 *.war
