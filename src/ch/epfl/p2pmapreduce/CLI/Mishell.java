@@ -182,7 +182,7 @@ public class Mishell {
 
 		System.out.println("Removing " + input + " from DFS..");
 
-		boolean success = p.rm(new File(input, -1));
+		boolean success = p.remoteRemove(new File(input, -1));
 		
 		if (success) {
 			System.out.println("Succeeded in removing from distant file System and publishing RmIndexAdvertisement");

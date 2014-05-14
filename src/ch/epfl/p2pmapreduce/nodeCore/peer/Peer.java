@@ -235,14 +235,16 @@ public class Peer implements Runnable, MessageBuilder{
 	 */
 	public boolean remotePut(File file) {
 
-		PutIndexAdvertisement putAdvertisement = (PutIndexAdvertisement) AdvertisementFactory.newAdvertisement(PutIndexAdvertisement.getAdvertisementType());
 		
-		putAdvertisement.setDFSFileName(file.name);
-		putAdvertisement.setFileCreationTime(System.currentTimeMillis());
-		putAdvertisement.setFileSize(file.chunkCount * NetworkConstants.CHUNK_SIZE);
-		putAdvertisement.setID(ID.nullID);
-
-		cManager.send(putAdvertisement);
+		//TODO: Un-comment when GetIndex testing is done.
+//		PutIndexAdvertisement putAdvertisement = (PutIndexAdvertisement) AdvertisementFactory.newAdvertisement(PutIndexAdvertisement.getAdvertisementType());
+//		
+//		putAdvertisement.setDFSFileName(file.name);
+//		putAdvertisement.setFileCreationTime(System.currentTimeMillis());
+//		putAdvertisement.setFileSize(file.chunkCount * NetworkConstants.CHUNK_SIZE);
+//		putAdvertisement.setID(ID.nullID);
+//
+//		cManager.send(putAdvertisement);
 
 		return fManager.addFile(file);
 	}
@@ -253,13 +255,16 @@ public class Peer implements Runnable, MessageBuilder{
 	 * @param file The file representation of file to remove from local index.
 	 * @return true if the file existed false if no such file
 	 */
-	public boolean rm(File file) {
-		RmIndexAdvertisement rmAdvertisement = (RmIndexAdvertisement) AdvertisementFactory.newAdvertisement(RmIndexAdvertisement.getAdvertisementType());
-		rmAdvertisement.setFileName(file.name);
-		rmAdvertisement.setFileDeletionTime(System.currentTimeMillis());
-		rmAdvertisement.setID(ID.nullID);
-
-		cManager.send(rmAdvertisement);
+	public boolean remoteRemove(File file) {
+		
+		// TODO: Un-comment when testing GetIndex is done.
+		
+//		RmIndexAdvertisement rmAdvertisement = (RmIndexAdvertisement) AdvertisementFactory.newAdvertisement(RmIndexAdvertisement.getAdvertisementType());
+//		rmAdvertisement.setFileName(file.name);
+//		rmAdvertisement.setFileDeletionTime(System.currentTimeMillis());
+//		rmAdvertisement.setID(ID.nullID);
+//
+//		cManager.send(rmAdvertisement);
 
 		return fManager.rmFile(file);
 	}
