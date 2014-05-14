@@ -341,7 +341,7 @@ public class JxtaCommunicator {
 				//discoveryService.getRemoteAdvertisements(null, DiscoveryService.PEER, null, null, NetworkConstants.CANDIDATE_SIZE);
 
 				// Only one PipeAdvertisement should be returned from each Peer in the DFS.
-				System.out.println("Discovering..");
+				System.out.println("discovering..");
 				discoveryService.getRemoteAdvertisements(null, DiscoveryService.ADV, "Name", "pipeAdv:*", 10, this);
 
 				try {
@@ -382,14 +382,16 @@ public class JxtaCommunicator {
 
 						Advertisement adv = TheEnumeration.nextElement();
 
-						System.out.println("Discovered Advertisement is a " + adv.getAdvType());
-
 						// We are only interested in the PipeAdvertisements.
 						if(adv.getAdvType().equals(PipeAdvertisement.getAdvertisementType())) {
 
-							System.out.println("We identified the PipeAdvertisement and handle it");
+							
 							PipeAdvertisement pipeAdv = (PipeAdvertisement) adv;
 
+							System.out.println("found a peer! handling " + pipeAdv.getName());
+							
+							//TODO: Test if not discovered already!
+							
 							int neighbourId = UidGenerator.freshId();
 
 							peerPipes.put(neighbourId, pipeAdv);

@@ -89,6 +89,7 @@ public class ConnectionManager {
 
 	public void update(int peerId, File file, Chunkfield c) {
 		for (Neighbour n: neighbors) {
+			System.out.println("neighbour " + n + " has chunkfield " + c + " for file " + file);
 			if (n.id == peerId) n.setChunkfield(file.name, c);
 		}
 	}
