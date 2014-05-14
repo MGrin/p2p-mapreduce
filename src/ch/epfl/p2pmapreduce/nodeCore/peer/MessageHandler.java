@@ -64,6 +64,7 @@ public class MessageHandler implements MessageReceiver {
 	 */
 	public void handleMessage() {
 		Message m = readHead();
+		System.out.println("message is of type " + m.getClass());
 		m.visit(this);
 	}
 	

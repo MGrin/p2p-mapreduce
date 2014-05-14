@@ -213,6 +213,7 @@ public class JxtaCommunicator {
 			public void run() {
 
 				try {
+					System.out.println("publishing PipeAdvertisement with name " + pipeAdvertisement.getName());
 					pg.getDiscoveryService().publish(pipeAdvertisement);
 				} catch (IOException e) {
 					System.err.println("Could not publish PipeAdvertisement! Peers are not going to be able to send us messages then..");
@@ -230,8 +231,7 @@ public class JxtaCommunicator {
 			@Override
 			public void run() {
 
-				System.out.println("Discovering index update...");
-
+				System.out.println("discovering index updates");
 				pg.getDiscoveryService().getRemoteAdvertisements(null, DiscoveryService.ADV, null, null, 10, listener);
 
 			}
