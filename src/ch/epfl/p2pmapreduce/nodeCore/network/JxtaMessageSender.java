@@ -87,8 +87,6 @@ public class JxtaMessageSender implements IMessageSender {
 		MessageElement name = new StringMessageElement("name", SEND_CHUNKFIELD,
 				null);
 		message.addMessageElement(name);
-
-		System.out.println("map to string is : " + convertMapToString(sendChunkfield.chunkfields()));
 		
 		MessageElement chunkField = new StringMessageElement("chunkfield",
 				convertMapToString(sendChunkfield.chunkfields()), null);
@@ -188,7 +186,7 @@ public class JxtaMessageSender implements IMessageSender {
 		StringBuilder builder = new StringBuilder();
 
 		for (String s : map.keySet())
-			builder.append(s + ":" + map.get(s).toBitString() + "/");
+			builder.append(s + ":" + map.get(s).toBitString() + "|");
 
 		return builder.toString();
 	}

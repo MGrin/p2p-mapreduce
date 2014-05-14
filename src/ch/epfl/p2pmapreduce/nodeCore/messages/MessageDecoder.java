@@ -124,13 +124,11 @@ public class MessageDecoder {
 	private static Map<String, Chunkfield> convertStringToMap(String text) {
 
 		Map<String, Chunkfield> map = new HashMap<String, Chunkfield>();
-		String[] elements = text.split("/");
-		
-		System.out.println("Text : " + text);
+
+		String[] elements = text.split("|");
 
 		for (int i = 0; i < elements.length; i++) {
 			String[] keyValue = elements[i].split(":");
-			System.out.println("Elements[" + i + "] : " + elements[i]);
 
 			String key = keyValue[0];
 
