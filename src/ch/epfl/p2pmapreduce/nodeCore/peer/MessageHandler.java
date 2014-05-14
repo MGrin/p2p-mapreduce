@@ -119,7 +119,13 @@ public class MessageHandler implements MessageReceiver {
 	@Override
 	public void receive(FileRemoved updateIndex) {
 		
-		//TODO: Implement | But same problem here! we only have the name so cannot instantiate
+		if(files.rmFile(new File(updateIndex.name(), -1))) {
+			//Not a directory be default.. But Metadata should actually now!
+			Metadata.metaRm(updateIndex.name(), false);
+			
+			//TODO: Hmm not sure if right thing to do.
+			state.set(PeerState.BUILDGLOBALCF);
+		}
 		
 	}
 
