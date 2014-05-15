@@ -22,14 +22,18 @@ public class RmIndexAdvertisement extends Advertisement {
 
 	private ID advertisementID = ID.nullID;
 
+	private final String identifier ="indexAdvertisement:rm";
+
 	private String fileName = "";
 	private String fileDeletionTime = Long.toString(0);
+
+	private final static String identifierTag = "MyIdentifierTag";
 	private final static String idTag = "MyIDTag";
 	private final static String fileNameTag = "MyfileNameTag";
+
 	private final static String fileDeletionTimeTag = "MyFileDeletionTimeTag";
 
-	private final static String[] indexableFields = { idTag, fileNameTag,
-			fileDeletionTimeTag };
+	private final static String[] indexableFields = { idTag, identifierTag , fileDeletionTimeTag };
 
 	public RmIndexAdvertisement() {
 		// Accepting default values
@@ -155,7 +159,7 @@ public class RmIndexAdvertisement extends Advertisement {
 	}
 
 	public static class Instantiator implements
-			AdvertisementFactory.Instantiator {
+	AdvertisementFactory.Instantiator {
 
 		public String getAdvertisementType() {
 			return RmIndexAdvertisement.getAdvertisementType();

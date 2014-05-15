@@ -236,15 +236,14 @@ public class Peer implements Runnable, MessageBuilder{
 	public boolean remotePut(File file) {
 
 		
-		//TODO: Un-comment when GetIndex testing is done.
-//		PutIndexAdvertisement putAdvertisement = (PutIndexAdvertisement) AdvertisementFactory.newAdvertisement(PutIndexAdvertisement.getAdvertisementType());
-//		
-//		putAdvertisement.setDFSFileName(file.name);
-//		putAdvertisement.setFileCreationTime(System.currentTimeMillis());
-//		putAdvertisement.setFileSize(file.chunkCount * NetworkConstants.CHUNK_SIZE);
-//		putAdvertisement.setID(ID.nullID);
-//
-//		cManager.send(putAdvertisement);
+		PutIndexAdvertisement putAdvertisement = (PutIndexAdvertisement) AdvertisementFactory.newAdvertisement(PutIndexAdvertisement.getAdvertisementType());
+		
+		putAdvertisement.setFileName(file.name);
+		putAdvertisement.setFileCreationTime(System.currentTimeMillis());
+		putAdvertisement.setFileSize(file.chunkCount * NetworkConstants.CHUNK_SIZE);
+		putAdvertisement.setID(ID.nullID);
+
+		cManager.send(putAdvertisement);
 
 		return fManager.addFile(file, true);
 	}
@@ -257,14 +256,12 @@ public class Peer implements Runnable, MessageBuilder{
 	 */
 	public boolean remoteRemove(File file) {
 		
-		// TODO: Un-comment when testing GetIndex is done.
-		
-//		RmIndexAdvertisement rmAdvertisement = (RmIndexAdvertisement) AdvertisementFactory.newAdvertisement(RmIndexAdvertisement.getAdvertisementType());
-//		rmAdvertisement.setFileName(file.name);
-//		rmAdvertisement.setFileDeletionTime(System.currentTimeMillis());
-//		rmAdvertisement.setID(ID.nullID);
-//
-//		cManager.send(rmAdvertisement);
+		RmIndexAdvertisement rmAdvertisement = (RmIndexAdvertisement) AdvertisementFactory.newAdvertisement(RmIndexAdvertisement.getAdvertisementType());
+		rmAdvertisement.setFileName(file.name);
+		rmAdvertisement.setFileDeletionTime(System.currentTimeMillis());
+		rmAdvertisement.setID(ID.nullID);
+
+		cManager.send(rmAdvertisement);
 
 		return fManager.rmFile(file);
 	}

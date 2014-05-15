@@ -20,16 +20,19 @@ public class PutIndexAdvertisement extends Advertisement {
 	public final static String advertisementType = "jxta:PutIndexAdvertisement";
 
 	private ID advertisementID = ID.nullID;
-	private String dfsFileName = "";
+	
+	private final String identifier = "indexAdvertisement:put";
+	private String fileName = "";
 	private String fileSize = "";
 	private String fileCreationTime = "";
 
-	private final static String nameTag = "MyNameTag";
+	private final static String identifierTag = "MyIdentifierTag";
+	private final static String fileNameTag = "MyFileNameTag";
 	private final static String idTag = "MyIDTag";
 	private final static String dateTag = "MyDateTag";
 	private final static String sizeTag = "MySizeTag";
 
-	private final static String[] indexableFields = { nameTag, idTag, dateTag };
+	private final static String[] indexableFields = { identifierTag, idTag, dateTag };
 
 	public PutIndexAdvertisement(Element Root) {
 
@@ -72,8 +75,8 @@ public class PutIndexAdvertisement extends Advertisement {
 			}
 		}
 
-		if (theElementName.compareTo(nameTag) == 0) {
-			dfsFileName = theTextValue;
+		if (theElementName.compareTo(fileNameTag) == 0) {
+			fileName = theTextValue;
 			return;
 		}
 
@@ -105,7 +108,7 @@ public class PutIndexAdvertisement extends Advertisement {
 				fileSize);
 		theResult.appendChild(myTempElement);
 
-		myTempElement = theResult.createElement(nameTag, dfsFileName);
+		myTempElement = theResult.createElement(fileNameTag, fileName);
 		theResult.appendChild(myTempElement);
 
 		return theResult;
@@ -145,12 +148,12 @@ public class PutIndexAdvertisement extends Advertisement {
 		fileCreationTime = Long.toString(time);
 	}
 
-	public String getDFSFileName() {
-		return dfsFileName;
+	public String getFileName() {
+		return fileName;
 	}
 
-	public void setDFSFileName(String name) {
-		dfsFileName = name;
+	public void setFileName(String name) {
+		fileName = name;
 	}
 
 	public static class Instantiator implements
@@ -174,7 +177,7 @@ public class PutIndexAdvertisement extends Advertisement {
 		PutIndexAdvertisement result = (PutIndexAdvertisement) super.clone();
 
 		result.advertisementID = this.advertisementID;
-		result.dfsFileName = this.dfsFileName;
+		result.fileName = this.fileName;
 		result.fileCreationTime = this.fileCreationTime;
 		result.fileSize = this.fileSize;
 
