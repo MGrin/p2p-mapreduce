@@ -238,10 +238,10 @@ public class Metadata {
 				files.add(new ch.epfl.p2pmapreduce.nodeCore.volume.File(tokenize(fullpaths.get(i),":").get(0), chunkCount));
 			}
 			//test
-			//for(int i = 0; i<files.size(); i++){
-			//	System.out.println((files.get(i).name));
-			//	System.out.println((files.get(i).chunkCount));
-			//}
+			for(int i = 0; i<files.size(); i++){
+				System.out.println((files.get(i).name));
+				System.out.println((files.get(i).chunkCount));
+			}
 			return files;
 		}
 	}
@@ -258,9 +258,13 @@ public class Metadata {
 				chunkCount = tokenize(childrens.get(i).getText(),",").get(0);
 				pathCount = fullpath+":"+chunkCount;
 				while (parent != null){
-					pathCount = parent.getName() + "/" + pathCount;
+					if(parent.getName().compareTo("DFS") != 0){
+						pathCount = parent.getName() + "/" + pathCount;
+					}
 					parent = parent.getParentElement();
+					
 				}
+				
 				fullpaths.add(pathCount);
 			} else {
 				searchFiles(childrens.get(i).getChildren());
@@ -272,11 +276,11 @@ public class Metadata {
 	//Tests
 	public static void main(String[] args) {
 		//Metadata meta = new Metadata();
-		//create();
+		create();
 		//metaLs("boite");
-		//metaPut("boite/caillou/chameau,8000,12-12-1222 12:12:12");
-		//metaPut("choux/pain,1234,12-12-1222 12:12:12");
-		//toFiles();
+		metaPut("boite/caillou/chameau,8000,12-12-1222 12:12:12");
+		metaPut("choux/pain,1234,12-12-1222 12:12:12");
+		toFiles();
 		//metaLs("boite");
 		//metaPut("choux/fichier/kiki,80,12-12-1222 12:12:12");
 		//metaLs("choux/fichier");
