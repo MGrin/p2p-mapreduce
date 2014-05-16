@@ -124,6 +124,9 @@ public class MessageDecoder {
 	private static Map<String, Chunkfield> convertStringToMap(String text) {
 
 		Map<String, Chunkfield> map = new HashMap<String, Chunkfield>();
+		
+		if(text.equals("")) return map;
+		
 		String[] elements = text.split("$");
 
 		for (int i = 0; i < elements.length; i++) {

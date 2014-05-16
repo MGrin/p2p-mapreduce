@@ -37,9 +37,6 @@ public class MainRendezVous {
 		seeds.put(CENTRAL_NAME, centralSeed);
 
 		centralSeed.start();
-		Tools.PopInformationMessage("Central seed", "Waiting for other peers to connect");
-
-
 
 		// Creating a child group with PSE
 		PeerGroup ChildPeerGroup = null;
@@ -52,9 +49,9 @@ public class MainRendezVous {
 					);
 
 
-		if (Module.START_OK != ChildPeerGroup.startApp(new String[0]))
-			System.err.println("Cannot start custom peergroup");
-		
+			if (Module.START_OK != ChildPeerGroup.startApp(new String[0]))
+				System.err.println("Cannot start custom peergroup");
+
 		} catch (PeerGroupException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -65,54 +62,52 @@ public class MainRendezVous {
 		// Checking membership implementation
 		MembershipService ChildGroupMembership = ChildPeerGroup.getMembershipService();
 
-		Tools.PopInformationMessage(CENTRAL_NAME
-				, "Custom group membership implementation:\n"
-						+ ChildGroupMembership.getClass().getSimpleName());
+		Tools.PopInformationMessage(CENTRAL_NAME, "Waiting for other peers to connect..");
 
 		// Stopping the network
 		Tools.PopInformationMessage(CENTRAL_NAME, "Stop the JXTA network");
 		centralSeed.stop();
 
-}
-
-public static ModuleImplAdvertisement createAllPurposePeerGroupImplAdv() {
-
-	ModuleImplAdvertisement implAdv = CompatibilityUtils.createModuleImplAdvertisement(
-			PeerGroup.allPurposePeerGroupSpecID, StdPeerGroup.class.getName(),
-			"General Purpose Peer Group");
-
-	// Create the service list for the group.
-	StdPeerGroupParamAdv paramAdv = new StdPeerGroupParamAdv();
-
-	// set the services
-	paramAdv.addService(PeerGroup.endpointClassID, PeerGroup.refEndpointSpecID);
-	paramAdv.addService(PeerGroup.resolverClassID, PeerGroup.refResolverSpecID);
-	paramAdv.addService(PeerGroup.membershipClassID, PeerGroup.refMembershipSpecID);
-	paramAdv.addService(PeerGroup.accessClassID, PeerGroup.refAccessSpecID);
-
-	// standard services
-	paramAdv.addService(PeerGroup.discoveryClassID, PeerGroup.refDiscoverySpecID);
-	paramAdv.addService(PeerGroup.rendezvousClassID, PeerGroup.refRendezvousSpecID);
-	paramAdv.addService(PeerGroup.pipeClassID, PeerGroup.refPipeSpecID);
-	paramAdv.addService(PeerGroup.peerinfoClassID, PeerGroup.refPeerinfoSpecID);
-
-	paramAdv.addService(PeerGroup.contentClassID, ContentServiceImpl.MODULE_SPEC_ID);
-
-	// Insert the newParamAdv in implAdv
-	XMLElement paramElement = (XMLElement) paramAdv.getDocument(MimeMediaType.XMLUTF8);
-	implAdv.setParam(paramElement);
-
-	return implAdv;
-
-}
-
-public static String getAddress(){
-	try {
-		return "tcp://" + InetAddress.getLocalHost().getHostAddress() + ":" + PORT;
-	} catch (UnknownHostException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-		return null;
 	}
-}
+
+	public static ModuleImplAdvertisement createAllPurposePeerGroupImplAdv() {
+
+		ModuleImplAdvertisement implAdv = CompatibilityUtils.createModuleImplAdvertisement(
+				PeerGroup.allPurposePeerGroupSpecID, StdPeerGroup.class.getName(),
+				"General Purpose Peer Group");
+
+		// Create the service list for the group.
+		StdPeerGroupParamAdv paramAdv = new StdPeerGroupParamAdv();
+
+		// set the services
+		paramAdv.addService(PeerGroup.endpointClassID, PeerGroup.refEndpointSpecID);
+		paramAdv.addService(PeerGroup.resolverClassID, PeerGroup.refResolverSpecID);
+		paramAdv.addService(PeerGroup.membershipClassID, PeerGroup.refMembershipSpecID);
+		paramAdv.addService(PeerGroup.accessClassID, PeerGroup.refAccessSpecID);
+
+		// standard services
+		paramAdv.addService(PeerGroup.discoveryClassID, PeerGroup.refDiscoverySpecID);
+		paramAdv.addService(PeerGroup.rendezvousClassID, PeerGroup.refRendezvousSpecID);
+		paramAdv.addService(PeerGroup.pipeClassID, PeerGroup.refPipeSpecID);
+		paramAdv.addService(PeerGroup.peerinfoClassID, PeerGroup.refPeerinfoSpecID);
+
+		paramAdv.addService(PeerGroup.contentClassID, ContentServiceImpl.MODULE_SPEC_ID);
+
+		// Insert the newParamAdv in implAdv
+		XMLElement paramElement = (XMLElement) paramAdv.getDocument(MimeMediaType.XMLUTF8);
+		implAdv.setParam(paramElement);
+
+		return implAdv;
+
+	}
+
+	public static String getAddress(){
+		try {
+			return "tcp://" + InetAddress.getLocalHost().getHostAddress() + ":" + PORT;
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
 }

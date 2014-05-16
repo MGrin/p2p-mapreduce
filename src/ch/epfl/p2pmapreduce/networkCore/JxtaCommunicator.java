@@ -42,8 +42,8 @@ public class JxtaCommunicator {
 
 	private final static int MAIN_RENDEZVOUS_PORT = 9710;
 
-	//private final static String MAIN_RENDEZ_VOUS_ADDRESS = "tcp://icdatasrv2.epfl.ch:" + MAIN_RENDEZVOUS_PORT;
-	private final static String MAIN_RENDEZ_VOUS_ADDRESS = "tcp://localhost:" + MAIN_RENDEZVOUS_PORT;
+	private final static String MAIN_RENDEZ_VOUS_ADDRESS = "tcp://icdatasrv2.epfl.ch:" + MAIN_RENDEZVOUS_PORT;
+	//private final static String MAIN_RENDEZ_VOUS_ADDRESS = "tcp://localhost:" + MAIN_RENDEZVOUS_PORT;
 
 
 	private final static int PIPE_RESOLVING_TIMEOUT = 30000;
@@ -216,6 +216,7 @@ public class JxtaCommunicator {
 
 				try {
 					System.out.println("publishing PipeAdvertisement with name " + pipeAdvertisement.getName());
+					System.out.println("next publishing in " + (NetworkConstants.PIPE_ADVERTISEMENT_LIFETIME - 30 * 1000)/1000 + " seconds");
 					pg.getDiscoveryService().publish(pipeAdvertisement);
 				} catch (IOException e) {
 					System.err.println("Could not publish PipeAdvertisement! Peers are not going to be able to send us messages then..");
@@ -234,7 +235,7 @@ public class JxtaCommunicator {
 			public void run() {
 
 				System.out.println("discovering index updates");
-				pg.getDiscoveryService().getRemoteAdvertisements(null, DiscoveryService.ADV, null, null, 10, listener);
+				pg.getDiscoveryService().getRemoteAdvertisements(null, DiscoveryService.ADV, "MyIdentifierTag" , "indexAdvertisement:*", 10, listener);
 
 			}
 		}, 0, NetworkConstants.INDEX_ADVERTISEMENT_DISCOVERY_RATE);
