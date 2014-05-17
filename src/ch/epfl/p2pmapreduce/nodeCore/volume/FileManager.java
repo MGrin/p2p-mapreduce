@@ -109,6 +109,8 @@ public class FileManager {
 			e.printStackTrace();
 			return null;
 		}
+		
+		System.out.println("--------- FILE LOADED WITH CHUNKCOUNT " + chunkCount);
 		return new File(dfsFullPath, chunkCount);
 	}
 	
@@ -153,7 +155,7 @@ public class FileManager {
 		}
 		
 		for (File newF: newIndex.files()) {
-			if (! index.contains(newF)) index.put(newF, false);
+			if (! index.contains(newF)) this.addFile(newF, false);
 		}
 	}
 

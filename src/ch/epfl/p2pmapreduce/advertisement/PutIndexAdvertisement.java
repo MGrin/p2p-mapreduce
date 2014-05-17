@@ -89,6 +89,7 @@ public class PutIndexAdvertisement extends Advertisement {
 			fileSize = theTextValue;
 			return;
 		}
+		
 	}
 
 	@Override
@@ -109,6 +110,9 @@ public class PutIndexAdvertisement extends Advertisement {
 		theResult.appendChild(myTempElement);
 
 		myTempElement = theResult.createElement(fileNameTag, fileName);
+		theResult.appendChild(myTempElement);
+		
+		myTempElement = theResult.createElement(identifierTag, identifier);
 		theResult.appendChild(myTempElement);
 
 		return theResult;

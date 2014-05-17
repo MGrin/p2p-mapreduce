@@ -29,9 +29,9 @@ public class NetworkConstants {
 	public static final int CHUNK_SIZE = 1024;
 	
 	//
-	public static final int PIPE_ADVERTISEMENT_LIFETIME = 5 * 60 * 1000;
+	public static final int PIPE_ADVERTISEMENT_LIFETIME = 2 * 60 * 1000;
 	
-	public static final int INDEX_ADVERTISEMENT_DISCOVERY_RATE = 20 * 1000; 
+	public static final int INDEX_ADVERTISEMENT_DISCOVERY_RATE = 30 * 1000; 
 	
 	// just for simulation
 	
