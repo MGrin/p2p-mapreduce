@@ -132,9 +132,9 @@ public class Mishell {
 						System.out.println("on " + tok[1]);
 						rm(tok[1], false);
 					} else if (tok.length == 3) {
-						if (tok[2].compareTo("-d") == 0) {
-							System.out.println("handle rm on the folder : " + tok[1]);
-							rm(tok[1], true);
+						if (tok[1].compareTo("-d") == 0) {
+							System.out.println("handle rm on the folder : " + tok[2]);
+							rm(tok[2], true);
 						}
 					} else {
 						System.out
@@ -185,7 +185,7 @@ public class Mishell {
 
 	public static void rm(String input, boolean isDirectory) {
 		System.out.println("Removing " + input + " from DFS..");
-
+		
 		if(Metadata.metaExist(input)) {
 			boolean success = p.remoteRemove(new File(input, -1));
 
