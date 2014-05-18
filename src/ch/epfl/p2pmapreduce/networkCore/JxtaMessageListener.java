@@ -78,7 +78,7 @@ public class JxtaMessageListener implements PipeMsgListener, DiscoveryListener{
 						
 						System.out.println("Received " + putAdvertisement.getClass().getSimpleName() + " for file : " + putAdvertisement.getFileName() + " at time " + new Date(putAdvertisement.getFileCreationTime()));
 
-						NewFile newFileMessage = new NewFile(-1, putAdvertisement.getFileName(), (int)Math.ceil( 1.0 * putAdvertisement.getFileSize() / NetworkConstants.CHUNK_SIZE));
+						NewFile newFileMessage = new NewFile(-1, putAdvertisement.getFileSize(), putAdvertisement.getFileName());
 						handler.enqueue(newFileMessage);
 						
 					} else if (adv.getClass().equals(RmIndexAdvertisement.class)) {

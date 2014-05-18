@@ -20,7 +20,7 @@ public class NewFile extends IndexUpdate {
 		this.chunkCount = chunkCount;
 	}
 
-	public NewFile(int from, int fileSize, String fileName) {
+	public NewFile(int from, long fileSize, String fileName) {
 		super(from);
 		this.fileSize = fileSize;
 		this.fileName = fileName;
