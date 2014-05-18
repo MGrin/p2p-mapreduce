@@ -199,8 +199,10 @@ public class Mishell {
 			System.out.println("Succeeded in removing from distant file System and publishing RmIndexAdvertisement");
 
 			if (isDirectory) {
+				System.out.println("!!!removing: " + input + " by directory");
 				Metadata.metaRm(input, true);
 			} else {
+				System.out.println("!!!removing: " + input + "not by directory");
 				Metadata.metaRm(input, false);
 			}
 			

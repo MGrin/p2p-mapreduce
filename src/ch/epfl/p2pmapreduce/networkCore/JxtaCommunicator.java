@@ -235,7 +235,7 @@ public class JxtaCommunicator {
 			public void run() {
 
 				System.out.println("discovering index updates");
-				pg.getDiscoveryService().getRemoteAdvertisements(null, DiscoveryService.ADV, "MyIdentifiertag" , "*", 10, listener);
+				pg.getDiscoveryService().getRemoteAdvertisements(null, DiscoveryService.ADV, "MyIdentifierTag" , "*", 10, listener);
 
 			}
 		}, 0, NetworkConstants.INDEX_ADVERTISEMENT_DISCOVERY_RATE);
