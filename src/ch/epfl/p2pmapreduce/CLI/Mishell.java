@@ -109,9 +109,9 @@ public class Mishell {
 						System.out.println("not enough arguments");
 					}
 				} else if (tok[0].compareTo("get") == 0) {
-					if (tok.length == 2) {
+					if (tok.length == 3) {
 						System.out.println("handle get");
-						get(tok[1]);
+						get(tok[1], tok[2]);
 					} else if (tok.length > 2) {
 						System.out.println("Too much arguments for get");
 					} else {
@@ -176,10 +176,10 @@ public class Mishell {
 
 	}
 
-	public static void get(String input) {
-		System.out.println("with the file : " + input);
+	public static void get(String input, String outPath) {
+		System.out.println("with the file : " + input + " to go on the os as " + outPath);
 		if (Metadata.metaExist(input)) {
-			p.get(input);
+			p.get(input, outPath);
 		}
 	}
 
@@ -232,7 +232,7 @@ public class Mishell {
 			System.out.println("Format : rm file_to_delete_on_dfs argument");
 			System.out.println("arguments : \"-d\" to delete a directory");
 		} else if (input.compareTo("get") == 0) {
-			System.out.println("Format : get file_to_get_on_dfs");
+			System.out.println("Format : get file_to_get_on_dfs path_on_os");
 			System.out.println("No options for \"get\"");
 		} else if (input.compareTo("put") == 0) {
 			System.out.println("format : put file_to_send path_on_dfs.");
