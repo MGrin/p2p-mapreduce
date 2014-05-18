@@ -8,12 +8,15 @@ import java.util.Map;
 import ch.epfl.p2pmapreduce.advertisement.PutIndexAdvertisement;
 import ch.epfl.p2pmapreduce.advertisement.RmIndexAdvertisement;
 import ch.epfl.p2pmapreduce.networkCore.JxtaCommunicator;
+import ch.epfl.p2pmapreduce.nodeCore.messages.ExpectedSend;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunk;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunkfield;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetIndex;
+import ch.epfl.p2pmapreduce.nodeCore.messages.RefreshIndex;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendChunk;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendChunkfield;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendIndex;
+import ch.epfl.p2pmapreduce.nodeCore.peer.MessageExpecter;
 import ch.epfl.p2pmapreduce.nodeCore.peer.MessageHandler;
 import ch.epfl.p2pmapreduce.nodeCore.utils.NetworkConstants;
 import ch.epfl.p2pmapreduce.nodeCore.volume.Chunkfield;
@@ -25,6 +28,9 @@ public class ConnectionManager {
 
 	private final INeighbourDiscoverer nD ;
 	private IMessageSender sender ;
+	
+
+	private MessageExpecter expecter = MessageExpecter.INSTANCE;
 
 	private final JxtaCommunicator communicator;
 	
@@ -48,7 +54,10 @@ public class ConnectionManager {
 			neighbors = nD.getNeighbors();
 			
 			if(neighbors == null || neighbors.size() == 0) return false;
-			
+			// cuts the list when too many peers
+			for (int i = NetworkConstants.N_OPT; i < neighbors.size(); i++) {
+				neighbors.remove(i);
+			}
 		} else {
 			System.err.println("Could not start JXTA network.. Exiting");
 			System.exit(-1);
@@ -62,6 +71,7 @@ public class ConnectionManager {
 	}
 	
 	public void initMessageListening(MessageHandler handler) {
+		
 		
 		communicator.initMessageListener(handler, communicator.netPeerGroup);
 		this.sender = new JxtaMessageSender(communicator);		
@@ -102,11 +112,30 @@ public class ConnectionManager {
 		// entry for file in globalChunkfields will have to be recomputed
 		globalChunkfields.put(file, null);
 	}
-
-	public void remove(int peerId) {
-		neighbors.remove(peerId);
+	
+	// fetches a list of fresh neighbors and replace neigbors with peerID in peerIds
+	public void replaceNeighbors(List<Integer> peerIds) {
+		List<Neighbour> freshNeighbors = nD.getNeighbors();
+		List<Neighbour> partingNeighbors = removeNeighbors(peerIds);
+		freshNeighbors.removeAll(partingNeighbors);
+		for (Neighbour n : freshNeighbors) {
+			if (neighbors.size() < NetworkConstants.N_OPT && !neighbors.contains(n)) {
+				neighbors.add(n);
+			}
+		}
+		
 	}
-
+	
+	private List<Neighbour> removeNeighbors(List<Integer> peerIds) {
+		List<Neighbour> stayingPeers = new ArrayList<Neighbour>();
+		List<Neighbour> quittingPeers = new ArrayList<Neighbour>();
+		for (Neighbour n : neighbors) {
+			if (!peerIds.contains(n.id)) stayingPeers.add(n);
+			else quittingPeers.add(n);
+		}
+		neighbors = stayingPeers;
+		return quittingPeers;
+	}
 	// message sending methods
 
 	/**
@@ -124,6 +153,7 @@ public class ConnectionManager {
 			}
 		}
 		if (owner != null) {
+			expecter.expect(new ExpectedSend.Chunk(owner.id));
 			return sender.send(getChunk, owner);
 		} else return false;
 	}
@@ -146,11 +176,11 @@ public class ConnectionManager {
 	public void broadcast(GetChunkfield getChunkfield) {
 
 		for (Neighbour n: neighbors) {
+			expecter.expect(new ExpectedSend.Chunkfield(n.id));
 			sender.send(getChunkfield, n);
 		}
 	}
-
-	// temporary, until index messages gestion in miShell is integrated 
+ 
 	public boolean send(SendIndex sendIndex, int receiverId) {
 		System.out.println("receiver id is " + receiverId);
 		Neighbour receiver = getFromId(receiverId);
@@ -160,9 +190,14 @@ public class ConnectionManager {
 		} else return false;
 	}
 
-	// temporary, until index messages gestion in miShell is integrated
 	public boolean send(GetIndex getIndex) {
+		expecter.expect(new ExpectedSend.Index(neighbors.get(0).id));
 		return sender.send(getIndex, neighbors.get(0));
+	}
+	
+	public void send(RefreshIndex refreshIndex) {
+		// TODO add method in IMessageSender
+		// sender.send(refreshIndex);
 	}
 	
 	public void send(RmIndexAdvertisement rmAdvertisement) {
@@ -172,6 +207,8 @@ public class ConnectionManager {
 	public void send(PutIndexAdvertisement putAdvertisement) {
 		sender.send(putAdvertisement);
 	}
+	
+	
 
 	// utilities
 

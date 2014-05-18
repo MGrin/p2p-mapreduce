@@ -27,4 +27,7 @@ public class SendChunkfield implements Message, SendMessage {
 	public String toString() {
 		return "send chunkfield message from peer " + from;
 	}
+
+	@Override
+	public MessageType getType() { return MessageType.SEND_CHUNKFIELD; }
 }

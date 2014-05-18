@@ -16,6 +16,7 @@ import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunkfield;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetIndex;
 import ch.epfl.p2pmapreduce.nodeCore.messages.Message;
 import ch.epfl.p2pmapreduce.nodeCore.messages.NewFile;
+import ch.epfl.p2pmapreduce.nodeCore.messages.RefreshIndex;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendChunk;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendChunkfield;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendIndex;
@@ -62,9 +63,29 @@ public class Peer implements Runnable, MessageBuilder{
 	public void run() {
 		running = true;
 		print("running...");
-		int waitTimeout = 0;
+		int waitTime = 0;
+		long previousTs = 0;
 		PeerState previous = null;
 		while (running) {
+			long ts = System.currentTimeMillis();
+			if (ts%1000 == 0 && ts != previousTs) {
+				waitTime++;
+				previousTs = ts;
+			}
+			if (waitTime > PeerConstants.WAIT_TIMEOUT) {
+				waitTime = 0;
+				// this should only occur when a waiting too long for messages (sendIndex, send cf, send c)
+				List<Integer> badPeers = messages.timeoutIndex();
+				if (badPeers != null) {
+					cManager.replaceNeighbors(badPeers);
+					state.set(PeerState.GETINDEX);
+				} else {
+					badPeers = messages.timeoutChunk();
+					badPeers.addAll(messages.timeoutChunkfield());
+					cManager.replaceNeighbors(badPeers);
+					state.set(PeerState.REFRESHINDEX);
+				}
+			}
 			if (previous != state.get()) print(state.get() + "...");
 			previous = state.get();
 			switch (state.get()) {
@@ -79,43 +100,33 @@ public class Peer implements Runnable, MessageBuilder{
 				break;
 			case GETINDEX:
 				cManager.send(getIndex());
-				state.set(PeerState.WAITINGINDEX);
+				state.set(PeerState.WAITING);
 				break;
-			case WAITINGGLOBALCF :
-				// TODO set timeout for continuing re-requesting global chunkfield
-			case WAITINGCHUNKS :
-				// TODO set timeout for continuing requesting chunks
-			case WAITINGINDEX :
-				// TODO set timeout for re-requesting index
 			case WAITING :
 				if (!messages.isEmpty()) {
 					print("handling a message...");
 					messages.handleMessage();
 				}
-				long ts = System.currentTimeMillis();
-				if (ts%1000 == 0) {
-					waitTimeout++;
-					while (ts == System.currentTimeMillis());
-				}
-				if (waitTimeout > PeerConstants.WAIT_TIMEOUT) {
-					waitTimeout = 0;
-					state.set(PeerState.BUILDGLOBALCF);
-				}
+				break;
+			case REFRESHINDEX :
+				waitTime = 0;
+				cManager.send(refreshIndex());
+				state.set(PeerState.BUILDGLOBALCF); // not so good but simple implementation
 				break;
 			case BUILDGLOBALCF :
+				waitTime = 0;
 				if (fManager.filesCount() == 0) {
 					print("No files in index !");
 					state.set(PeerState.WAITING);
 				} else {
 					cManager.broadcast(getChunkfield());
-					state.set(PeerState.WAITINGGLOBALCF);
+					state.set(PeerState.WAITING);
 				}
 				break;
 			case CHECKGLOBALCF :
 				int sentRequestCount = checkGlobalCF();
 				print("sent " + sentRequestCount + " chunk requests");
-				messages.addPendingChunkRequest(sentRequestCount);
-				if (sentRequestCount > 0 ) state.set(PeerState.WAITINGCHUNKS);
+				if (sentRequestCount > 0 ) state.set(PeerState.WAITING);
 				else state.set(PeerState.WAITING);
 				break;
 			case EXITING :
@@ -217,7 +228,7 @@ public class Peer implements Runnable, MessageBuilder{
 	/**
 	 * Used by miShell to chunkify new file
 	 * Will chunkify argument and update index and chunkfield in FileManager.
-	 * Index update is assumed to be managed by miShell itself.
+	 * Index update has to be done here (TODO).
 	 * 
 	 * @param osFullPath os full path of file to load
 	 * @param dfsFullPath dfsFullPath to store file (including fileName)
@@ -396,8 +407,10 @@ public class Peer implements Runnable, MessageBuilder{
 	public MessageHandler getMessageHandler() {
 		return messages;
 	}
+	public RefreshIndex refreshIndex() {
+		return new RefreshIndex(id);
+	}
 
-	@Override
 	public List<GetChunk> get(String fileName) {
 		return null;
 	}

@@ -3,11 +3,9 @@ package ch.epfl.p2pmapreduce.nodeCore.peer;
 public enum PeerState {
 	BOOTING,
 	GETINDEX,
-	WAITINGINDEX,
+	REFRESHINDEX,
 	BUILDGLOBALCF,
-	WAITINGGLOBALCF,
 	CHECKGLOBALCF,
-	WAITINGCHUNKS,
 	WAITING,
 	EXITING;
 }
