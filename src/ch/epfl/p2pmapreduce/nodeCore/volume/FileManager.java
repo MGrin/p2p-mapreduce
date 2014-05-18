@@ -246,6 +246,10 @@ public class FileManager {
 		System.out.println("peer_" + peerId + ": " + message);
 	}
 	
+	public boolean containsFile(String fName) {
+		return getFile(fName) != null;
+	}
+	
 	// utility methods
 	
 	/*

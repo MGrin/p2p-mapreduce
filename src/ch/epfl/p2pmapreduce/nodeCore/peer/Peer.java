@@ -76,7 +76,7 @@ public class Peer implements Runnable, MessageBuilder{
 				waitTime = 0;
 				// this should only occur when a waiting too long for messages (sendIndex, send cf, send c)
 				List<Integer> badPeers = messages.timeoutIndex();
-				if (badPeers != null) {
+				if (badPeers != null && state.get() == PeerState.WAITINGINDEX) {
 					cManager.replaceNeighbors(badPeers);
 					state.set(PeerState.GETINDEX);
 				} else {
@@ -103,10 +103,11 @@ public class Peer implements Runnable, MessageBuilder{
 					state.set(PeerState.GETINDEX);
 				} else {
 					cManager.send(getIndex());
-					state.set(PeerState.WAITING);
+					state.set(PeerState.WAITINGINDEX);
 				}
 				
 				break;
+			case WAITINGINDEX :
 			case WAITING :
 				if (!messages.isEmpty()) {
 					print("handling a message...");

@@ -64,7 +64,7 @@ public class Index {
 		} else return false;
 	}
 
-	public boolean contains(File f) {		
+	public boolean contains(File f) {
 		Iterator<File> fileIterator = files.keySet().iterator();
 
 		File otherFile = null;
