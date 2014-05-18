@@ -11,6 +11,13 @@ import ch.epfl.p2pmapreduce.nodeCore.peer.Peer;
 import ch.epfl.p2pmapreduce.nodeCore.utils.FileManagerConstants;
 import ch.epfl.p2pmapreduce.nodeCore.volume.File;
 
+/**
+ * 
+ * @author marguet
+ *
+ *Basic CLI in order to connect to the DFS. command help permits to check the instructions.
+ *It is connected to a Peer (the user)
+ */
 public class Mishell {
 
 	/*
@@ -31,6 +38,9 @@ public class Mishell {
 
 	public static Peer p;
 
+	/*
+	 * Function to launch : program access
+	 */
 	public static void main(String[] args) throws java.io.IOException {
 
 		String name = null;
@@ -71,6 +81,7 @@ public class Mishell {
 		System.out.println("Root of the DFS is \"DFS\"");
 		System.out.println("Type \"help\" if you are lost.");
 
+		//loop over the user inputs
 		while (true) {
 			System.out.print("miShell>");
 			line = scanner.nextLine();
@@ -145,10 +156,20 @@ public class Mishell {
 		}
 	}
 
+	/**
+	 * list the files in Metadata
+	 * @param input : folder where we want to ls
+	 */
 	public static void ls(String input) {
 		Metadata.metaLs(input);
 	}
 
+	/**
+	 * When we want to put a new file, we need to add its indexation in Metadata.
+	 * will send PutIndexAdvertisement
+	 * @param osFullFilePath : path of the existing file
+	 * @param dfsPath : path we want to use on the DFS
+	 */
 	public static void put(String osFullFilePath, String dfsPath) {
 		List<String> temp = Metadata.tokenize(osFullFilePath, "/");
 
@@ -176,6 +197,11 @@ public class Mishell {
 
 	}
 
+	/**
+	 * When an item is present on the DFS, we want to get it, not only the chunks.
+	 * @param input : name of the item
+	 * @param outPath : path where we want to get the file (locally)
+	 */
 	public static void get(String input, String outPath) {
 		System.out.println("with the file : " + input + " to go on the os as " + outPath);
 		if (Metadata.metaExist(input)) {
@@ -183,6 +209,11 @@ public class Mishell {
 		}
 	}
 
+	/**
+	 * Delete the specified file, and delete it on the index -> will send an RmIndexAdvertisement
+	 * @param input
+	 * @param isDirectory
+	 */
 	public static void rm(String input, boolean isDirectory) {
 		System.out.println("Removing " + input + " from DFS..");
 		
@@ -206,11 +237,16 @@ public class Mishell {
 		}
 	}
 
+	/**
+	 * connection to the DFS, permits to the peer to initialize the Metadata file
+	 * and permits to discover other peers in ordwer to update this Metadata file.
+	 */
 	public static void connect() {
 		p.start();
 		Metadata.create();
 	}
 
+	//disconnect from the DFS and kill the peer
 	public static void quit() {
 		Runtime.getRuntime().exit(0);
 	}
@@ -240,6 +276,8 @@ public class Mishell {
 		}
 	}
 
+	//UTILITY
+	
 	private static String getFileInfos(String osFullPath, String DFSFullPath) {
 		java.io.File file = new java.io.File(osFullPath);
 
