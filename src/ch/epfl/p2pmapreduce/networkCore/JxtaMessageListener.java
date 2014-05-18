@@ -22,8 +22,11 @@ public class JxtaMessageListener implements PipeMsgListener, DiscoveryListener{
 
 	private MessageHandler handler;
 	
+	private long latestDiscovery;
+	
 	public JxtaMessageListener(MessageHandler handler) {
 		this.handler = handler;
+		latestDiscovery = 0;
 	}
 	
 	@Override
@@ -47,6 +50,8 @@ public class JxtaMessageListener implements PipeMsgListener, DiscoveryListener{
 
 			Enumeration<Advertisement> TheEnumeration = responseMsg.getAdvertisements();
 
+			long minDiscoveryTime = Long.MAX_VALUE;
+			
 			while (TheEnumeration.hasMoreElements()) {
 
 				try {
@@ -56,6 +61,21 @@ public class JxtaMessageListener implements PipeMsgListener, DiscoveryListener{
 
 						PutIndexAdvertisement putAdvertisement = (PutIndexAdvertisement) adv;
 
+						long creationTime = putAdvertisement.getFileCreationTime();
+						
+						if(creationTime <= latestDiscovery) {
+							Date latest = new Date(latestDiscovery);
+							
+							System.out.println("put advertisement for file " + putAdvertisement.getFileName() + " is too old");
+							System.out.println("was created at " + new Date(creationTime));
+							System.out.println("only discover after " + latest);
+							continue;
+						}
+						
+						if(creationTime > latestDiscovery && creationTime < minDiscoveryTime) {
+							minDiscoveryTime = creationTime;
+						}
+						
 						System.out.println("Received " + putAdvertisement.getClass().getSimpleName() + " for file : " + putAdvertisement.getFileName() + " at time " + new Date(putAdvertisement.getFileCreationTime()));
 
 						NewFile newFileMessage = new NewFile(-1, putAdvertisement.getFileName(), (int)Math.ceil( 1.0 * putAdvertisement.getFileSize() / NetworkConstants.CHUNK_SIZE));
@@ -64,6 +84,21 @@ public class JxtaMessageListener implements PipeMsgListener, DiscoveryListener{
 					} else if (adv.getClass().equals(RmIndexAdvertisement.class)) {
 						
 						RmIndexAdvertisement rmAdvertisement = (RmIndexAdvertisement) adv;
+						
+						long deletionTime = rmAdvertisement.getFileDeletionTime();
+						
+						if(deletionTime <= latestDiscovery) {
+							Date latest = new Date(latestDiscovery);
+							
+							System.out.println("put advertisement for file " + rmAdvertisement.getFileName() + " is too old");
+							System.out.println("was created at " + new Date(deletionTime));
+							System.out.println("only discover after " + latest);
+							continue;
+						}
+						
+						if(deletionTime > latestDiscovery && deletionTime < minDiscoveryTime) {
+							minDiscoveryTime = deletionTime;
+						}
 						
 						FileRemoved fileRemovedMessage = new FileRemoved(-1, -1, rmAdvertisement.getFileName());
 						
@@ -86,6 +121,8 @@ public class JxtaMessageListener implements PipeMsgListener, DiscoveryListener{
 				}
 
 			}
+			
+			latestDiscovery = minDiscoveryTime;
 		}
 	}
 

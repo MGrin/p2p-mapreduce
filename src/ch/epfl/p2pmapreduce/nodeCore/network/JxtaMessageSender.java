@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 import net.jxta.document.MimeMediaType;
@@ -53,6 +52,7 @@ public class JxtaMessageSender implements IMessageSender {
 	public static final String GET_CHUNK = "GETCHUNK";
 	public static final String GET_CHUNKFIELD = "GETCHUNKFIELD";
 	public static final String SEND_CHUNKFIELD = "SENDCHUNKFIELD";
+	public static final String GET = "GET";
 
 	public JxtaMessageSender(JxtaCommunicator jxtaCommunicator) {
 		this.communicator = jxtaCommunicator;

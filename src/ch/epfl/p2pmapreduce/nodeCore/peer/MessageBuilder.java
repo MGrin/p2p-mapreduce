@@ -1,5 +1,7 @@
 package ch.epfl.p2pmapreduce.nodeCore.peer;
 
+import java.util.List;
+
 import ch.epfl.p2pmapreduce.nodeCore.messages.FileStabilized;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunk;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunkfield;
@@ -20,6 +22,8 @@ public interface MessageBuilder {
 	
 	GetChunk getChunk(String fileName, int chunkId);
 	SendChunk sendChunk(String fileName, int chunkId);
+	
+	List<GetChunk> get(String fileName);
 	
 	NewFile newFile(String fileName, int chunkCount);
 	FileStabilized fileStabilized(String fName);

@@ -9,7 +9,6 @@ import net.jxta.platform.NetworkManager;
 import ch.epfl.p2pmapreduce.index.Metadata;
 import ch.epfl.p2pmapreduce.nodeCore.peer.Peer;
 import ch.epfl.p2pmapreduce.nodeCore.utils.FileManagerConstants;
-import ch.epfl.p2pmapreduce.nodeCore.utils.NetworkConstants;
 import ch.epfl.p2pmapreduce.nodeCore.volume.File;
 
 public class Mishell {
@@ -150,22 +149,15 @@ public class Mishell {
 		Metadata.metaLs(input);
 	}
 
-	public static void cat(String input) {
-		System.out.println("with the file : " + input);
-	}
-
-	public static void cd(String input) {
-		if (input == null) {
-			System.out.println("without arguments");
-		} else {
-			System.out.println("with path : " + input);
-		}
-	}
-
 	public static void put(String osFullFilePath, String dfsPath) {
 		List<String> temp = Metadata.tokenize(osFullFilePath, "/");
 
-		String dfsFullFolderPath = dfsPath.concat("/" + temp.get(temp.size() - 1));
+		String dfsFullFolderPath = "";
+		if (dfsPath.compareTo("/") == 0) {
+			dfsFullFolderPath = dfsPath.concat(temp.get(temp.size() - 1));
+		} else {
+			dfsFullFolderPath = dfsPath.concat("/" + temp.get(temp.size() - 1));
+		}
 		boolean success = false;
 		System.out.println("with the file (local): " + osFullFilePath
 				+ " (DFS): " + dfsFullFolderPath);
@@ -186,12 +178,12 @@ public class Mishell {
 
 	public static void get(String input) {
 		System.out.println("with the file : " + input);
-
-		// TODO: Implement get
+		if (Metadata.metaExist(input)) {
+			p.get(input);
+		}
 	}
 
 	public static void rm(String input, boolean isDirectory) {
-
 		System.out.println("Removing " + input + " from DFS..");
 
 		boolean success = p.remoteRemove(new File(input, -1));
@@ -200,10 +192,13 @@ public class Mishell {
 			System.out.println("Succeeded in removing from distant file System and publishing RmIndexAdvertisement");
 
 			if (isDirectory) {
+				System.out.println("!!!removing: " + input + " by directory");
 				Metadata.metaRm(input, true);
 			} else {
+				System.out.println("!!!removing: " + input + "not by directory");
 				Metadata.metaRm(input, false);
 			}
+			
 			System.out.println("Succedded in removing file " + input
 					+ " on DFS? " + success);
 		}

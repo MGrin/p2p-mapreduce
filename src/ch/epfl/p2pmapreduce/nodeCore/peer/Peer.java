@@ -407,10 +407,11 @@ public class Peer implements Runnable, MessageBuilder{
 	public MessageHandler getMessageHandler() {
 		return messages;
 	}
-
-	@Override
 	public RefreshIndex refreshIndex() {
 		return new RefreshIndex(id);
 	}
 
+	public List<GetChunk> get(String fileName) {
+		return null;
+	}
 }

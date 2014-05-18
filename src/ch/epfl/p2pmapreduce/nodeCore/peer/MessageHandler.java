@@ -151,6 +151,7 @@ public class MessageHandler implements MessageReceiver {
 		
 		if(files.rmFile(files.getFile(updateIndex.name()))) {
 			//Not a directory be default.. But Metadata should actually now!
+			System.out.println("removing from local xml file!");
 			Metadata.metaRm(updateIndex.name(), false);
 			
 			//TODO: Hmm not sure if right thing to do. Nope, remove in next commit

@@ -162,6 +162,7 @@ public class Metadata {
 	
 	//ls function
 	public static void metaLs(String folder) {
+		
 		SAXBuilder sxb = new SAXBuilder();
 		try {
 			document = sxb.build(file);
@@ -171,7 +172,7 @@ public class Metadata {
 			System.err.println("File doesn't exist");
 			e.printStackTrace();
 		}
-
+		
 		racine = document.getRootElement();
 		System.out.println("listing files in \"" + folder + "\"");
 		// best case
@@ -272,15 +273,49 @@ public class Metadata {
 		}
 	}
 	
+	public static boolean metaExist(String path) {
+		SAXBuilder sxb = new SAXBuilder();
+		try {
+			document = sxb.build(file);
+		} catch (JDOMException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			System.err.println("File doesn't exist");
+			e.printStackTrace();
+		}
+		
+		racine = document.getRootElement();
+		Element current = racine;
+		List<String> tokens = tokenize(path,"/");
+		for(int i = 0; i<tokens.size();i++){
+			if (i == tokens.size()-1){
+				if (searchIndice(current.getChildren(),tokens.get(i)) != -1){
+					return true;
+				} else {
+					return false;
+				}
+			} else {
+				int indice = searchIndice(current.getChildren(), tokens.get(i));
+				if (indice != -1){
+					current = current.getChildren().get(indice);
+				} else {
+					return false;
+				}
+			}
+		}
+		
+		return false;
+	}
+	
 	
 	//Tests
 	public static void main(String[] args) {
 		//Metadata meta = new Metadata();
 		create();
 		//metaLs("boite");
-		metaPut("boite/caillou/chameau,8000,12-12-1222 12:12:12");
+		//metaPut("boite/caillou/chameau,8000,12-12-1222 12:12:12");
 		metaPut("choux/pain,1234,12-12-1222 12:12:12");
-		toFiles();
+		System.out.println((metaExist("choux/pain")));;
 		//metaLs("boite");
 		//metaPut("choux/fichier/kiki,80,12-12-1222 12:12:12");
 		//metaLs("choux/fichier");
