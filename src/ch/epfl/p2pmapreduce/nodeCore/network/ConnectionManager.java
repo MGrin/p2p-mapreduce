@@ -72,7 +72,6 @@ public class ConnectionManager {
 	
 	public void initMessageListening(MessageHandler handler) {
 		
-		
 		communicator.initMessageListener(handler, communicator.netPeerGroup);
 		this.sender = new JxtaMessageSender(communicator);		
 	}
@@ -230,6 +229,12 @@ public class ConnectionManager {
 		}
 		return sb.substring(0, sb.length()-2)+"]";
 	}
+<<<<<<< HEAD
+
+	public void initIndexUpdateDiscovery(MessageHandler handler) {
+		communicator.initIndexUpdateDiscovery(handler);
+		
+=======
 	
 	public int neighborsCount() {
 		if (neighbors == null) {
@@ -237,6 +242,7 @@ public class ConnectionManager {
 		} else {
 			return neighbors.size();
 		}
+>>>>>>> e5b6dfab6174b077db3592e74ca837a17e17f24b
 	}
 }
 
