@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ch.epfl.p2pmapreduce.nodeCore.volume.Chunkfield;
-import ch.epfl.p2pmapreduce.nodeCore.volume.File;
+import ch.epfl.p2pmapreduce.nodeCore.volume.EmptyChunkfield;
 
 public class Neighbour {
 	
@@ -18,7 +18,9 @@ public class Neighbour {
 	}
 	
 	public Chunkfield getChunkfield(String fName) {
-		return chunkfields.get(fName);
+		if (! chunkfields.containsKey(fName)) {
+			return new EmptyChunkfield();
+		} else return chunkfields.get(fName);
 	}
 
 	public void setChunkfield(String fName, Chunkfield c) {
