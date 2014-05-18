@@ -116,7 +116,9 @@ public class MessageHandler implements MessageReceiver {
 		if (! isExpected(message)) return;
 		
 		for (String fName : message.chunkfields().keySet()) {
-			cManager.update(message.sender(), files.getFile(fName), message.chunkfields().get(fName));
+			if (files.containsFile(fName)) {
+				cManager.update(message.sender(), files.getFile(fName), message.chunkfields().get(fName));
+			}
 		}
 		
 		if (!expecter.waitingChunkfield()) state.set(PeerState.CHECKGLOBALCF);
