@@ -442,6 +442,11 @@ public class JxtaCommunicator {
 
 							PipeAdvertisement pipeAdv = (PipeAdvertisement) adv;
 
+							if(pipeAdv.getName().equals(pipeAdvertisement.getName())) {
+								System.out.println("found myself! not adding of course..");
+								continue;
+							}
+							
 							System.out.println("found a peer! handling "
 									+ pipeAdv.getName());
 
