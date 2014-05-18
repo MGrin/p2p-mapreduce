@@ -63,6 +63,8 @@ public class JxtaMessageListener implements PipeMsgListener, DiscoveryListener{
 
 						long creationTime = putAdvertisement.getFileCreationTime();
 						
+						if(creationTime <= latestDiscovery) continue;
+						
 						if(creationTime > latestDiscovery && creationTime < minDiscoveryTime) {
 							minDiscoveryTime = creationTime;
 						}
@@ -77,6 +79,8 @@ public class JxtaMessageListener implements PipeMsgListener, DiscoveryListener{
 						RmIndexAdvertisement rmAdvertisement = (RmIndexAdvertisement) adv;
 						
 						long deletionTime = rmAdvertisement.getFileDeletionTime();
+						
+						if(deletionTime <= latestDiscovery) return;
 						
 						if(deletionTime > latestDiscovery && deletionTime < minDiscoveryTime) {
 							minDiscoveryTime = deletionTime;
@@ -103,6 +107,8 @@ public class JxtaMessageListener implements PipeMsgListener, DiscoveryListener{
 				}
 
 			}
+			
+			latestDiscovery = minDiscoveryTime;
 		}
 	}
 
