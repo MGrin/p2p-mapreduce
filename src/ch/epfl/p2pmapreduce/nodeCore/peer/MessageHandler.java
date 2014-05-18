@@ -138,6 +138,7 @@ public class MessageHandler implements MessageReceiver {
 
 	@Override
 	public void receive(NewFile newfile) {
+				
 		if (files.addFile(new File(newfile.name(), newfile.chunkCount()), false)) {
 			Metadata.metaPut(newfile.getFileInfos());
 			state.set(PeerState.BUILDGLOBALCF);
@@ -146,9 +147,7 @@ public class MessageHandler implements MessageReceiver {
 	
 	@Override
 	public void receive(FileRemoved updateIndex) {
-		
-		//DONE: Implement | But same problem here! we only have the name so cannot instantiate
-		
+				
 		if(files.rmFile(files.getFile(updateIndex.name()))) {
 			//Not a directory be default.. But Metadata should actually now!
 			System.out.println("removing from local xml file!");

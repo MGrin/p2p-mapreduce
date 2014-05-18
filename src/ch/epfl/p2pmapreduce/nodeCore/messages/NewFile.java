@@ -1,5 +1,6 @@
 package ch.epfl.p2pmapreduce.nodeCore.messages;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import ch.epfl.p2pmapreduce.nodeCore.utils.NetworkConstants;
@@ -12,12 +13,16 @@ public class NewFile extends IndexUpdate {
 	private int from;
 
 	private long fileSize = -1;
+	
+	private String fileCurrentDate;
 
 	public NewFile(int from, String fileName, int chunkCount) {
 		super(from);
 		this.from = from;
 		this.fileName = fileName;
 		this.chunkCount = chunkCount;
+		
+		fileCurrentDate = getCurrentDate();
 	}
 
 	public NewFile(int from, long fileSize, String fileName) {
@@ -25,6 +30,8 @@ public class NewFile extends IndexUpdate {
 		this.fileSize = fileSize;
 		this.fileName = fileName;
 		this.chunkCount = (int) Math.ceil(1.0 * fileSize / NetworkConstants.CHUNK_SIZE);
+		
+		fileCurrentDate = getCurrentDate();
 	}
 
 	public String name() { return fileName; }
@@ -33,8 +40,24 @@ public class NewFile extends IndexUpdate {
 	}
 	
 	public String getFileInfos() {
-		if(fileSize == -1) System.out.println("FileSize not initialized!!"); System.exit(-1);
-		return fileName + "," + fileSize + "," + new Date();
+		
+		if(fileSize == -1) {
+			System.out.println("file size for file " + fileName + " not initialized! ending.."); 
+			System.exit(-1);
+		}
+		
+		return fileName + "," + fileSize + "," + fileCurrentDate;
+	}
+	
+	public long getFileSize() {
+		return fileSize;
+	}
+	
+	private String getCurrentDate() {
+		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
+		String currentDate = sdf.format(System.currentTimeMillis());
+		
+		return currentDate;
 	}
 
 	@Override

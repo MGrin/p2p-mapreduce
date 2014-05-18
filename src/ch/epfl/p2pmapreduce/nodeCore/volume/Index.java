@@ -55,10 +55,10 @@ public class Index {
 
 	public boolean put(File f, boolean isOwned) {
 		if (!files.containsKey(f)) {
-			
+
 			Chunkfield c = new Chunkfield(f, isOwned);
 			System.out.println(c.toString());
-			
+
 			files.put(f, new Chunkfield(f, isOwned));
 			return true;
 		} else return false;
@@ -84,6 +84,7 @@ public class Index {
 		for (File f : files.keySet()) {
 			if (f.name.equals(fName)) return f;
 		}
+
 		return null;
 	}
 
