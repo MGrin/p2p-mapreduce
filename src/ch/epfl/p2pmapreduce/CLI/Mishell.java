@@ -5,8 +5,11 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
+import net.jxta.platform.NetworkManager;
 import ch.epfl.p2pmapreduce.index.Metadata;
 import ch.epfl.p2pmapreduce.nodeCore.peer.Peer;
+import ch.epfl.p2pmapreduce.nodeCore.utils.FileManagerConstants;
+import ch.epfl.p2pmapreduce.nodeCore.utils.NetworkConstants;
 import ch.epfl.p2pmapreduce.nodeCore.volume.File;
 
 public class Mishell {
@@ -32,7 +35,7 @@ public class Mishell {
 	public static void main(String[] args) throws java.io.IOException {
 
 		String name = null;
-		
+
 		if(args.length == 0) {
 			name = Integer.toString(new Random().nextInt());
 		} else if (args.length == 1) {
@@ -45,6 +48,15 @@ public class Mishell {
 		Scanner scanner = new Scanner(System.in);
 		String line;
 		String[] tok;
+
+
+		java.io.File dataFolder = new java.io.File(FileManagerConstants.DFS_DIR);
+		boolean folderExists = (dataFolder.exists() && dataFolder.isDirectory());
+		System.out.println("raidfs data already exists? .... " + folderExists);
+
+		if(folderExists) {
+			NetworkManager.RecursiveDelete(dataFolder);
+		}
 
 		p = new Peer(name, 0);
 
@@ -70,7 +82,7 @@ public class Mishell {
 						help(tok[1]);
 					} else {
 						System.out
-								.println("About what command do you need help ? (connect, cat, cd, ls, get, put, rm)");
+						.println("About what command do you need help ? (connect, cat, cd, ls, get, put, rm)");
 						System.out.println("Specify only one command.");
 					}
 				} else if (tok[0].compareTo("quit") == 0) {
@@ -86,7 +98,7 @@ public class Mishell {
 						connect();
 					} else {
 						System.out
-								.println("too much arguments for \"connect\"");
+						.println("too much arguments for \"connect\"");
 					}
 				} else if (tok[0].compareTo("ls") == 0) {
 					if (tok.length > 1) {
@@ -127,7 +139,7 @@ public class Mishell {
 						}
 					} else {
 						System.out
-								.println("Please specify a file/folder to delete");
+						.println("Please specify a file/folder to delete");
 					}
 				}
 			}
@@ -152,7 +164,7 @@ public class Mishell {
 
 	public static void put(String osFullFilePath, String dfsPath) {
 		List<String> temp = Metadata.tokenize(osFullFilePath, "/");
-		
+
 		String dfsFullFolderPath = dfsPath.concat("/" + temp.get(temp.size() - 1));
 		boolean success = false;
 		System.out.println("with the file (local): " + osFullFilePath
@@ -162,10 +174,10 @@ public class Mishell {
 			System.out.println("infos not null : with val : " + infos);
 			File f = p.rootPut(osFullFilePath, dfsFullFolderPath);
 			success = p.remotePut(f);
-			
+
 			if (success)
 				Metadata.metaPut(infos);
-			
+
 			System.out.println("Succedded in putting file " + f.name + " on DFS? "
 					+ success);
 		}
@@ -183,10 +195,10 @@ public class Mishell {
 		System.out.println("Removing " + input + " from DFS..");
 
 		boolean success = p.remoteRemove(new File(input, -1));
-		
+
 		if (success) {
 			System.out.println("Succeeded in removing from distant file System and publishing RmIndexAdvertisement");
-			
+
 			if (isDirectory) {
 				Metadata.metaRm(input, true);
 			} else {
