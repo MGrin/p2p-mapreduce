@@ -173,7 +173,9 @@ public class Mishell {
 
 	public static void get(String input) {
 		System.out.println("with the file : " + input);
-		p.get(input);
+		if (Metadata.metaExist(input)) {
+			p.get(input);
+		}
 	}
 
 	public static void rm(String input, boolean isDirectory) {
