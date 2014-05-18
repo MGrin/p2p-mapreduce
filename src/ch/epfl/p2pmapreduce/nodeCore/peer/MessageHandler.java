@@ -139,7 +139,7 @@ public class MessageHandler implements MessageReceiver {
 	@Override
 	public void receive(NewFile newfile) {
 		if (files.addFile(new File(newfile.name(), newfile.chunkCount()), false)) {
-			Metadata.metaPut(newfile.name());
+			Metadata.metaPut(newfile.getFileInfos());
 			state.set(PeerState.BUILDGLOBALCF);
 		}
 	}

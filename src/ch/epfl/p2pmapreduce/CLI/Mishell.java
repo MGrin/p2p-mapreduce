@@ -186,21 +186,23 @@ public class Mishell {
 	public static void rm(String input, boolean isDirectory) {
 		System.out.println("Removing " + input + " from DFS..");
 
-		boolean success = p.remoteRemove(new File(input, -1));
+		if(Metadata.metaExist(input)) {
+			boolean success = p.remoteRemove(new File(input, -1));
 
-		if (success) {
-			System.out.println("Succeeded in removing from distant file System and publishing RmIndexAdvertisement");
+			if (success) {
+				System.out.println("Succeeded in removing from distant file System and publishing RmIndexAdvertisement");
 
-			if (isDirectory) {
-				System.out.println("!!!removing: " + input + " by directory");
-				Metadata.metaRm(input, true);
-			} else {
-				System.out.println("!!!removing: " + input + "not by directory");
-				Metadata.metaRm(input, false);
+				if (isDirectory) {
+					System.out.println("!!!removing: " + input + " by directory");
+					Metadata.metaRm(input, true);
+				} else {
+					System.out.println("!!!removing: " + input + "not by directory");
+					Metadata.metaRm(input, false);
+				}
+
+				System.out.println("Succedded in removing file " + input
+						+ " on DFS? " + success);
 			}
-			
-			System.out.println("Succedded in removing file " + input
-					+ " on DFS? " + success);
 		}
 	}
 
