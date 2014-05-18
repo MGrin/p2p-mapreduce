@@ -419,6 +419,7 @@ public class Peer implements Runnable, MessageBuilder{
 
 	public void get(String fileName, String filePathOs) {
 		File file = this.fManager.getFile(fileName);
+		fManager.addPendingGet(fileName, filePathOs);
 		if (file != null) {
 			for (int i = 0; i < file.chunkCount; i++) {
 				if (!this.fManager.containsChunk(fileName, i)) {

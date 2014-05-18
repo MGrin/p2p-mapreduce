@@ -116,7 +116,9 @@ public class MessageHandler implements MessageReceiver {
 		if (! isExpected(message)) return;
 		
 		for (String fName : message.chunkfields().keySet()) {
-			cManager.update(message.sender(), files.getFile(fName), message.chunkfields().get(fName));
+			if (files.containsFile(fName)) {
+				cManager.update(message.sender(), files.getFile(fName), message.chunkfields().get(fName));
+			}
 		}
 		
 		if (!expecter.waitingChunkfield()) state.set(PeerState.CHECKGLOBALCF);
@@ -162,7 +164,7 @@ public class MessageHandler implements MessageReceiver {
 
 	@Override
 	public void receive(GetChunk getChunk) {
-		
+		if (!files.containsFile(getChunk.fName())) return;
 		cManager.send(builder.sendChunk(getChunk.fName(), getChunk.chunkId()), getChunk.sender());
 	}
 
@@ -170,6 +172,7 @@ public class MessageHandler implements MessageReceiver {
 	public void receive(SendChunk sendChunk) {
 		
 		if (! isExpected(sendChunk)) return;
+		if (!files.containsFile(sendChunk.fName())) return;
 		
 		files.addChunk(sendChunk.fName(), sendChunk.chunkId(), sendChunk.getChunkData());
 		// may not be necessary because of build global cf
