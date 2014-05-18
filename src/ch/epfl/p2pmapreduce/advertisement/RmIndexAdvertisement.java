@@ -105,6 +105,10 @@ public class RmIndexAdvertisement extends Advertisement {
 		myTempElement = theResult.createElement(fileDeletionTimeTag,
 				fileDeletionTime);
 		theResult.appendChild(myTempElement);
+		
+		myTempElement = theResult.createElement(identifierTag,
+				identifier);
+		theResult.appendChild(myTempElement);
 
 		return theResult;
 	}

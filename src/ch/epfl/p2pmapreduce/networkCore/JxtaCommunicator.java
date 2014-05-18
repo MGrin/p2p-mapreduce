@@ -235,7 +235,7 @@ public class JxtaCommunicator {
 			public void run() {
 
 				System.out.println("discovering index updates");
-				pg.getDiscoveryService().getRemoteAdvertisements(null, DiscoveryService.ADV, null , null, 10, listener);
+				pg.getDiscoveryService().getRemoteAdvertisements(null, DiscoveryService.ADV, "MyIdentifiertag" , "*", 10, listener);
 
 			}
 		}, 0, NetworkConstants.INDEX_ADVERTISEMENT_DISCOVERY_RATE);
@@ -361,7 +361,7 @@ public class JxtaCommunicator {
 				//discoveryService.getRemoteAdvertisements(null, DiscoveryService.PEER, null, null, NetworkConstants.CANDIDATE_SIZE);
 
 				// Only one PipeAdvertisement should be returned from each Peer in the DFS.
-				System.out.println("discovering..");
+				System.out.println("discovering neighbours...");
 				discoveryService.getRemoteAdvertisements(null, DiscoveryService.ADV, "Name", "pipeAdv:*", 10, this);
 
 				try {
