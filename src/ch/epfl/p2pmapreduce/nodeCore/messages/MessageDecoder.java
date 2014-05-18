@@ -59,12 +59,6 @@ public class MessageDecoder {
 
 		} else if (name.compareTo(JxtaMessageSender.SEND_CHUNKFIELD) == 0) {
 			
-			Iterator<String> nameSpaceIterator = jxtaMessage.getMessageNamespaces();
-			
-			while( nameSpaceIterator.hasNext() ) {
-				System.out.println("SENDINDEX NameSpace : " + nameSpaceIterator.next());
-			}
-			
 			Map<String, Chunkfield> chunkfields = convertStringToMap(new String(jxtaMessage
 					.getMessageElement("chunkfield").getBytes(true)));
 			

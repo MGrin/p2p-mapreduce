@@ -153,6 +153,13 @@ public class MessageHandler implements MessageReceiver {
 	@Override
 	public void receive(FileRemoved updateIndex) {
 				
+		System.out.println("file " + updateIndex.name() + " was removed");
+		
+		if(!files.containsFile(updateIndex.name())) {
+			System.out.println("it is not in the index!");
+			return;
+		}
+		
 		if(files.rmFile(files.getFile(updateIndex.name()))) {
 			//Not a directory be default.. But Metadata should actually now!
 			System.out.println("removing from local xml file!");

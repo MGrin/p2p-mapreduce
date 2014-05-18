@@ -384,6 +384,8 @@ public class JxtaCommunicator {
 	public class JxtaNeighbourDiscoverer implements INeighbourDiscoverer,
 			DiscoveryListener {
 
+		
+
 		@Override
 		public List<Neighbour> getNeighbors() {
 
