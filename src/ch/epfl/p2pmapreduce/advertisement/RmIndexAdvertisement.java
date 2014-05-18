@@ -15,6 +15,14 @@ import net.jxta.document.TextElement;
 import net.jxta.id.ID;
 import net.jxta.id.IDFactory;
 
+/**
+ * 
+ * @author marguet
+ *
+ *Class representing an IndexAdvertisement.
+ *it is broadcasted to all the neighbors in order for them to receive
+ *the information of a brand new rm to the DFS.
+ */
 public class RmIndexAdvertisement extends Advertisement {
 
 	public static final String name = "RmIndexAdvertisement";
@@ -24,6 +32,7 @@ public class RmIndexAdvertisement extends Advertisement {
 
 	private final String identifier ="indexAdvertisement:rm";
 
+	//informations of an rm : name of the deleted file, its deletion time
 	private String fileName = "";
 	private String fileDeletionTime = Long.toString(0);
 

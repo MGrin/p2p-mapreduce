@@ -23,17 +23,9 @@ public class Mishell {
 	/*
 	 * What need to be implemented for compatibility with Peer class
 	 * 
-	 * TODO when requesting index at connection, has to initialise Peer with
-	 * data contained in meta.xml What need to be done : meta.xml ->
-	 * List<nodeCore.volume.File> (already done by Jeremy ?)
-	 * 
 	 * TODO file overwriting does not occur in Peer. calling twice rootPut()
 	 * with same parameter will result in loading same file twice under
 	 * different references. Overwritting put must be controlled by miShell
-	 * 
-	 * TODO remotePut will have to transmit information under same format as in
-	 * index initialisation (see first todo) data received from network has to
-	 * be parsed and put in a nodeCore.volume.File class
 	 */
 
 	public static Peer p;

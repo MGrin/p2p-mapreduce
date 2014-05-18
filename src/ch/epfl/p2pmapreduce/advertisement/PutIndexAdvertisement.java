@@ -15,12 +15,21 @@ import net.jxta.document.TextElement;
 import net.jxta.id.ID;
 import net.jxta.id.IDFactory;
 
+/**
+ * 
+ * @author marguet
+ *
+ *Class representing an IndexAdvertisement.
+ *it is broadcasted to all the neighbors in order for them to receive
+ *the information of a brand new put to the DFS.
+ */
 public class PutIndexAdvertisement extends Advertisement {
 	public static final String name = "PutIndexAdvertisement";
 	public final static String advertisementType = "jxta:PutIndexAdvertisement";
 
 	private ID advertisementID = ID.nullID;
 	
+	//informations with a put : name of the added file, its size, its creation date
 	private final String identifier = "indexAdvertisement:put";
 	private String fileName = "";
 	private String fileSize = "";
