@@ -162,6 +162,7 @@ public class Metadata {
 	
 	//ls function
 	public static void metaLs(String folder) {
+		
 		SAXBuilder sxb = new SAXBuilder();
 		try {
 			document = sxb.build(file);
@@ -171,7 +172,7 @@ public class Metadata {
 			System.err.println("File doesn't exist");
 			e.printStackTrace();
 		}
-
+		
 		racine = document.getRootElement();
 		System.out.println("listing files in \"" + folder + "\"");
 		// best case
@@ -272,15 +273,21 @@ public class Metadata {
 		}
 	}
 	
+	public static boolean metaExist(String path) {
+		
+		
+		return false;
+	}
+	
 	
 	//Tests
 	public static void main(String[] args) {
 		//Metadata meta = new Metadata();
 		create();
 		//metaLs("boite");
-		metaPut("boite/caillou/chameau,8000,12-12-1222 12:12:12");
+		//metaPut("boite/caillou/chameau,8000,12-12-1222 12:12:12");
 		metaPut("choux/pain,1234,12-12-1222 12:12:12");
-		toFiles();
+		metaExist("choux/pain");
 		//metaLs("boite");
 		//metaPut("choux/fichier/kiki,80,12-12-1222 12:12:12");
 		//metaLs("choux/fichier");

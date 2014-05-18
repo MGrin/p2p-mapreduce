@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import ch.epfl.p2pmapreduce.index.Metadata;
 import ch.epfl.p2pmapreduce.nodeCore.messages.FileRemoved;
 import ch.epfl.p2pmapreduce.nodeCore.messages.FileStabilized;
+import ch.epfl.p2pmapreduce.nodeCore.messages.Get;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunk;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunkfield;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetIndex;
@@ -152,5 +153,11 @@ public class MessageHandler implements MessageReceiver {
 	@Override
 	public void receive(FileStabilized fileSabilized) {
 		files.stabilize(fileSabilized.file());
+	}
+	
+	@Override
+	public void receive(Get get) {
+		// TODO Auto-generated method stub
+		
 	}
 }

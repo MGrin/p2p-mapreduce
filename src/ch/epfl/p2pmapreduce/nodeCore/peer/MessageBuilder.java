@@ -1,6 +1,7 @@
 package ch.epfl.p2pmapreduce.nodeCore.peer;
 
 import ch.epfl.p2pmapreduce.nodeCore.messages.FileStabilized;
+import ch.epfl.p2pmapreduce.nodeCore.messages.Get;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunk;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunkfield;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetIndex;
@@ -19,6 +20,8 @@ public interface MessageBuilder {
 	
 	GetChunk getChunk(String fileName, int chunkId);
 	SendChunk sendChunk(String fileName, int chunkId);
+	
+	Get get(String fileName);
 	
 	NewFile newFile(String fileName, int chunkCount);
 	FileStabilized fileStabilized(String fName);
