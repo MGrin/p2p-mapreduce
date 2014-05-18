@@ -11,4 +11,5 @@ public interface MessageReceiver {
 	void receive(GetChunk getChunk);
 	void receive(SendChunk sendChunk);
 	void receive(FileStabilized fileSabilized);
+	void receive(Get get);
 }

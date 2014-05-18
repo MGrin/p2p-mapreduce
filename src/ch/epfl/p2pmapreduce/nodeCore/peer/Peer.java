@@ -11,6 +11,7 @@ import net.jxta.id.ID;
 import ch.epfl.p2pmapreduce.advertisement.PutIndexAdvertisement;
 import ch.epfl.p2pmapreduce.advertisement.RmIndexAdvertisement;
 import ch.epfl.p2pmapreduce.nodeCore.messages.FileStabilized;
+import ch.epfl.p2pmapreduce.nodeCore.messages.Get;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunk;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunkfield;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetIndex;
@@ -395,6 +396,12 @@ public class Peer implements Runnable, MessageBuilder{
 
 	public MessageHandler getMessageHandler() {
 		return messages;
+	}
+
+	@Override
+	public Get get(String fileName) {
+		//TODO
+		return null;
 	}
 
 }

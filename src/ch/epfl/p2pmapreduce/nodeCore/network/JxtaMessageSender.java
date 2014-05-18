@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 import net.jxta.document.MimeMediaType;
@@ -19,6 +18,7 @@ import ch.epfl.p2pmapreduce.advertisement.PutIndexAdvertisement;
 import ch.epfl.p2pmapreduce.advertisement.RmIndexAdvertisement;
 import ch.epfl.p2pmapreduce.index.Metadata;
 import ch.epfl.p2pmapreduce.networkCore.JxtaCommunicator;
+import ch.epfl.p2pmapreduce.nodeCore.messages.Get;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunk;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunkfield;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetIndex;
@@ -52,6 +52,7 @@ public class JxtaMessageSender implements IMessageSender {
 	public static final String GET_CHUNK = "GETCHUNK";
 	public static final String GET_CHUNKFIELD = "GETCHUNKFIELD";
 	public static final String SEND_CHUNKFIELD = "SENDCHUNKFIELD";
+	public static final String GET = "GET";
 
 	public JxtaMessageSender(JxtaCommunicator jxtaCommunicator) {
 		this.communicator = jxtaCommunicator;
@@ -163,6 +164,18 @@ public class JxtaMessageSender implements IMessageSender {
 
 		communicator.sendMessage(message, receiver);
 
+		return true;
+	}
+	
+	//TODO
+	@Override
+	public boolean send(Get get, Neighbour receiver) {
+		Message message = messageBasis.clone();
+		MessageElement name = new StringMessageElement("name", GET, null);
+		message.addMessageElement(name);
+		
+		communicator.sendMessage(message, receiver);
+		
 		return true;
 	}
 

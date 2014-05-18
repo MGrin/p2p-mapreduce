@@ -9,7 +9,6 @@ import net.jxta.platform.NetworkManager;
 import ch.epfl.p2pmapreduce.index.Metadata;
 import ch.epfl.p2pmapreduce.nodeCore.peer.Peer;
 import ch.epfl.p2pmapreduce.nodeCore.utils.FileManagerConstants;
-import ch.epfl.p2pmapreduce.nodeCore.utils.NetworkConstants;
 import ch.epfl.p2pmapreduce.nodeCore.volume.File;
 
 public class Mishell {
@@ -150,18 +149,6 @@ public class Mishell {
 		Metadata.metaLs(input);
 	}
 
-	public static void cat(String input) {
-		System.out.println("with the file : " + input);
-	}
-
-	public static void cd(String input) {
-		if (input == null) {
-			System.out.println("without arguments");
-		} else {
-			System.out.println("with path : " + input);
-		}
-	}
-
 	public static void put(String osFullFilePath, String dfsPath) {
 		List<String> temp = Metadata.tokenize(osFullFilePath, "/");
 
@@ -186,8 +173,7 @@ public class Mishell {
 
 	public static void get(String input) {
 		System.out.println("with the file : " + input);
-
-		// TODO: Implement get
+		p.get(input);
 	}
 
 	public static void rm(String input, boolean isDirectory) {
