@@ -172,6 +172,12 @@ public class Mishell {
 			dfsFullFolderPath = dfsPath.concat("/" + temp.get(temp.size() - 1));
 		}
 		boolean success = false;
+		
+		if(!p.isReadyForActions()) {
+			System.out.println("Peer did not boot the DFS index yet! try later..");
+			return;
+		}
+		
 		System.out.println("with the file (local): " + osFullFilePath
 				+ " (DFS): " + dfsFullFolderPath);
 		String infos = getFileInfos(osFullFilePath, dfsFullFolderPath);
@@ -180,8 +186,10 @@ public class Mishell {
 			File f = p.rootPut(osFullFilePath, dfsFullFolderPath);
 			success = p.remotePut(f);
 
-			if (success)
+			if (success) {
 				Metadata.metaPut(infos);
+			} else
+				System.out.println("could not put the file on the DFS..");
 
 			System.out.println("Succedded in putting file " + f.name + " on DFS? "
 					+ success);
