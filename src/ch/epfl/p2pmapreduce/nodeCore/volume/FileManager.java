@@ -239,7 +239,13 @@ public class FileManager {
 	}
 	
 	public void addPendingGet(String fName, String osFullPath) {
-		pendingGet.put(getFile(fName), osFullPath);
+		File target = getFile(fName);
+		if (target == null) return;
+		if (index.hasAllChunks(getFile(fName))) {
+			restore(target);
+		} else {
+			pendingGet.put(getFile(fName), osFullPath);
+		}
 	}
 	
 	public void print(String message) {
@@ -275,6 +281,24 @@ public class FileManager {
 	private void restore(File file) {
 		String osFullPath = pendingGet.remove(file);
 		java.io.File destFile = new java.io.File(osFullPath);
-		// TODO
+		// TODO create parent folders if don't exist
+		if (!destFile.exists()) {
+			try {
+				BufferedWriter out = new BufferedWriter(new FileWriter (destFile));
+				BufferedReader in = null;
+				for (int i = 0; i < file.chunkCount; i++) {
+					in = new BufferedReader(new FileReader(new java.io.File(file.name, i + CHUNK_EXT)));
+					String line = null;
+					while ((line = in.readLine()) != null) {
+						out.write(line);
+						out.newLine();
+					}
+					in.close();
+				}
+				out.close();
+			} catch (IOException e) {
+				System.err.println("Something went wrong writing in " + osFullPath);
+			}
+		}
 	}
 }
