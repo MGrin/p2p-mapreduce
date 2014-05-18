@@ -1,6 +1,5 @@
 package ch.epfl.p2pmapreduce.nodeCore.volume;
 
-import ch.epfl.p2pmapreduce.nodeCore.utils.UidGenerator;
 
 public class File {
 
@@ -35,22 +34,11 @@ public class File {
 		this(f.name, f.chunkCount);
 		this.stabilized = f.stabilized;
 	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (!(o instanceof File)) return false;
-		else {
-			File that = (File) o;
-			return
-					this.chunkCount == that.chunkCount
-					&& this.name.equals(that.name);
-		}
-	}
 	
 	@Override
 	public int hashCode() {
 		// arbitrary
-		return name.hashCode() + chunkCount;
+		return name.hashCode();
 	}
 	
 	public void stabilise() { stabilized = true; }
@@ -64,4 +52,18 @@ public class File {
 	 * @return true if peer is responsible or file is not stabilized
 	 */
 	public boolean isPeerResponsible() { return !stabilized || isPeerResponsible; }
+	
+	@Override
+	public String toString() {
+		return "(" + this.name + ", " + this.chunkCount + ")";
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (!(o instanceof File)) return false;
+		else {
+			File that = (File) o;
+			return this.name.equals(that.name);
+		}
+	}
 }

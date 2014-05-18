@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import Examples.Z_Tools_And_Others.Tools;
 import net.jxta.discovery.DiscoveryEvent;
 import net.jxta.discovery.DiscoveryListener;
 import net.jxta.discovery.DiscoveryService;
@@ -42,6 +43,8 @@ public class JxtaCommunicator {
 	private final static int MAIN_RENDEZVOUS_PORT = 9710;
 
 	private final static String MAIN_RENDEZ_VOUS_ADDRESS = "tcp://icdatasrv2.epfl.ch:" + MAIN_RENDEZVOUS_PORT;
+	//private final static String MAIN_RENDEZ_VOUS_ADDRESS = "tcp://localhost:" + MAIN_RENDEZVOUS_PORT;
+
 
 	private final static int PIPE_RESOLVING_TIMEOUT = 30000;
 	private final static int DFS_JOIN_TIMEOUT = 60000;
@@ -58,11 +61,14 @@ public class JxtaCommunicator {
 
 	private PipeAdvertisement pipeAdvertisement = null;
 	private Timer pipeAdvertisementPublisher;
+	private Timer indexAdvertisementDiscoverer;
+
+	static List<Neighbour> neighbours = new LinkedList<Neighbour>();
 
 	//All the Peer Groups this Peer belongs to.
 	//private Set<PeerGroup> peerGroups;
 
-	private Map<Integer, PipeAdvertisement> peerPipes = new HashMap<Integer, PipeAdvertisement>();
+	private static Map<Integer, PipeAdvertisement> peerPipes = new HashMap<Integer, PipeAdvertisement>();
 
 	// Will have a PeerID per PeerGroup.. to rethink
 
@@ -71,6 +77,7 @@ public class JxtaCommunicator {
 		this.port = port;
 		this.peerID = IDFactory.newPeerID(PeerGroupID.defaultNetPeerGroupID, name.getBytes());
 		configFile = new File("." + System.getProperty("file.separator") + name);
+		NetworkManager.RecursiveDelete(configFile);
 		try {
 			networkManager = new NetworkManager(NetworkManager.ConfigMode.EDGE, name, configFile.toURI());
 			networkConfigurator = networkManager.getConfigurator();
@@ -123,7 +130,7 @@ public class JxtaCommunicator {
 
 
 		// Connect
-		if(!connectToRDV(60000)) {
+		if(!connectToRDV(20000)) { // TODO Change to 60000
 			System.err.println("Unable to connect to " + MAIN_RENDEZ_VOUS_ADDRESS);
 			return false;
 		}
@@ -192,11 +199,12 @@ public class JxtaCommunicator {
 
 		// Instantiating the Pipe Advertisement
 		pipeAdvertisement = (PipeAdvertisement) AdvertisementFactory.newAdvertisement(PipeAdvertisement.getAdvertisementType());
+		
 		PipeID pipeID = IDFactory.newPipeID(pg.getPeerGroupID(), name.getBytes());
 
 		pipeAdvertisement.setPipeID(pipeID);
 		pipeAdvertisement.setType(PipeService.UnicastType);
-		pipeAdvertisement.setName("Incoming Pipe for " + this.name);
+		pipeAdvertisement.setName("pipeAdv:" + this.name);
 		pipeAdvertisement.setDescription("Created by " + name);
 
 		pipeAdvertisementPublisher = new Timer();
@@ -205,8 +213,10 @@ public class JxtaCommunicator {
 
 			@Override
 			public void run() {
-				
+
 				try {
+					System.out.println("publishing PipeAdvertisement with name " + pipeAdvertisement.getName());
+					System.out.println("next publishing in " + (NetworkConstants.PIPE_ADVERTISEMENT_LIFETIME - 30 * 1000)/1000 + " seconds");
 					pg.getDiscoveryService().publish(pipeAdvertisement);
 				} catch (IOException e) {
 					System.err.println("Could not publish PipeAdvertisement! Peers are not going to be able to send us messages then..");
@@ -215,7 +225,20 @@ public class JxtaCommunicator {
 			}
 		}, 0, NetworkConstants.PIPE_ADVERTISEMENT_LIFETIME - 30 * 1000);
 
-		JxtaMessageListener listener = new JxtaMessageListener(mh);
+		final JxtaMessageListener listener = new JxtaMessageListener(mh);
+
+		indexAdvertisementDiscoverer = new Timer();
+
+		indexAdvertisementDiscoverer.schedule(new TimerTask() {
+
+			@Override
+			public void run() {
+
+				System.out.println("discovering index updates");
+				pg.getDiscoveryService().getRemoteAdvertisements(null, DiscoveryService.ADV, null , null, 10, listener);
+
+			}
+		}, 0, NetworkConstants.INDEX_ADVERTISEMENT_DISCOVERY_RATE);
 
 
 		try {
@@ -248,6 +271,8 @@ public class JxtaCommunicator {
 
 		PeerGroup pg = netPeerGroup;
 		//pg = neighbour.getPeerGroup();
+		
+		System.out.println("attempt to send " + m.getMessageElement("name").toString());
 
 		if(pg != null) {
 			PipeService pipeService = pg.getPipeService();
@@ -255,7 +280,15 @@ public class JxtaCommunicator {
 			try {
 				op = pipeService.createOutputPipe(peerPipes.get(neighbour.id) , PIPE_RESOLVING_TIMEOUT);
 
-				op.send(m);
+				while(! op.send(m) ) {
+					System.out.println("attempt to send " + m.getMessageElement("name").toString());
+					try {
+						Thread.sleep(100);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 
 				op.close();
 			} catch (IOException e) {
@@ -288,6 +321,24 @@ public class JxtaCommunicator {
 		return pipeAdvertisement;
 	}
 
+	public static int getIdForPipeAdv(PipeAdvertisement adv) {
+
+		for(int i : peerPipes.keySet()) {
+			if(adv.getName().equals( peerPipes.get(i).getName() )) return i;
+		}
+
+		return -1;
+	}
+	
+	public static void putPipeAdvertisement(int id, PipeAdvertisement pa) {
+		peerPipes.put(id, pa);
+		System.out.println("linking " + id + " to " + pa.getName());
+		System.out.println("size of map is now " + peerPipes.size());
+		
+		Neighbour neighbour = new Neighbour(id);
+		neighbours.add(neighbour);
+	}
+
 	/**
 	 * Inner class of JxtaCommunicator, used to discover Peers ( well actually, their PipeAdvertisements 
 	 * in order to send them messages ).
@@ -298,8 +349,6 @@ public class JxtaCommunicator {
 	 *
 	 */
 	public class JxtaNeighbourDiscoverer implements INeighbourDiscoverer, DiscoveryListener {
-
-		List<Neighbour> neighbours = new LinkedList<Neighbour>();
 
 		@Override
 		public List<Neighbour> getNeighbors() {
@@ -312,13 +361,15 @@ public class JxtaCommunicator {
 				//discoveryService.getRemoteAdvertisements(null, DiscoveryService.PEER, null, null, NetworkConstants.CANDIDATE_SIZE);
 
 				// Only one PipeAdvertisement should be returned from each Peer in the DFS.
-				discoveryService.getRemoteAdvertisements(null, DiscoveryService.ADV, null, null, 1);
+				System.out.println("discovering..");
+				discoveryService.getRemoteAdvertisements(null, DiscoveryService.ADV, "Name", "pipeAdv:*", 10, this);
 
 				try {
-					wait();
+					synchronized(this) {
+						this.wait(10 * 1000);
+					}
 				} catch (InterruptedException e) {
-
-					System.err.println("Wait for Neighbour Discovery was interrupted!");
+					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
@@ -332,10 +383,10 @@ public class JxtaCommunicator {
 		@Override
 		public void discoveryEvent(DiscoveryEvent event) {
 
-			if(neighbours.size() >= NetworkConstants.CANDIDATE_SIZE) {
-				notify();
-				return;
-			}
+			//TODO: Handle limited number of neighbours
+
+			System.out.println("Advertisement discovered!");
+
 
 			// Who triggered the event?
 			DiscoveryResponseMsg responseMsg = event.getResponse();
@@ -354,12 +405,17 @@ public class JxtaCommunicator {
 						// We are only interested in the PipeAdvertisements.
 						if(adv.getAdvType().equals(PipeAdvertisement.getAdvertisementType())) {
 
+							
 							PipeAdvertisement pipeAdv = (PipeAdvertisement) adv;
 
+							System.out.println("found a peer! handling " + pipeAdv.getName());
+							
+							//TODO: Test if not discovered already!
+							
 							int neighbourId = UidGenerator.freshId();
 
 							peerPipes.put(neighbourId, pipeAdv);
-
+							
 							Neighbour neighbour = new Neighbour(neighbourId);
 
 							neighbours.add(neighbour);

@@ -18,18 +18,22 @@ import net.jxta.id.IDFactory;
 public class RmIndexAdvertisement extends Advertisement {
 
 	public static final String name = "RmIndexAdvertisement";
-	public static final String advertisementType = "jxta:CustomizedAdvertisement";
+	public static final String advertisementType = "jxta:RmIndexAdvertisement";
 
 	private ID advertisementID = ID.nullID;
 
+	private final String identifier ="indexAdvertisement:rm";
+
 	private String fileName = "";
-	private long fileDeletionTime = 0;
+	private String fileDeletionTime = Long.toString(0);
+
+	private final static String identifierTag = "MyIdentifierTag";
 	private final static String idTag = "MyIDTag";
 	private final static String fileNameTag = "MyfileNameTag";
+
 	private final static String fileDeletionTimeTag = "MyFileDeletionTimeTag";
 
-	private final static String[] indexableFields = { idTag, fileNameTag,
-			fileDeletionTimeTag };
+	private final static String[] indexableFields = { idTag, identifierTag , fileDeletionTimeTag };
 
 	public RmIndexAdvertisement() {
 		// Accepting default values
@@ -81,7 +85,7 @@ public class RmIndexAdvertisement extends Advertisement {
 		}
 
 		if (theElementName.compareTo(fileDeletionTimeTag) == 0) {
-			fileDeletionTime = Long.parseLong(theTextValue);
+			fileDeletionTime = theTextValue;
 			return;
 		}
 	}
@@ -99,7 +103,7 @@ public class RmIndexAdvertisement extends Advertisement {
 		theResult.appendChild(myTempElement);
 
 		myTempElement = theResult.createElement(fileDeletionTimeTag,
-				Long.toString(fileDeletionTime));
+				fileDeletionTime);
 		theResult.appendChild(myTempElement);
 
 		return theResult;
@@ -126,11 +130,11 @@ public class RmIndexAdvertisement extends Advertisement {
 	}
 
 	public void setFileDeletionTime(long time) {
-		fileDeletionTime = time;
+		fileDeletionTime = Long.toString(time);
 	}
 
 	public long getFileDeletionTime() {
-		return fileDeletionTime;
+		return Long.parseLong(fileDeletionTime);
 	}
 
 	@Override
@@ -155,7 +159,7 @@ public class RmIndexAdvertisement extends Advertisement {
 	}
 
 	public static class Instantiator implements
-			AdvertisementFactory.Instantiator {
+	AdvertisementFactory.Instantiator {
 
 		public String getAdvertisementType() {
 			return RmIndexAdvertisement.getAdvertisementType();

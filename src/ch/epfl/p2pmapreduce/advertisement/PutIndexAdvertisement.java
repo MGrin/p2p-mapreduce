@@ -17,19 +17,22 @@ import net.jxta.id.IDFactory;
 
 public class PutIndexAdvertisement extends Advertisement {
 	public static final String name = "PutIndexAdvertisement";
-	public final static String advertisementType = "jxta:CustomizedAdvertisement";
+	public final static String advertisementType = "jxta:PutIndexAdvertisement";
 
 	private ID advertisementID = ID.nullID;
-	private String dfsFileName = "";
-	private long fileSize = 0;
-	private long fileCreationTime = 0;
+	
+	private final String identifier = "indexAdvertisement:put";
+	private String fileName = "";
+	private String fileSize = "";
+	private String fileCreationTime = "";
 
-	private final static String nameTag = "MyNameTag";
+	private final static String identifierTag = "MyIdentifierTag";
+	private final static String fileNameTag = "MyFileNameTag";
 	private final static String idTag = "MyIDTag";
 	private final static String dateTag = "MyDateTag";
 	private final static String sizeTag = "MySizeTag";
 
-	private final static String[] indexableFields = { nameTag, idTag, dateTag };
+	private final static String[] indexableFields = { identifierTag, idTag, dateTag };
 
 	public PutIndexAdvertisement(Element Root) {
 
@@ -72,20 +75,21 @@ public class PutIndexAdvertisement extends Advertisement {
 			}
 		}
 
-		if (theElementName.compareTo(nameTag) == 0) {
-			dfsFileName = theTextValue;
+		if (theElementName.compareTo(fileNameTag) == 0) {
+			fileName = theTextValue;
 			return;
 		}
 
 		if (theElementName.compareTo(dateTag) == 0) {
-			fileCreationTime = Long.parseLong(theTextValue);
+			fileCreationTime = theTextValue;
 			return;
 		}
 
 		if (theElementName.compareTo(sizeTag) == 0) {
-			fileSize = Long.parseLong(theTextValue);
+			fileSize = theTextValue;
 			return;
 		}
+		
 	}
 
 	@Override
@@ -102,10 +106,13 @@ public class PutIndexAdvertisement extends Advertisement {
 		theResult.appendChild(myTempElement);
 
 		myTempElement = theResult.createElement(sizeTag,
-				Long.toString(fileSize));
+				fileSize);
 		theResult.appendChild(myTempElement);
 
-		myTempElement = theResult.createElement(nameTag, dfsFileName);
+		myTempElement = theResult.createElement(fileNameTag, fileName);
+		theResult.appendChild(myTempElement);
+		
+		myTempElement = theResult.createElement(identifierTag, identifier);
 		theResult.appendChild(myTempElement);
 
 		return theResult;
@@ -130,27 +137,27 @@ public class PutIndexAdvertisement extends Advertisement {
 	}
 
 	public long getFileSize() {
-		return fileSize;
+		return Long.parseLong(fileSize);
 	}
 
 	public void setFileSize(long size) {
-		fileSize = size;
+		fileSize = Long.toString(size);
 	}
 
 	public long getFileCreationTime() {
-		return fileCreationTime;
+		return Long.parseLong(fileCreationTime);
 	}
 
 	public void setFileCreationTime(long time) {
-		fileCreationTime = time;
+		fileCreationTime = Long.toString(time);
 	}
 
-	public String getDFSFileName() {
-		return dfsFileName;
+	public String getFileName() {
+		return fileName;
 	}
 
-	public void setDFSFileName(String name) {
-		dfsFileName = name;
+	public void setFileName(String name) {
+		fileName = name;
 	}
 
 	public static class Instantiator implements
@@ -174,7 +181,7 @@ public class PutIndexAdvertisement extends Advertisement {
 		PutIndexAdvertisement result = (PutIndexAdvertisement) super.clone();
 
 		result.advertisementID = this.advertisementID;
-		result.dfsFileName = this.dfsFileName;
+		result.fileName = this.fileName;
 		result.fileCreationTime = this.fileCreationTime;
 		result.fileSize = this.fileSize;
 
@@ -183,6 +190,6 @@ public class PutIndexAdvertisement extends Advertisement {
 
 	@Override
 	public String getAdvType() {
-		return RmIndexAdvertisement.class.getName();
+		return PutIndexAdvertisement.class.getName();
 	}
 }

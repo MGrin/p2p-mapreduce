@@ -35,8 +35,15 @@ public class FileManager {
 	 * @param f the file to add.
 	 * @return true if the file was not already present
 	 */
-	public boolean addFile(File f) {
-		return index.put(f);
+	public boolean addFile(File f, boolean isOwned) {
+		if (! isOwned) {
+			java.io.File fileDir = new java.io.File(FileManagerConstants.DFS_DIR + java.io.File.separator + f.name);
+			if (!fileDir.exists()) {
+				fileDir.mkdirs();
+			}
+		}
+		
+		return index.put(f, isOwned);
 	}
 
 	/**
@@ -53,32 +60,46 @@ public class FileManager {
 		String sep = java.io.File.separator;
 		int chunkCount = 0;
 		try {
-			BufferedReader in = new BufferedReader(new FileReader(osFullPath));
-			String destDir = System.getProperty("user.home") + sep + FileManagerConstants.DFS_DIR + sep + dfsFullPath;
+			FileReader fr = new FileReader(osFullPath);
+			BufferedReader in = new BufferedReader(fr);
+			String destDir = /*System.getProperty("user.home") + sep +*/ FileManagerConstants.DFS_DIR + sep + dfsFullPath; // TODO Check path and rights
 			java.io.File fileDir = new java.io.File(destDir);
-			fileDir.mkdir();
-			BufferedWriter out = null;
-			String line = null;
-			int chunkSize = -1;
-			while ((line = in.readLine()) != null) {
-				if (chunkSize == -1) {
-					out = new BufferedWriter(new FileWriter (new java.io.File(fileDir, chunkCount + ".chunk")));
-					chunkSize = 0;
+			//check if we succeded in creating the dir
+			if(fileDir.exists() || fileDir.mkdirs()){
+				BufferedWriter out = null;
+				String line = null;
+				int chunkSize = -1;
+				while ((line = in.readLine()) != null) {
+					if (chunkSize == -1) {
+						java.io.File dfsFile = new java.io.File(fileDir, chunkCount + CHUNK_EXT);
+						
+						out = new BufferedWriter(new FileWriter (dfsFile));
+						chunkSize = 0;
+					}
+					out.write(line);
+					out.newLine();
+					chunkSize += line.length() *2; // assuming two bytes per char
+					if (chunkSize >= NetworkConstants.CHUNK_SIZE) {
+						chunkCount ++;
+						out.close();
+						chunkSize = -1;
+					}
 				}
-				out.write(line);
-				out.newLine();
-				chunkSize += line.length() *2; // assuming two bytes per char
-				if (chunkSize >= NetworkConstants.CHUNK_SIZE) {
+				// detects last unfinised chunk (smaller size)
+				if (chunkCount < NetworkConstants.CHUNK_SIZE) {
 					chunkCount ++;
-					out.close();
-					chunkSize = -1;
+					if(out != null){
+						out.close();
+					}else{
+						System.err.println("the file " + osFullPath + " is empty");
+					}
+
 				}
+			}else {
+				System.err.println("the folder " + destDir + " couldn't be created"); 
+				return null;
 			}
-			// detects last unfinised chunk (smaller size)
-			if (chunkCount < NetworkConstants.CHUNK_SIZE) {
-				chunkCount ++;
-				out.close();
-			}
+			
 		} catch (FileNotFoundException e) {
 			System.err.println("file " + osFullPath + " not found.");
 			return null;
@@ -88,11 +109,14 @@ public class FileManager {
 			e.printStackTrace();
 			return null;
 		}
+		
+		System.out.println("--------- FILE LOADED WITH CHUNKCOUNT " + chunkCount);
 		return new File(dfsFullPath, chunkCount);
 	}
 	
 	public boolean rmFile(File f) {
 		// TODO malicious injection possible here : filename = ../../../ => will remove the whole filesystem
+				
 		if (index.remove(f)) {
 			clean(f.name);
 			return true;
@@ -132,7 +156,7 @@ public class FileManager {
 		}
 		
 		for (File newF: newIndex.files()) {
-			if (! index.contains(newF)) index.put(newF);
+			if (! index.contains(newF)) this.addFile(newF, false);
 		}
 	}
 
@@ -173,6 +197,7 @@ public class FileManager {
 			out.close();
 			index.putChunk(fName, chunkId);
 		} catch (IOException e) {
+			e.printStackTrace();
 			System.err.println("Could not write chunk " + chunkId + " for file " + fName + ".");
 		}
 	}
@@ -215,7 +240,8 @@ public class FileManager {
 	 * storing the chunkfiles.
 	 */
 	private java.io.File getChunkDir(String dfsFullPath) {
-		return new java.io.File(System.getProperty("user.home") + FileManagerConstants.DFS_DIR + java.io.File.separator + dfsFullPath);
+		//TODO: Get back to this!!
+		return new java.io.File(/*System.getProperty("user.home") + java.io.File.separator +*/ FileManagerConstants.DFS_DIR + java.io.File.separator + dfsFullPath);
 	}
 	
 	/*

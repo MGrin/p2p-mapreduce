@@ -33,24 +33,27 @@ public class ConnectionManager {
 	private MessageExpecter expecter = MessageExpecter.INSTANCE;
 
 	private final JxtaCommunicator communicator;
-
-	private int peerId;
+	
 	private List<Neighbour> neighbors = new ArrayList<Neighbour>();
 	// TODO think of resetting globalChunkfields entries when getting chunk !!
 	private Map<File, GlobalChunkfield> globalChunkfields = new HashMap<File, GlobalChunkfield>();
 
-	public ConnectionManager(int peerId) {
-		this.peerId = peerId;
-		this.communicator = new JxtaCommunicator("Peer" + peerId, NetworkConstants.generatePortNumber());
+	public ConnectionManager(String peerName) {
+		this.communicator = new JxtaCommunicator(peerName, NetworkConstants.generatePortNumber());
 		this.nD = communicator.new JxtaNeighbourDiscoverer();
 	}
 
-	public void init() {
+	public boolean init(MessageHandler handler) {
 
 		boolean couldStart = communicator.start();
 
 		if(couldStart) {
+			
+			initMessageListening(handler);
+			
 			neighbors = nD.getNeighbors();
+			
+			if(neighbors == null || neighbors.size() == 0) return false;
 			// cuts the list when too many peers
 			for (int i = NetworkConstants.N_OPT; i < neighbors.size(); i++) {
 				neighbors.remove(i);
@@ -59,6 +62,8 @@ public class ConnectionManager {
 			System.err.println("Could not start JXTA network.. Exiting");
 			System.exit(-1);
 		}
+		
+		return true;
 	}
 
 	public void stop() {
@@ -94,6 +99,7 @@ public class ConnectionManager {
 
 	public void update(int peerId, File file, Chunkfield c) {
 		for (Neighbour n: neighbors) {
+			System.out.println("neighbour " + n + " has chunkfield " + c + " for file " + file);
 			if (n.id == peerId) n.setChunkfield(file.name, c);
 		}
 	}
@@ -176,7 +182,9 @@ public class ConnectionManager {
 	}
  
 	public boolean send(SendIndex sendIndex, int receiverId) {
+		System.out.println("receiver id is " + receiverId);
 		Neighbour receiver = getFromId(receiverId);
+		System.out.println("receiver for index will be " + receiver);
 		if (receiver != null) {
 			return sender.send(sendIndex, receiver);
 		} else return false;
@@ -205,6 +213,10 @@ public class ConnectionManager {
 	// utilities
 
 	private Neighbour getFromId(int neighbourId) {
+		
+		System.out.println("getting neighbour for id " + neighbourId);
+		System.out.println(neighbors.size() + " neighbours discovered so far");
+		
 		for (Neighbour n: neighbors) {
 			if (n.id == neighbourId) return n;
 		}

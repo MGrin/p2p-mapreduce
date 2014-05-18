@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
+	<classpathentry excluding="Examples/A_JXTA_Connection_And_Local_Configuration/|Examples/B_Exploring_Connectivity_Issues/|Examples/B_Exploring_Connectivity_Issues/Monitoring/|Examples/C_Peers_And_PeerGroups/|Examples/D_Discovering_Resources/|Examples/E_Messages_And_Advertisements/|Examples/F_Private_Keys_X509_Certificates_And_KeyStores/|Examples/G_Simple_Pipe_Communication/|Examples/H_Bidirectional_Pipe_Communication/|Examples/I_JXTA_Socket_And_Socket_Server/|Examples/J_JXTA_Multicast_Socket/|Examples/K_Service/|Examples/L_Peer_Information/" kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/bcprov-jdk15-145.jar"/>
 	<classpathentry kind="lib" path="lib/derby-10.5.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/felix.jar"/>
 	<classpathentry kind="lib" path="lib/h2-1.2.127.jar"/>
 	<classpathentry kind="lib" path="lib/javax.servlet.jar"/>
-	<classpathentry kind="lib" path="lib/jxse-2.6.jar">
+	<classpathentry kind="lib" path="lib/jxse-2.6.jar" sourcepath="jxse2.7/jxse-2.7-sources.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="file:/C:/Users/Tketa/Documents/GitHub/p2p-mapreduce/doc/jxse-2.6-javadoc/"/>
 		</attributes>

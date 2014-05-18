@@ -32,20 +32,20 @@ public class Peer implements Runnable, MessageBuilder{
 
 	private String peerName;
 	private Thread runner;
-	
+
 	public final int id;
-	
+
 	private StateManager state = new StateManager();
 	private boolean running = false;
-	
+
 	private ConnectionManager cManager;
 	private MessageHandler messages;
 	private FileManager fManager;
-	
+
 	private final int x;
 	private final int y;
 	private boolean verbose = false;
-	
+
 	public Peer(String name, int id) {
 		peerName = name;
 		this.id = id;
@@ -53,13 +53,13 @@ public class Peer implements Runnable, MessageBuilder{
 		x = (int) (Math.random() * NetworkConstants.AREA_SIZE);
 		y = (int) (Math.random() * NetworkConstants.AREA_SIZE);
 		runner = new Thread(this);
-		cManager = new ConnectionManager(this.id);
+		cManager = new ConnectionManager(name);
 		messages = new MessageHandler(this, state, fManager, cManager);
 		System.out.println("Hello world, I'm " + peerName + " with id " + id);
-		
+
 		verbose = id==0;
 	}
-	
+
 	public void run() {
 		running = true;
 		print("running...");
@@ -91,9 +91,12 @@ public class Peer implements Runnable, MessageBuilder{
 			switch (state.get()) {
 			case BOOTING:
 				print("fetching neighbors");
-				cManager.init();
-				cManager.initMessageListening(messages);
-				state.set(PeerState.GETINDEX);
+				boolean neighborsFetched = cManager.init(messages);
+				//cManager.initMessageListening(messages);
+				
+				if(neighborsFetched) state.set(PeerState.GETINDEX);
+				else state.set(PeerState.WAITING);
+				
 				break;
 			case GETINDEX:
 				cManager.send(getIndex());
@@ -135,33 +138,33 @@ public class Peer implements Runnable, MessageBuilder{
 				break;
 			}
 		}
-		
+
 		cManager.stop();
 		print("disconnected");
 	}
-	
+
 	private void print(String message) {
 		if (verbose) System.out.println(peerName + ": " + message);
 	}
-	
+
 	private void err(String message) {
 		System.err.println(peerName + ": " + message);
 	}
-	
+
 	public void enqueue(Message m) {
 		print("enqueud " + m);
 		messages.enqueue(m);
 	}
-	
+
 	public double dist(Peer that) {
 		return Math.sqrt((that.x-this.x) * (that.x-this.x) + (that.y-this.y) * (that.y-this.y));
 	}
-	
+
 	public boolean isRunning() {
 		return running;
 	}
-	
-	
+
+
 	private void sleep(int sec) {
 		if (running) {
 			try {
@@ -171,9 +174,9 @@ public class Peer implements Runnable, MessageBuilder{
 			}
 		}
 	}
-	
+
 	// control methods
-	
+
 	public void start() {
 		if (!running) {
 			running = true;
@@ -182,21 +185,21 @@ public class Peer implements Runnable, MessageBuilder{
 			runner.start();
 		}
 	}
-	
+
 	public void kill() {
 		if (running) {
 			print("killing...");
 			state.set(PeerState.EXITING);
 		}
 	}
-	
+
 	public void connect() {
 		if (running) {
 			print("connecting...");
-			cManager.init();
+			//cManager.init(messages);
 		}
 	}
-	
+
 	public void neighbors() {
 		if (running) {
 			print(cManager.neighborsToString());
@@ -206,11 +209,11 @@ public class Peer implements Runnable, MessageBuilder{
 	public void init() {
 		connect();
 	}
-	
+
 	public void setVerbose(boolean v) {
 		verbose = v;
 	}
-	
+
 	/**
 	 * Don't use this method !!!
 	 * Use rootPut or remotePut instead
@@ -219,9 +222,9 @@ public class Peer implements Runnable, MessageBuilder{
 	 */
 	public void put(File f) {
 	}
-	
+
 	/* miShell interface */
-	
+
 	/**
 	 * Used by miShell to chunkify new file
 	 * Will chunkify argument and update index and chunkfield in FileManager.
@@ -234,7 +237,7 @@ public class Peer implements Runnable, MessageBuilder{
 	public File rootPut(String osFullPath, String dfsFullPath) {
 		return fManager.loadFile(osFullPath, dfsFullPath);
 	}
-	
+
 	/**
 	 * Used by miShell to notify put index update
 	 * 
@@ -242,41 +245,40 @@ public class Peer implements Runnable, MessageBuilder{
 	 * @return true if the file was added (not already existing in local index) false otherwise
 	 */
 	public boolean remotePut(File file) {
+
 		
 		PutIndexAdvertisement putAdvertisement = (PutIndexAdvertisement) AdvertisementFactory.newAdvertisement(PutIndexAdvertisement.getAdvertisementType());
-	
-		putAdvertisement.setDFSFileName(file.name);
+		
+		putAdvertisement.setFileName(file.name);
 		putAdvertisement.setFileCreationTime(System.currentTimeMillis());
 		putAdvertisement.setFileSize(file.chunkCount * NetworkConstants.CHUNK_SIZE);
 		putAdvertisement.setID(ID.nullID);
-		
+
 		cManager.send(putAdvertisement);
-		
-		return fManager.addFile(file);
+
+		return fManager.addFile(file, true);
 	}
-	
+
 	/**
 	 * used by miShell to notify rm index update
 	 * 
 	 * @param file The file representation of file to remove from local index.
 	 * @return true if the file existed false if no such file
 	 */
-	public boolean rm(File file) {
+	public boolean remoteRemove(File file) {
 		
 		RmIndexAdvertisement rmAdvertisement = (RmIndexAdvertisement) AdvertisementFactory.newAdvertisement(RmIndexAdvertisement.getAdvertisementType());
-		
 		rmAdvertisement.setFileName(file.name);
 		rmAdvertisement.setFileDeletionTime(System.currentTimeMillis());
 		rmAdvertisement.setID(ID.nullID);
-		
+
 		cManager.send(rmAdvertisement);
-		
-		//TODO: Not going to work because chunkCount is -1! Have to compare only with file names.
+
 		return fManager.rmFile(file);
 	}
-	
+
 	// state machine methods
-	
+
 	private int checkGlobalCF() {
 		Map<File, List<Integer>> chunksToGet = new HashMap<File, List<Integer>>();
 		GlobalChunkfield tempGC = null;
@@ -314,10 +316,10 @@ public class Peer implements Runnable, MessageBuilder{
 		// send request for chunks to get
 		int requestCounter = 0;
 		while (requestCounter < NetworkConstants.CHUNK_REQUEST_COUNT
-					&& requestRandomChunk(chunksToGet)) {
+				&& requestRandomChunk(chunksToGet)) {
 			requestCounter ++;
 		}
-		
+
 		return requestCounter;
 	}
 	/*
@@ -349,10 +351,10 @@ public class Peer implements Runnable, MessageBuilder{
 			chunkId = chunksOfFile.remove(chunkIndex);
 			if (chunksOfFile.size() == 0) chunksToGet.remove(file);
 		} while (!cManager.send(getChunk(file.name, chunkId)));
-		
+
 		return true;
 	}
-	
+
 	// MessageBuilder methods
 	@Override
 	public GetIndex getIndex() {
@@ -401,7 +403,7 @@ public class Peer implements Runnable, MessageBuilder{
 		print("creating fileStablilized message for file " + fName);
 		return new FileStabilized(this.id, fName);
 	}
-	
+
 	public MessageHandler getMessageHandler() {
 		return messages;
 	}

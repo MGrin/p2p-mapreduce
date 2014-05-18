@@ -22,6 +22,7 @@ import ch.epfl.p2pmapreduce.networkCore.JxtaCommunicator;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunk;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunkfield;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetIndex;
+import ch.epfl.p2pmapreduce.nodeCore.messages.RefreshIndex;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendChunk;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendChunkfield;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendIndex;
@@ -87,9 +88,10 @@ public class JxtaMessageSender implements IMessageSender {
 		MessageElement name = new StringMessageElement("name", SEND_CHUNKFIELD,
 				null);
 		message.addMessageElement(name);
-
+		
 		MessageElement chunkField = new StringMessageElement("chunkfield",
 				convertMapToString(sendChunkfield.chunkfields()), null);
+		
 		message.addMessageElement(chunkField);
 
 		communicator.sendMessage(message, receiver);
@@ -181,35 +183,15 @@ public class JxtaMessageSender implements IMessageSender {
 
 	// UTILS
 
-	public static String convertMapToString(Map<String, Chunkfield> map) {
+	private String convertMapToString(Map<String, Chunkfield> map) {
 		StringBuilder builder = new StringBuilder();
 
 		for (String s : map.keySet())
-			builder.append(s + ":" + map.get(s).toBitString() + "/");
+			builder.append(s + ":" + map.get(s).toBitString() + "$");
 
 		return builder.toString();
 	}
 
-	public static Map<Integer, Chunkfield> convertStringToMap(String text) {
-
-		Map<Integer, Chunkfield> map = new HashMap<Integer, Chunkfield>();
-		String[] elements = text.split("/");
-
-		for (int i = 0; i < elements.length; i++) {
-			String[] keyValue = elements[i].split(":");
-
-			int key = Integer.parseInt(keyValue[0]);
-
-			boolean[] chunkField = new boolean[keyValue[1].length()];
-
-			for (int j = 0; j < keyValue[1].length(); j++) {
-				chunkField[j] = (keyValue[1].charAt(j) == '1');
-			}
-
-			map.put(key, new Chunkfield(chunkField));
-		}
-		return map;
-	}
 
 	public static byte[] getRawFile(File fileToSend) {
 		byte[] array = null;
@@ -234,5 +216,11 @@ public class JxtaMessageSender implements IMessageSender {
 			}
 		}
 		return array;
+	}
+
+	@Override
+	public boolean send(RefreshIndex refreshIndex) {
+		// Already managed by thread
+		return false;
 	}
 }

@@ -3,6 +3,7 @@ package ch.epfl.p2pmapreduce.nodeCore.peer;
 import java.util.LinkedList;
 import java.util.List;
 
+import ch.epfl.p2pmapreduce.index.Metadata;
 import ch.epfl.p2pmapreduce.nodeCore.messages.FileRemoved;
 import ch.epfl.p2pmapreduce.nodeCore.messages.FileStabilized;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunk;
@@ -70,6 +71,7 @@ public class MessageHandler implements MessageReceiver {
 	 */
 	public void handleMessage() {
 		Message m = readHead();
+		System.out.println("message is of type " + m.getClass());
 		m.visit(this);
 	}
 	
@@ -136,8 +138,8 @@ public class MessageHandler implements MessageReceiver {
 
 	@Override
 	public void receive(NewFile newfile) {
-		
-		if (files.addFile(new File(newfile.name(), newfile.chunkCount()))) {
+		if (files.addFile(new File(newfile.name(), newfile.chunkCount()), false)) {
+			Metadata.metaPut(newfile.name());
 			state.set(PeerState.BUILDGLOBALCF);
 		}
 	}
@@ -146,7 +148,14 @@ public class MessageHandler implements MessageReceiver {
 	public void receive(FileRemoved updateIndex) {
 		
 		//DONE: Implement | But same problem here! we only have the name so cannot instantiate
-		files.rmFile(files.getFile(updateIndex.name()));
+		
+		if(files.rmFile(files.getFile(updateIndex.name()))) {
+			//Not a directory be default.. But Metadata should actually now!
+			Metadata.metaRm(updateIndex.name(), false);
+			
+			//TODO: Hmm not sure if right thing to do. Nope, remove in next commit
+			state.set(PeerState.BUILDGLOBALCF);
+		}
 		
 	}
 
