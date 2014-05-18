@@ -18,7 +18,6 @@ import ch.epfl.p2pmapreduce.advertisement.PutIndexAdvertisement;
 import ch.epfl.p2pmapreduce.advertisement.RmIndexAdvertisement;
 import ch.epfl.p2pmapreduce.index.Metadata;
 import ch.epfl.p2pmapreduce.networkCore.JxtaCommunicator;
-import ch.epfl.p2pmapreduce.nodeCore.messages.Get;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunk;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunkfield;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetIndex;
@@ -164,18 +163,6 @@ public class JxtaMessageSender implements IMessageSender {
 
 		communicator.sendMessage(message, receiver);
 
-		return true;
-	}
-	
-	//TODO
-	@Override
-	public boolean send(Get get, Neighbour receiver) {
-		Message message = messageBasis.clone();
-		MessageElement name = new StringMessageElement("name", GET, null);
-		message.addMessageElement(name);
-		
-		communicator.sendMessage(message, receiver);
-		
 		return true;
 	}
 
