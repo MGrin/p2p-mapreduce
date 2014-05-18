@@ -92,7 +92,6 @@ public class Peer implements Runnable, MessageBuilder{
 			case BOOTING:
 				print("fetching neighbors");
 				boolean neighborsFetched = cManager.init(messages);
-				//cManager.initMessageListening(messages);
 				
 				if(neighborsFetched) state.set(PeerState.GETINDEX);
 				else state.set(PeerState.WAITING);

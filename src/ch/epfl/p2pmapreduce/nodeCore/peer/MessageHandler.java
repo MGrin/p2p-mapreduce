@@ -130,10 +130,13 @@ public class MessageHandler implements MessageReceiver {
 	@Override
 	public void receive(SendIndex sendIndex) {
 		
-		if (! isExpected(sendIndex)) return;
+		if (!isExpected(sendIndex)) return;
+		
+		cManager.initIndexUpdateDiscovery(this);
+		
 		files.replaceIndex(sendIndex.index);
 		
-		if (! expecter.waitingIndex()) state.set(PeerState.BUILDGLOBALCF);
+		if (!expecter.waitingIndex()) state.set(PeerState.BUILDGLOBALCF);
 	}
 
 	@Override

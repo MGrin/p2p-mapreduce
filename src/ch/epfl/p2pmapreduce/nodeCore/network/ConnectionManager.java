@@ -72,7 +72,6 @@ public class ConnectionManager {
 	
 	public void initMessageListening(MessageHandler handler) {
 		
-		
 		communicator.initMessageListener(handler, communicator.netPeerGroup);
 		this.sender = new JxtaMessageSender(communicator);		
 	}
@@ -229,6 +228,11 @@ public class ConnectionManager {
 			sb.append(n.id + ", ");
 		}
 		return sb.substring(0, sb.length()-2)+"]";
+	}
+
+	public void initIndexUpdateDiscovery(MessageHandler handler) {
+		communicator.initIndexUpdateDiscovery(handler);
+		
 	}
 }
 

@@ -16,7 +16,6 @@ import ch.epfl.p2pmapreduce.nodeCore.messages.FileRemoved;
 import ch.epfl.p2pmapreduce.nodeCore.messages.MessageDecoder;
 import ch.epfl.p2pmapreduce.nodeCore.messages.NewFile;
 import ch.epfl.p2pmapreduce.nodeCore.peer.MessageHandler;
-import ch.epfl.p2pmapreduce.nodeCore.utils.NetworkConstants;
 
 public class JxtaMessageListener implements PipeMsgListener, DiscoveryListener{
 
