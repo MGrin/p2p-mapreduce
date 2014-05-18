@@ -55,6 +55,8 @@ public class Peer implements Runnable, MessageBuilder{
 	private final int x;
 	private final int y;
 	private boolean verbose = false;
+	
+	private boolean isReadyForAction = false;
 
 	public Peer(String name, int id) {
 		peerName = name;
@@ -121,6 +123,10 @@ public class Peer implements Runnable, MessageBuilder{
 			case WAITING :
 				if (!messages.isEmpty()) {
 					print("handling a message...");
+					if(messages.get() instanceof SendIndex) {
+						isReadyForAction = true;
+					}
+					
 					messages.handleMessage();
 				}
 				break;
@@ -374,6 +380,10 @@ public class Peer implements Runnable, MessageBuilder{
 
 		return true;
 	}
+	
+	public boolean isReadyForActions() {
+		return isReadyForAction;
+	}
 
 	// MessageBuilder methods
 	@Override
@@ -443,4 +453,6 @@ public class Peer implements Runnable, MessageBuilder{
 			
 		}
 	}
+
+
 }

@@ -244,6 +244,8 @@ public class ConnectionManager {
 
 	public void initIndexUpdateDiscovery(MessageHandler handler) {
 		communicator.initIndexUpdateDiscovery(handler);
+		
+		
 	}
 
 	public int neighborsCount() {
