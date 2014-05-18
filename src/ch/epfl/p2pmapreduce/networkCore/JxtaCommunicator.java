@@ -451,7 +451,18 @@ public class JxtaCommunicator {
 									+ pipeAdv.getName());
 
 							// TODO: Test if not discovered already!
-
+							
+							boolean alreadyDiscovered = false;
+							
+							for(PipeAdvertisement pa : peerPipes.values()) {
+								if(pipeAdv.getName().equals(pa.getName())) {
+									System.out.println("We know this peer already!");
+									alreadyDiscovered = true;
+								}
+							}
+							
+							if(alreadyDiscovered) continue;
+								
 							int neighbourId = UidGenerator.freshId();
 
 							peerPipes.put(neighbourId, pipeAdv);

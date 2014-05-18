@@ -91,7 +91,7 @@ public class JxtaMessageListener implements PipeMsgListener, DiscoveryListener{
 						if(deletionTime <= latestDiscovery) {
 							Date latest = new Date(latestDiscovery);
 							
-							System.out.println("put advertisement for file " + rmAdvertisement.getFileName() + " is too old");
+							System.out.println("rm advertisement for file " + rmAdvertisement.getFileName() + " is too old");
 							System.out.println("was created at " + new Date(deletionTime));
 							System.out.println("only discover after " + latest);
 							continue;
