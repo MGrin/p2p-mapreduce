@@ -91,18 +91,14 @@ public class Peer implements Runnable, MessageBuilder{
 			switch (state.get()) {
 			case BOOTING:
 				print("fetching neighbors");
-<<<<<<< HEAD
-				boolean neighborsFetched = cManager.init(messages);
-=======
+
 				cManager.init(messages);
-				//cManager.initMessageListening(messages);
->>>>>>> e5b6dfab6174b077db3592e74ca837a17e17f24b
 				
 				state.set(PeerState.GETINDEX);
 				
 				break;
 			case GETINDEX:
-				if (cManager.neighborsCount() >= 0) {
+				if (cManager.neighborsCount() <= 0) {
 					cManager.replaceNeighbors(new ArrayList<Integer>());
 					state.set(PeerState.GETINDEX);
 				} else {

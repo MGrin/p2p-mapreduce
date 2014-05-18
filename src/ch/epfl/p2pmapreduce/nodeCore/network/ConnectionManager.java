@@ -28,12 +28,12 @@ public class ConnectionManager {
 
 	private final INeighbourDiscoverer nD ;
 	private IMessageSender sender ;
-	
+
 
 	private MessageExpecter expecter = MessageExpecter.INSTANCE;
 
 	private final JxtaCommunicator communicator;
-	
+
 	private List<Neighbour> neighbors = new ArrayList<Neighbour>();
 	// TODO think of resetting globalChunkfields entries when getting chunk !!
 	private Map<File, GlobalChunkfield> globalChunkfields = new HashMap<File, GlobalChunkfield>();
@@ -48,11 +48,11 @@ public class ConnectionManager {
 		boolean couldStart = communicator.start();
 
 		if(couldStart) {
-			
+
 			initMessageListening(handler);
-			
+
 			neighbors = nD.getNeighbors();
-			
+
 			if(neighbors == null || neighbors.size() == 0) return false;
 			// cuts the list when too many peers
 			for (int i = NetworkConstants.N_OPT; i < neighbors.size(); i++) {
@@ -62,16 +62,16 @@ public class ConnectionManager {
 			System.err.println("Could not start JXTA network.. Exiting");
 			System.exit(-1);
 		}
-		
+
 		return true;
 	}
 
 	public void stop() {
 		communicator.stop();
 	}
-	
+
 	public void initMessageListening(MessageHandler handler) {
-		
+
 		communicator.initMessageListener(handler, communicator.netPeerGroup);
 		this.sender = new JxtaMessageSender(communicator);		
 	}
@@ -111,7 +111,7 @@ public class ConnectionManager {
 		// entry for file in globalChunkfields will have to be recomputed
 		globalChunkfields.put(file, null);
 	}
-	
+
 	// fetches a list of fresh neighbors and replace neigbors with peerID in peerIds
 	public void replaceNeighbors(List<Integer> peerIds) {
 		List<Neighbour> freshNeighbors = nD.getNeighbors();
@@ -122,9 +122,9 @@ public class ConnectionManager {
 				neighbors.add(n);
 			}
 		}
-		
+
 	}
-	
+
 	private List<Neighbour> removeNeighbors(List<Integer> peerIds) {
 		List<Neighbour> stayingPeers = new ArrayList<Neighbour>();
 		List<Neighbour> quittingPeers = new ArrayList<Neighbour>();
@@ -179,7 +179,7 @@ public class ConnectionManager {
 			sender.send(getChunkfield, n);
 		}
 	}
- 
+
 	public boolean send(SendIndex sendIndex, int receiverId) {
 		System.out.println("receiver id is " + receiverId);
 		Neighbour receiver = getFromId(receiverId);
@@ -193,29 +193,29 @@ public class ConnectionManager {
 		expecter.expect(new ExpectedSend.Index(neighbors.get(0).id));
 		return sender.send(getIndex, neighbors.get(0));
 	}
-	
+
 	public void send(RefreshIndex refreshIndex) {
 		// TODO add method in IMessageSender
 		// sender.send(refreshIndex);
 	}
-	
+
 	public void send(RmIndexAdvertisement rmAdvertisement) {
 		sender.send(rmAdvertisement);
 	}
-	
+
 	public void send(PutIndexAdvertisement putAdvertisement) {
 		sender.send(putAdvertisement);
 	}
-	
-	
+
+
 
 	// utilities
 
 	private Neighbour getFromId(int neighbourId) {
-		
+
 		System.out.println("getting neighbour for id " + neighbourId);
 		System.out.println(neighbors.size() + " neighbours discovered so far");
-		
+
 		for (Neighbour n: neighbors) {
 			if (n.id == neighbourId) return n;
 		}
@@ -229,20 +229,17 @@ public class ConnectionManager {
 		}
 		return sb.substring(0, sb.length()-2)+"]";
 	}
-<<<<<<< HEAD
 
 	public void initIndexUpdateDiscovery(MessageHandler handler) {
 		communicator.initIndexUpdateDiscovery(handler);
-		
-=======
-	
+	}
+
 	public int neighborsCount() {
 		if (neighbors == null) {
 			return 0;
 		} else {
 			return neighbors.size();
 		}
->>>>>>> e5b6dfab6174b077db3592e74ca837a17e17f24b
 	}
 }
 
