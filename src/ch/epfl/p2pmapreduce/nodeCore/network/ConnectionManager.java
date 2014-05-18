@@ -9,6 +9,7 @@ import ch.epfl.p2pmapreduce.advertisement.PutIndexAdvertisement;
 import ch.epfl.p2pmapreduce.advertisement.RmIndexAdvertisement;
 import ch.epfl.p2pmapreduce.networkCore.JxtaCommunicator;
 import ch.epfl.p2pmapreduce.nodeCore.messages.ExpectedSend;
+import ch.epfl.p2pmapreduce.nodeCore.messages.FileStabilizedAdvertisement;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunk;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunkfield;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetIndex;
@@ -23,7 +24,14 @@ import ch.epfl.p2pmapreduce.nodeCore.volume.Chunkfield;
 import ch.epfl.p2pmapreduce.nodeCore.volume.File;
 import ch.epfl.p2pmapreduce.nodeCore.volume.GlobalChunkfield;
 
-
+/**
+ * ConnectionManager is responsible for neighbors memorization with their chunkfields.
+ * Additionnaly, it provides interface for sending methods to the peer. This class
+ * may be accessed by the MessageHandler as well to store received chunkfield information.
+ * 
+ * @author vtpittet
+ *
+ */
 public class ConnectionManager {
 
 	private final INeighbourDiscoverer nD ;
@@ -205,6 +213,10 @@ public class ConnectionManager {
 
 	public void send(PutIndexAdvertisement putAdvertisement) {
 		sender.send(putAdvertisement);
+	}
+	
+	public void send(FileStabilizedAdvertisement fileStabilizedAdvertizement) {
+		sender.send(fileStabilizedAdvertizement);
 	}
 
 
