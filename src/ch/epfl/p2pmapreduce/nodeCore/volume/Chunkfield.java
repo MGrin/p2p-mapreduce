@@ -49,6 +49,13 @@ public class Chunkfield {
 		return true;
 	}
 	
+	public boolean isFull() {
+		for (boolean b : field) {
+			if (!b) return false;
+		}
+		return true;
+	}
+	
 	/**
 	 * The user must be careful not to mix fields of different files.
 	 * Different chunkfield length may lead to out of bound exception.

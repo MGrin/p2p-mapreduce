@@ -129,4 +129,13 @@ public class Index {
 	public void dropChunk(String fName, int chunkId) {
 		files.get(getFile(fName)).dropChunk(chunkId);
 	}
+
+	public boolean hasAllChunks(File target) {
+		Chunkfield cf = files.get(target);
+		if (cf == null) {
+			return false;
+		} else {
+			return cf.isFull();
+		}
+	}
 }

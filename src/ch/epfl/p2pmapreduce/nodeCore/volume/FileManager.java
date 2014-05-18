@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -24,6 +25,9 @@ public class FileManager {
 //	private Map<File, Chunkfield> files = new HashMap<File, Chunkfield>();
 	private Index index = new Index();
 	public final int peerId;
+	
+	// will restore file to os when all chunks are collected
+	private HashMap<File, String> pendingGet = new HashMap<File, String>();
 	
 	public FileManager(int peerId) {
 		this.peerId = peerId;
@@ -196,6 +200,11 @@ public class FileManager {
 			out.write(charData);
 			out.close();
 			index.putChunk(fName, chunkId);
+			File target = getFile(fName);
+			if (pendingGet.containsKey(target)
+					&& index.hasAllChunks(target)) {
+				restore(target);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.err.println("Could not write chunk " + chunkId + " for file " + fName + ".");
@@ -229,6 +238,10 @@ public class FileManager {
 		index.stabilize(fName);
 	}
 	
+	public void addPendingGet(String fName, String osFullPath) {
+		pendingGet.put(getFile(fName), osFullPath);
+	}
+	
 	public void print(String message) {
 		System.out.println("peer_" + peerId + ": " + message);
 	}
@@ -255,4 +268,9 @@ public class FileManager {
 		}
 	}
 	
+	private void restore(File file) {
+		String osFullPath = pendingGet.remove(file);
+		java.io.File destFile = new java.io.File(osFullPath);
+		// TODO
+	}
 }
