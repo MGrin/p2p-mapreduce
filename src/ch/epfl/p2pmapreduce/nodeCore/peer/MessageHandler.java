@@ -162,7 +162,7 @@ public class MessageHandler implements MessageReceiver {
 
 	@Override
 	public void receive(GetChunk getChunk) {
-		
+		if (!files.containsFile(getChunk.fName())) return;
 		cManager.send(builder.sendChunk(getChunk.fName(), getChunk.chunkId()), getChunk.sender());
 	}
 
@@ -170,6 +170,7 @@ public class MessageHandler implements MessageReceiver {
 	public void receive(SendChunk sendChunk) {
 		
 		if (! isExpected(sendChunk)) return;
+		if (!files.containsFile(sendChunk.fName())) return;
 		
 		files.addChunk(sendChunk.fName(), sendChunk.chunkId(), sendChunk.getChunkData());
 		// may not be necessary because of build global cf
