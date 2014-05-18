@@ -152,7 +152,12 @@ public class Mishell {
 	public static void put(String osFullFilePath, String dfsPath) {
 		List<String> temp = Metadata.tokenize(osFullFilePath, "/");
 
-		String dfsFullFolderPath = dfsPath.concat("/" + temp.get(temp.size() - 1));
+		String dfsFullFolderPath = "";
+		if (dfsPath.compareTo("/") == 0) {
+			dfsFullFolderPath = dfsPath.concat(temp.get(temp.size() - 1));
+		} else {
+			dfsFullFolderPath = dfsPath.concat("/" + temp.get(temp.size() - 1));
+		}
 		boolean success = false;
 		System.out.println("with the file (local): " + osFullFilePath
 				+ " (DFS): " + dfsFullFolderPath);
