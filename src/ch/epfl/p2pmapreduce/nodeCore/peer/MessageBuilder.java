@@ -23,7 +23,7 @@ public interface MessageBuilder {
 	GetChunk getChunk(String fileName, int chunkId);
 	SendChunk sendChunk(String fileName, int chunkId);
 	
-	List<GetChunk> get(String fileName);
+	void get(String fileName, String filePathOs);
 	
 	NewFile newFile(String fileName, int chunkCount);
 	FileStabilized fileStabilized(String fName);
