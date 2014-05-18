@@ -177,7 +177,6 @@ public class Mishell {
 	}
 
 	public static void rm(String input, boolean isDirectory) {
-
 		System.out.println("Removing " + input + " from DFS..");
 
 		boolean success = p.remoteRemove(new File(input, -1));
@@ -190,6 +189,7 @@ public class Mishell {
 			} else {
 				Metadata.metaRm(input, false);
 			}
+			
 			System.out.println("Succedded in removing file " + input
 					+ " on DFS? " + success);
 		}
