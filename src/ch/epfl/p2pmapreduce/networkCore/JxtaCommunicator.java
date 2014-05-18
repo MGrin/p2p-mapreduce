@@ -59,6 +59,7 @@ public class JxtaCommunicator {
 	public PeerGroup netPeerGroup;
 	private PeerGroup dfsPeerGroup;
 
+	private JxtaMessageListener messageListener;
 	private PipeAdvertisement pipeAdvertisement = null;
 	private Timer pipeAdvertisementPublisher;
 	private Timer indexAdvertisementDiscoverer;
@@ -222,6 +223,16 @@ public class JxtaCommunicator {
 		pipeAdvertisement.setName("pipeAdv:" + this.name);
 		pipeAdvertisement.setDescription("Created by " + name);
 
+		messageListener = new JxtaMessageListener(mh);
+
+		try {
+			pg.getPipeService().createInputPipe(pipeAdvertisement, messageListener);
+		} catch (IOException e) {
+			System.err
+					.println("Did not manage to create input pipe.. Exiting then");
+			System.exit(-1);
+		}
+		
 		pipeAdvertisementPublisher = new Timer();
 
 		pipeAdvertisementPublisher.scheduleAtFixedRate(new TimerTask() {
@@ -246,8 +257,9 @@ public class JxtaCommunicator {
 			}
 		}, 0, NetworkConstants.PIPE_ADVERTISEMENT_LIFETIME - 30 * 1000);
 
-		final JxtaMessageListener listener = new JxtaMessageListener(mh);
-
+	}
+	
+	public void initIndexUpdateDiscovery(MessageHandler handler) {
 		indexAdvertisementDiscoverer = new Timer();
 
 		indexAdvertisementDiscoverer.schedule(new TimerTask() {
@@ -256,19 +268,13 @@ public class JxtaCommunicator {
 			public void run() {
 
 				System.out.println("discovering index updates");
-				pg.getDiscoveryService().getRemoteAdvertisements(null, DiscoveryService.ADV, "MyIdentifierTag" , "*", 10, listener);
+				netPeerGroup.getDiscoveryService().getRemoteAdvertisements(null, DiscoveryService.ADV, "MyIdentifierTag" , "*", 10, messageListener);
 
 			}
 		}, 0, NetworkConstants.INDEX_ADVERTISEMENT_DISCOVERY_RATE);
-
-		try {
-			pg.getPipeService().createInputPipe(pipeAdvertisement, listener);
-		} catch (IOException e) {
-			System.err
-					.println("Did not manage to create input pipe.. Exiting then");
-			System.exit(-1);
-		}
+		
 	}
+
 
 	public void stop() {
 		networkManager.stopNetwork();
@@ -463,5 +469,6 @@ public class JxtaCommunicator {
 		}
 
 	}
+
 
 }

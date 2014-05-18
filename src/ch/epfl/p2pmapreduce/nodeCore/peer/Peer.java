@@ -91,14 +91,14 @@ public class Peer implements Runnable, MessageBuilder{
 			switch (state.get()) {
 			case BOOTING:
 				print("fetching neighbors");
+
 				cManager.init(messages);
-				//cManager.initMessageListening(messages);
 				
 				state.set(PeerState.GETINDEX);
 				
 				break;
 			case GETINDEX:
-				if (cManager.neighborsCount() >= 0) {
+				if (cManager.neighborsCount() <= 0) {
 					cManager.replaceNeighbors(new ArrayList<Integer>());
 					state.set(PeerState.GETINDEX);
 				} else {
@@ -416,7 +416,15 @@ public class Peer implements Runnable, MessageBuilder{
 		return new RefreshIndex(id);
 	}
 
-	public List<GetChunk> get(String fileName) {
-		return null;
+	public void get(String fileName, String filePathOs) {
+		File file = this.fManager.getFile(fileName);
+		if (file != null) {
+			for (int i = 0; i < file.chunkCount; i++) {
+				if (!this.fManager.containsChunk(fileName, i)) {
+					cManager.send(this.getChunk(fileName, i));
+				}
+			}
+			
+		}
 	}
 }
