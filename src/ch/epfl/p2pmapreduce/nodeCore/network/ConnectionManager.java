@@ -73,7 +73,7 @@ public class ConnectionManager {
 	public void initMessageListening(MessageHandler handler) {
 
 		communicator.initMessageListener(handler, communicator.netPeerGroup);
-		this.sender = new JxtaMessageSender(communicator);		
+		this.sender = new JxtaMessageSender(communicator);
 	}
 
 	/**

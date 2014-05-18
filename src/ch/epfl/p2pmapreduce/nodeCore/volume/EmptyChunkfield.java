@@ -26,7 +26,7 @@ public class EmptyChunkfield extends Chunkfield {
 	}
 	
 	public void fillWithChunks(int[] globalChunkfield) {
-		throw new RuntimeException("fillWithChunks in empty Chunkfield");
+		// nothing to do here;
 	}
 	
 	public boolean hasChunk(int chunkId) {
