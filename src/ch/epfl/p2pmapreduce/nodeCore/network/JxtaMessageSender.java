@@ -29,7 +29,7 @@ import ch.epfl.p2pmapreduce.nodeCore.volume.Chunkfield;
 
 /**
  * This class is responsible for transforming abstract messages into JXTA
- * messages, and send them to the corresponding Neighbour.
+ * messages, and send them to the corresponding Neighbor.
  * 
  * 
  * @author Tketa
