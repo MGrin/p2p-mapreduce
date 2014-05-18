@@ -230,5 +230,13 @@ public class ConnectionManager {
 		}
 		return sb.substring(0, sb.length()-2)+"]";
 	}
+	
+	public int neighborsCount() {
+		if (neighbors == null) {
+			return 0;
+		} else {
+			return neighbors.size();
+		}
+	}
 }
 

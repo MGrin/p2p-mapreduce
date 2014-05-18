@@ -78,7 +78,7 @@ public class FileManager {
 					}
 					out.write(line);
 					out.newLine();
-					chunkSize += line.length() *2; // assuming two bytes per char
+					chunkSize += line.length();
 					if (chunkSize >= NetworkConstants.CHUNK_SIZE) {
 						chunkCount ++;
 						out.close();
