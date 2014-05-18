@@ -156,8 +156,6 @@ public class MessageHandler implements MessageReceiver {
 			System.out.println("removing from local xml file!");
 			Metadata.metaRm(updateIndex.name(), false);
 			
-			//TODO: Hmm not sure if right thing to do. Nope, remove in next commit
-			state.set(PeerState.BUILDGLOBALCF);
 		}
 		
 	}
