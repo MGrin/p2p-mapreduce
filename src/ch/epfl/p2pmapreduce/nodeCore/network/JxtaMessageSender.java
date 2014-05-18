@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Map;
 
+import net.jxta.document.Advertisement;
 import net.jxta.document.MimeMediaType;
 import net.jxta.document.XMLDocument;
 import net.jxta.endpoint.ByteArrayMessageElement;
@@ -14,7 +15,6 @@ import net.jxta.endpoint.MessageElement;
 import net.jxta.endpoint.StringMessageElement;
 import net.jxta.endpoint.TextDocumentMessageElement;
 import net.jxta.protocol.PipeAdvertisement;
-import ch.epfl.p2pmapreduce.advertisement.PutIndexAdvertisement;
 import ch.epfl.p2pmapreduce.advertisement.RmIndexAdvertisement;
 import ch.epfl.p2pmapreduce.index.Metadata;
 import ch.epfl.p2pmapreduce.networkCore.JxtaCommunicator;
@@ -168,16 +168,9 @@ public class JxtaMessageSender implements IMessageSender {
 	}
 
 	@Override
-	public boolean send(PutIndexAdvertisement putIndex) {
+	public boolean send(Advertisement adv) {
 
-		return communicator.publishAdvertisement(putIndex,
-				communicator.netPeerGroup);
-	}
-
-	@Override
-	public boolean send(RmIndexAdvertisement rmIndex) {
-
-		return communicator.publishAdvertisement(rmIndex,
+		return communicator.publishAdvertisement(adv,
 				communicator.netPeerGroup);
 	}
 

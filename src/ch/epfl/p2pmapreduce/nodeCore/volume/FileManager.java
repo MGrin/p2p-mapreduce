@@ -18,6 +18,16 @@ import org.apache.commons.io.FileUtils;
 import ch.epfl.p2pmapreduce.nodeCore.utils.FileManagerConstants;
 import ch.epfl.p2pmapreduce.nodeCore.utils.NetworkConstants;
 
+/**
+ * 
+ * Manages known files and chunks.
+ * This class provides to the rest of the program access to stored data
+ * (retrieving, storing) and chunkfield extraction.
+ * 
+ * 
+ * @author vtpittet
+ *
+ */
 public class FileManager {
 
 	private final static String CHUNK_EXT = ".chk";

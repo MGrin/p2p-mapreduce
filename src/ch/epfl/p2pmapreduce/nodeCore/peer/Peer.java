@@ -11,6 +11,7 @@ import net.jxta.id.ID;
 import ch.epfl.p2pmapreduce.advertisement.PutIndexAdvertisement;
 import ch.epfl.p2pmapreduce.advertisement.RmIndexAdvertisement;
 import ch.epfl.p2pmapreduce.nodeCore.messages.FileStabilized;
+import ch.epfl.p2pmapreduce.nodeCore.messages.FileStabilizedAdvertisement;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunk;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunkfield;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetIndex;
@@ -27,6 +28,15 @@ import ch.epfl.p2pmapreduce.nodeCore.volume.File;
 import ch.epfl.p2pmapreduce.nodeCore.volume.FileManager;
 import ch.epfl.p2pmapreduce.nodeCore.volume.GlobalChunkfield;
 
+
+/**
+ * The class peer controls the main behavior of program.
+ * It is responsible of choosing which message to send (except response message)
+ * 
+ * 
+ * @author vtpittet
+ *
+ */
 
 public class Peer implements Runnable, MessageBuilder{
 
@@ -240,7 +250,6 @@ public class Peer implements Runnable, MessageBuilder{
 	/**
 	 * Used by miShell to chunkify new file
 	 * Will chunkify argument and update index and chunkfield in FileManager.
-	 * Index update has to be done here (TODO).
 	 * 
 	 * @param osFullPath os full path of file to load
 	 * @param dfsFullPath dfsFullPath to store file (including fileName)
@@ -318,7 +327,12 @@ public class Peer implements Runnable, MessageBuilder{
 			if (! f.isStabilized() && tempLowChunks.size() == 0) {
 				// enough duplication achieved, file can be stabilized
 				f.stabilise();
-				// TODO Send message to miShell for index updating
+				// TODO
+				FileStabilizedAdvertisement stabAdvertisement = (FileStabilizedAdvertisement) AdvertisementFactory.newAdvertisement(FileStabilizedAdvertisement.getAdvertisementType());
+				
+				stabAdvertisement.setID(ID.nullID);
+
+				cManager.send(stabAdvertisement);
 			}
 			if (tempGC.underMinChunks().size() == 0) {
 				// peer will become responsible for the file

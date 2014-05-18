@@ -1,7 +1,6 @@
 package ch.epfl.p2pmapreduce.nodeCore.network;
 
-import ch.epfl.p2pmapreduce.advertisement.PutIndexAdvertisement;
-import ch.epfl.p2pmapreduce.advertisement.RmIndexAdvertisement;
+import net.jxta.document.Advertisement;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunk;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunkfield;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetIndex;
@@ -26,8 +25,7 @@ public interface IMessageSender {
 	boolean send(SendIndex sendIndex, Neighbour receiver);
 	boolean send(GetIndex getIndex, Neighbour receiver);
 	
-	boolean send(PutIndexAdvertisement putIndex);
-	boolean send(RmIndexAdvertisement rmIndex);
+	boolean send(Advertisement adv);
 	
 	boolean send(RefreshIndex refreshIndex);
 }
