@@ -424,6 +424,7 @@ public class Peer implements Runnable, MessageBuilder{
 					cManager.send(this.getChunk(fileName, i));
 				}
 			}
+			
 		}
 	}
 }
