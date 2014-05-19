@@ -229,7 +229,7 @@ public class JxtaCommunicator {
 		pipeAdvertisement.setType(PipeService.UnicastType);
 		pipeAdvertisement.setName("pipeAdv:" + this.name);
 		pipeAdvertisement.setDescription("Created by " + name);
-
+		
 		messageListener = new JxtaMessageListener(mh);
 
 		try {
@@ -255,7 +255,7 @@ public class JxtaCommunicator {
 					.println("next publishing in "
 							+ (NetworkConstants.PIPE_ADVERTISEMENT_LIFETIME - 30 * 1000)
 							/ 1000 + " seconds");
-					pg.getDiscoveryService().publish(pipeAdvertisement);
+					pg.getDiscoveryService().publish(pipeAdvertisement, NetworkConstants.PIPE_ADVERTISEMENT_LIFETIME, 0);
 				} catch (IOException e) {
 					System.err
 					.println("Could not publish PipeAdvertisement! Peers are not going to be able to send us messages then..");

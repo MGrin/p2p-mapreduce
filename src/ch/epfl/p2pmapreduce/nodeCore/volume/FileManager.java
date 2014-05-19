@@ -306,6 +306,7 @@ public class FileManager {
 				}
 				out.close();
 			} catch (IOException e) {
+				e.printStackTrace();
 				System.err.println("Something went wrong writing in " + osFullPath);
 			}
 		}
