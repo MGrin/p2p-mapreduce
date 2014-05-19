@@ -84,7 +84,7 @@ public class Mishell {
 						help(tok[1]);
 					} else {
 						System.out
-								.println("About what command do you need help ? (connect, ls, get, put, rm)");
+						.println("About what command do you need help ? (connect, ls, get, put, rm)");
 						System.out.println("Specify only one command.");
 					}
 				} else if (tok[0].compareTo("connect") == 0) {
@@ -93,20 +93,20 @@ public class Mishell {
 						connect();
 					} else {
 						System.out
-								.println("too much arguments for \"connect\"");
+						.println("too much arguments for \"connect\"");
 					}
 
+				} else if (tok[0].compareTo("quit") == 0) {
+					if (tok.length == 1) {
+						// System.out.println("handle quit");
+						quit();
+					} else {
+						System.out
+						.println("too much arguments for \"quit\"");
+					}
 				} else if (p.isReadyForActions()) {
 
-					if (tok[0].compareTo("quit") == 0) {
-						if (tok.length == 1) {
-							// System.out.println("handle quit");
-							quit();
-						} else {
-							System.out
-									.println("too much arguments for \"quit\"");
-						}
-					} else if (tok[0].compareTo("ls") == 0) {
+					if (tok[0].compareTo("ls") == 0) {
 						if (tok.length > 1) {
 							// System.out.println("handle ls");
 							ls(tok[1]);
@@ -146,12 +146,12 @@ public class Mishell {
 							}
 						} else {
 							System.out
-									.println("Please specify a file/folder to delete");
+							.println("Please specify a file/folder to delete");
 						}
 					}
 				} else {
 					System.out
-							.println("Peer did not boot the DFS index yet! Try later...");
+					.println("Peer did not boot the DFS index yet! Try later...");
 				}
 			}
 		}
@@ -239,7 +239,7 @@ public class Mishell {
 
 			if (success) {
 				System.out
-						.println("Succeeded in removing from distant file System and publishing RmIndexAdvertisement");
+				.println("Succeeded in removing from distant file System and publishing RmIndexAdvertisement");
 
 				if (isDirectory) {
 					Metadata.metaRm(input, true);

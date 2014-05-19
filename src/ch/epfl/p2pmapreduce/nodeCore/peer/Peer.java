@@ -137,6 +137,7 @@ public class Peer implements Runnable, MessageBuilder{
 					print("handling a message...");
 					if(messages.get() instanceof SendIndex) {
 						isReadyForAction = true;
+						System.out.println("peer is now ready to put/rm !");
 					}
 					
 					messages.handleMessage();
