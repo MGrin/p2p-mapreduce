@@ -55,7 +55,7 @@ public class Peer implements Runnable, MessageBuilder{
 
 	private final int x;
 	private final int y;
-	private boolean verbose = false;
+	private boolean verbose = true;
 	
 	private boolean isReadyForAction = false;
 
