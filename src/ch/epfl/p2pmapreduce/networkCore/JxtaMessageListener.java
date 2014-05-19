@@ -13,6 +13,7 @@ import net.jxta.protocol.DiscoveryResponseMsg;
 import ch.epfl.p2pmapreduce.advertisement.PutIndexAdvertisement;
 import ch.epfl.p2pmapreduce.advertisement.RmIndexAdvertisement;
 import ch.epfl.p2pmapreduce.nodeCore.messages.FileRemoved;
+import ch.epfl.p2pmapreduce.nodeCore.messages.FileStabilizedAdvertisement;
 import ch.epfl.p2pmapreduce.nodeCore.messages.MessageDecoder;
 import ch.epfl.p2pmapreduce.nodeCore.messages.NewFile;
 import ch.epfl.p2pmapreduce.nodeCore.peer.MessageHandler;
@@ -111,12 +112,11 @@ public class JxtaMessageListener implements PipeMsgListener, DiscoveryListener{
 
 						handler.enqueue(fileRemovedMessage);
 
-					} else {
+					} else if(adv.getClass().equals(FileStabilizedAdvertisement.class)) {
 
-						//						System.out.println("Received an Advertisement which is neither an IndexAdvertisement nor a PeerGroupAdvertisement..");
-						//						System.out.println("It is a " + adv.getAdvType());
+
 					}
- 
+
 				} catch (ClassCastException Ex) {
 
 					// We are not dealing with an Index Advertisement

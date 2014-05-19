@@ -31,6 +31,7 @@ import net.jxta.protocol.DiscoveryResponseMsg;
 import net.jxta.protocol.PipeAdvertisement;
 import ch.epfl.p2pmapreduce.advertisement.PutIndexAdvertisement;
 import ch.epfl.p2pmapreduce.advertisement.RmIndexAdvertisement;
+import ch.epfl.p2pmapreduce.nodeCore.messages.FileStabilizedAdvertisement;
 import ch.epfl.p2pmapreduce.nodeCore.network.INeighbourDiscoverer;
 import ch.epfl.p2pmapreduce.nodeCore.network.Neighbour;
 import ch.epfl.p2pmapreduce.nodeCore.peer.MessageHandler;
@@ -142,9 +143,12 @@ public class JxtaCommunicator {
 		AdvertisementFactory.registerAdvertisementInstance(
 				RmIndexAdvertisement.getAdvertisementType(),
 				new RmIndexAdvertisement.Instantiator());
+		AdvertisementFactory.registerAdvertisementInstance(
+				FileStabilizedAdvertisement.getAdvertisementType(), 
+				new FileStabilizedAdvertisement.Instantiator());
 
 		// Connect
-		if (!connectToRDV(20000)) { // TODO Change to 60000
+		if (!connectToRDV(NetworkConstants.RENDEZVOUS_CONNECTION_TIMEOUT)) { // TODO Change to 60000
 			System.err.println("Unable to connect to "
 					+ MAIN_RENDEZ_VOUS_ADDRESS);
 			return false;
@@ -232,10 +236,10 @@ public class JxtaCommunicator {
 			pg.getPipeService().createInputPipe(pipeAdvertisement, messageListener);
 		} catch (IOException e) {
 			System.err
-					.println("Did not manage to create input pipe.. Exiting then");
+			.println("Did not manage to create input pipe.. Exiting then");
 			System.exit(-1);
 		}
-		
+
 		pipeAdvertisementPublisher = new Timer();
 
 		pipeAdvertisementPublisher.scheduleAtFixedRate(new TimerTask() {
@@ -245,23 +249,23 @@ public class JxtaCommunicator {
 
 				try {
 					System.out
-							.println("publishing PipeAdvertisement with name "
-									+ pipeAdvertisement.getName());
+					.println("publishing PipeAdvertisement with name "
+							+ pipeAdvertisement.getName());
 					System.out
-							.println("next publishing in "
-									+ (NetworkConstants.PIPE_ADVERTISEMENT_LIFETIME - 30 * 1000)
-									/ 1000 + " seconds");
+					.println("next publishing in "
+							+ (NetworkConstants.PIPE_ADVERTISEMENT_LIFETIME - 30 * 1000)
+							/ 1000 + " seconds");
 					pg.getDiscoveryService().publish(pipeAdvertisement);
 				} catch (IOException e) {
 					System.err
-							.println("Could not publish PipeAdvertisement! Peers are not going to be able to send us messages then..");
+					.println("Could not publish PipeAdvertisement! Peers are not going to be able to send us messages then..");
 					e.printStackTrace();
 				}
 			}
 		}, 0, NetworkConstants.PIPE_ADVERTISEMENT_LIFETIME - 30 * 1000);
 
 	}
-	
+
 	public void initIndexUpdateDiscovery(MessageHandler handler) {
 		indexAdvertisementDiscoverer = new Timer();
 
@@ -275,7 +279,7 @@ public class JxtaCommunicator {
 
 			}
 		}, 0, NetworkConstants.INDEX_ADVERTISEMENT_DISCOVERY_RATE);
-		
+
 	}
 
 
@@ -385,9 +389,9 @@ public class JxtaCommunicator {
 	 * 
 	 */
 	public class JxtaNeighbourDiscoverer implements INeighbourDiscoverer,
-			DiscoveryListener {
+	DiscoveryListener {
 
-		
+
 
 		@Override
 		public List<Neighbour> getNeighbors() {
@@ -451,23 +455,23 @@ public class JxtaCommunicator {
 								System.out.println("found myself! not adding of course..");
 								continue;
 							}
-							
+
 							System.out.println("found a peer! handling "
 									+ pipeAdv.getName());
 
 							// TODO: Test if not discovered already!
-							
+
 							boolean alreadyDiscovered = false;
-							
+
 							for(PipeAdvertisement pa : peerPipes.values()) {
 								if(pipeAdv.getName().equals(pa.getName())) {
 									System.out.println("We know this peer already!");
 									alreadyDiscovered = true;
 								}
 							}
-							
+
 							if(alreadyDiscovered) continue;
-								
+
 							int neighbourId = UidGenerator.freshId();
 
 							peerPipes.put(neighbourId, pipeAdv);

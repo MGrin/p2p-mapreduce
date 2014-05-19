@@ -36,6 +36,8 @@ public class NetworkConstants {
 	
 	public static final int INDEX_ADVERTISEMENT_DISCOVERY_RATE = 20 * 1000; 
 	
+	public static final int RENDEZVOUS_CONNECTION_TIMEOUT = 10 * 1000;
+	
 	// just for simulation
 	
 	public static final int AREA_SIZE = 10;
