@@ -180,11 +180,12 @@ public class Mishell {
 		
 		System.out.println("with the file (local): " + osFullFilePath
 				+ " (DFS): " + dfsFullFolderPath);
-		String infos = getFileInfos(osFullFilePath, dfsFullFolderPath);
-		if (infos != null) {
-			System.out.println("infos not null : with val : " + infos);
+		
 			File f = p.rootPut(osFullFilePath, dfsFullFolderPath);
-			success = p.remotePut(f);
+			if (f != null) {
+				String infos = getFileInfos(osFullFilePath, dfsFullFolderPath, f);
+				System.out.println("infos not null : with val : " + infos);
+				success = p.remotePut(f);
 
 			if (success) {
 				Metadata.metaPut(infos);
@@ -205,6 +206,7 @@ public class Mishell {
 	public static void get(String input, String outPath) {
 		System.out.println("with the file : " + input + " to go on the os as " + outPath);
 		if (Metadata.metaExist(input)) {
+			System.out.println("file: " + input + " exists");
 			p.get(input, outPath);
 		}
 	}
@@ -278,11 +280,11 @@ public class Mishell {
 
 	//UTILITY
 	
-	private static String getFileInfos(String osFullPath, String DFSFullPath) {
+	private static String getFileInfos(String osFullPath, String DFSFullPath, File f) {
 		java.io.File file = new java.io.File(osFullPath);
 
 		if (file.exists()) {
-			long fileSize = file.length();
+			long fileSize = f.chunkCount;
 			SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
 			String fileDate = sdf.format(file.lastModified());
 			String infos = DFSFullPath + "," + fileSize + "," + fileDate;

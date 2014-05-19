@@ -443,6 +443,9 @@ public class Peer implements Runnable, MessageBuilder{
 
 	public void get(String fileName, String filePathOs) {
 		File file = this.fManager.getFile(fileName);
+		
+		System.out.println("file to get is : " + file);
+		
 		fManager.addPendingGet(fileName, filePathOs);
 		if (file != null) {
 			for (int i = 0; i < file.chunkCount; i++) {
