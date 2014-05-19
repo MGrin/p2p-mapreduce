@@ -3,6 +3,7 @@ package ch.epfl.p2pmapreduce.nodeCore.peer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -87,15 +88,26 @@ public class Peer implements Runnable, MessageBuilder{
 			if (waitTime > PeerConstants.WAIT_TIMEOUT) {
 				waitTime = 0;
 				// this should only occur when a waiting too long for messages (sendIndex, send cf, send c)
-				List<Integer> badPeers = messages.timeoutIndex();
-				if (badPeers != null && state.get() == PeerState.WAITINGINDEX) {
-					cManager.replaceNeighbors(badPeers);
+				List<Integer> badPeers = new LinkedList<Integer>();
+				if (state.get() == PeerState.WAITINGINDEX) {
+					badPeers = messages.timeoutIndex();
 					state.set(PeerState.GETINDEX);
 				} else {
 					badPeers = messages.timeoutChunk();
 					badPeers.addAll(messages.timeoutChunkfield());
-					cManager.replaceNeighbors(badPeers);
 					state.set(PeerState.REFRESHINDEX);
+				}
+				if (badPeers.size() > 0 | cManager.neighborsCount() < NetworkConstants.N_OPT) {
+					int nC = -1;
+					if (badPeers.size() == 0) {
+						nC = cManager.neighborsCount();
+						System.out.println("trying to get more neighbors, currently have " + nC);
+					}
+					cManager.replaceNeighbors(badPeers);
+					if (nC != -1) {
+						nC = cManager.neighborsCount();
+						System.out.println("now have " + nC + " peers.");
+					}
 				}
 			}
 			if (previous != state.get()) print(state.get() + "...");
