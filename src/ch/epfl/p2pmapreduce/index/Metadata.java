@@ -126,7 +126,8 @@ public class Metadata {
 			XMLOutputter sortie = new XMLOutputter(Format.getPrettyFormat());
 			sortie.output(document, new FileOutputStream(file));
 		} catch (IOException e) {
-			System.out.println("Cannot update the file");
+			System.err.println("Cannot update the file");
+//			e.printStackTrace();
 		}
 	}
 
@@ -137,9 +138,11 @@ public class Metadata {
 		try {
 			document = sxb.build(file);
 		} catch (JDOMException e) {
-			e.printStackTrace();
+			System.err.println("JDOMException");
+//			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.err.println("IOException");
+//			e.printStackTrace();
 		}
 		racine = document.getRootElement();
 		if (fileName == racine.getName()) {
@@ -165,7 +168,7 @@ public class Metadata {
 					current = currentChildren.get(indice);
 					currentChildren = current.getChildren();
 				} else {
-					System.out
+					System.err
 							.println("Cannot delete something that doesn't exist");
 				}
 			}
@@ -180,14 +183,15 @@ public class Metadata {
 		try {
 			document = sxb.build(file);
 		} catch (JDOMException e) {
-			e.printStackTrace();
+			System.err.println("JDOMException");
+//			e.printStackTrace();
 		} catch (IOException e) {
 			System.err.println("File doesn't exist");
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 
 		racine = document.getRootElement();
-		System.out.println("listing files in \"" + folder + "\"");
+		System.out.println("Listing files in \"" + folder + "\"");
 		// best case
 		if (racine.getName().compareTo(folder) == 0) {
 			List<Element> toPrint = racine.getChildren();
@@ -237,9 +241,11 @@ public class Metadata {
 			try {
 				document = sxb.build(file);
 			} catch (JDOMException e) {
-				e.printStackTrace();
+				System.err.println("JDOMException");
+//				e.printStackTrace();
 			} catch (IOException e) {
-				e.printStackTrace();
+				System.err.println("IOException");
+//				e.printStackTrace();
 			}
 			racine = document.getRootElement();
 			fullpaths = new ArrayList<String>();
@@ -255,11 +261,11 @@ public class Metadata {
 				files.add(new ch.epfl.p2pmapreduce.nodeCore.volume.File(
 						tokenize(fullpaths.get(i), ":").get(0), chunkCount));
 			}
-			// test
+			/* Debug
 			for (int i = 0; i < files.size(); i++) {
 				System.out.println((files.get(i).name));
 				System.out.println((files.get(i).chunkCount));
-			}
+			}*/
 			return files;
 		}
 	}
@@ -295,10 +301,11 @@ public class Metadata {
 		try {
 			document = sxb.build(file);
 		} catch (JDOMException e) {
-			e.printStackTrace();
+			System.err.println("JDOMException");
+//			e.printStackTrace();
 		} catch (IOException e) {
 			System.err.println("File doesn't exist");
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 
 		racine = document.getRootElement();
@@ -324,7 +331,7 @@ public class Metadata {
 		return false;
 	}
 
-	/*
+	/* Debug
 	 * Tests public static void main(String[] args) { //Metadata meta = new
 	 * Metadata(); create(); //metaLs("boite");
 	 * //metaPut("boite/caillou/chameau,8000,12-12-1222 12:12:12");

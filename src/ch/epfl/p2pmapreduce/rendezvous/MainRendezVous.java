@@ -104,7 +104,8 @@ public class MainRendezVous {
 		try {
 			return "tcp://" + InetAddress.getLocalHost().getHostAddress() + ":" + PORT;
 		} catch (UnknownHostException e) {
-			e.printStackTrace();
+			System.err.println("UnknownHostException");
+//			e.printStackTrace();
 			return null;
 		}
 	}

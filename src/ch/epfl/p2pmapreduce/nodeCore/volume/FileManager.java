@@ -109,18 +109,19 @@ public class FileManager {
 					}
 
 				}
-			}else {
+			} else {
 				System.err.println("the folder " + destDir + " couldn't be created"); 
 				return null;
 			}
 			
 		} catch (FileNotFoundException e) {
 			System.err.println("file " + osFullPath + " not found.");
+//			e.printStackTrace();
 			return null;
 		} catch (IOException e) {
 			System.err.println("something went wrong loading " + osFullPath + ".");
 			clean(dfsFullPath);
-			e.printStackTrace();
+//			e.printStackTrace();
 			return null;
 		}
 		
@@ -216,7 +217,7 @@ public class FileManager {
 				restore(target);
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 			System.err.println("Could not write chunk " + chunkId + " for file " + fName + ".");
 		}
 	}
@@ -235,11 +236,11 @@ public class FileManager {
 				result[i*2+1] = (byte) (read.get(i) & 0xFF);
 			}
 		} catch (FileNotFoundException e) {
-			System.err.println("unable to load chunk " + chunkId + " for file " + fName + ".");
-			e.printStackTrace();
+			System.err.println("Unable to load chunk " + chunkId + " for file " + fName + ".");
+//			e.printStackTrace();
 		} catch (IOException e) {
-			System.err.println("unable to load chunk " + chunkId + " for file " + fName + ".");
-			e.printStackTrace();
+			System.err.println("Unable to load chunk " + chunkId + " for file " + fName + ".");
+//			e.printStackTrace();
 		}
 		return result;
 	}
@@ -258,7 +259,7 @@ public class FileManager {
 	}
 	
 	public void print(String message) {
-		System.out.println("peer_" + peerId + ": " + message);
+		System.out.println("Peer_" + peerId + ": " + message);
 	}
 	
 	public boolean containsFile(String fName) {
@@ -283,14 +284,15 @@ public class FileManager {
 		try {
 			FileUtils.deleteDirectory(getChunkDir(dfsFullPath));
 		} catch (IOException e) {
-			System.err.println("cannot remove chunkfiles of file " + dfsFullPath);
+			System.err.println("Cannot remove chunkfiles of file " + dfsFullPath);
+//			e.printStackTrace();
 		}
 	}
 	
 	private void restore(File file) {
 		String osFullPath = pendingGet.remove(file);
 		java.io.File destFile = new java.io.File(osFullPath);
-		// TODO create parent folders if don't exist
+		// TODO create parent folders if don't exist ?
 		if (!destFile.exists()) {
 			try {
 				BufferedWriter out = new BufferedWriter(new FileWriter (destFile));
@@ -306,7 +308,7 @@ public class FileManager {
 				}
 				out.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+//				e.printStackTrace();
 				System.err.println("Something went wrong writing in " + osFullPath);
 			}
 		}

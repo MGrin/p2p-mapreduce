@@ -145,7 +145,7 @@ public class PeerGroupJoiner extends Thread {
 		}
 		catch (Exception e){
 			System.out.println("Failure in authentication.");
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 	}
 }
