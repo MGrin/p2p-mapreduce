@@ -11,13 +11,13 @@ public class NetworkConstants {
 	private NetworkConstants() {}
 
 	public static final int N_MIN = 1;
-	public static final int N_OPT = 1;
-	public static final int N_MAX = 1;
+	public static final int N_OPT = 3;
+	public static final int N_MAX = 5;
 	
 	
 	public static final int GC_MIN = 1;
 	public static final int GC_OPT = 2;
-	public static final int GC_MAX = 2;
+	public static final int GC_MAX = 5;
 	
 	
 	// number of peers fetched for selecting best peers
