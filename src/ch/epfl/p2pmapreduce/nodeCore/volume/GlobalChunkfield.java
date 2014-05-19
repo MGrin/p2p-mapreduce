@@ -11,7 +11,6 @@ import ch.epfl.p2pmapreduce.nodeCore.utils.NetworkConstants;
 
 /**
  * Class implementing the global chunkfield
- * @author froelich
  *
  */
 public class GlobalChunkfield {

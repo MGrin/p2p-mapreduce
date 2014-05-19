@@ -148,7 +148,7 @@ public class JxtaCommunicator {
 				new FileStabilizedAdvertisement.Instantiator());
 
 		// Connect
-		if (!connectToRDV(NetworkConstants.RENDEZVOUS_CONNECTION_TIMEOUT)) { // TODO Change to 60000
+		if (!connectToRDV(NetworkConstants.RENDEZVOUS_CONNECTION_TIMEOUT)) {
 			System.err.println("Unable to connect to "
 					+ MAIN_RENDEZ_VOUS_ADDRESS);
 			return false;

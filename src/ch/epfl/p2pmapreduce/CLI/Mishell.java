@@ -84,7 +84,7 @@ public class Mishell {
 						help(tok[1]);
 					} else {
 						System.out
-						.println("About what command do you need help ? (connect, cat, cd, ls, get, put, rm)");
+						.println("About what command do you need help ? (connect, ls, get, put, rm)");
 						System.out.println("Specify only one command.");
 					}
 				} else if (tok[0].compareTo("quit") == 0) {

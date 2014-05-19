@@ -11,6 +11,7 @@ import ch.epfl.p2pmapreduce.nodeCore.messages.SendIndex;
 
 /**
  * Interface for the message sender
+ * implemented by JxtaMessageSender
  *
  */
 public interface IMessageSender {

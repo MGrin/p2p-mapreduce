@@ -41,7 +41,6 @@ public class RendezVous {
             MyNetworkConfigurator.setPeerID(peerID);
             
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -54,10 +53,8 @@ public class RendezVous {
             
             //NetPeerGroup.getRendezVousService();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (PeerGroupException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

@@ -203,8 +203,8 @@ public class ConnectionManager {
 	}
 
 	public void send(RefreshIndex refreshIndex) {
-		// TODO add method in IMessageSender
-		// sender.send(refreshIndex);
+		// handled by a thread
+		sender.send(refreshIndex);
 	}
 
 	public void send(RmIndexAdvertisement rmAdvertisement) {

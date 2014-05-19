@@ -1,6 +1,7 @@
 package ch.epfl.p2pmapreduce.nodeCore.messages;
 /**
  * Interface for the Message Receiver.
+ * implemented by MessageHandler
  */
 public interface MessageReceiver {
 	

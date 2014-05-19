@@ -13,7 +13,7 @@ import ch.epfl.p2pmapreduce.nodeCore.messages.SendChunkfield;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendIndex;
 /**
  * Interface for message builder
- *
+ * Implemented by Peer
  */
 public interface MessageBuilder {
 

@@ -62,7 +62,6 @@ public class Edge implements RendezvousListener {
 
 			MyNetworkConfigurator.setPeerID(peerID);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -83,10 +82,8 @@ public class Edge implements RendezvousListener {
 	                new IndexAdvertisement.Instantiator());
 
 		} catch (PeerGroupException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -114,7 +111,6 @@ public class Edge implements RendezvousListener {
 		try {
 			NetPeerGroup.getDiscoveryService().publish(NetPeerGroup.getPeerAdvertisement());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

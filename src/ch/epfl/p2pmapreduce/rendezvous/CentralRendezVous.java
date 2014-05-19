@@ -18,10 +18,8 @@ public class CentralRendezVous extends RendezVous{
             System.out.println("Start the JXTA network for RendezVous " + name);
             NetPeerGroup = MyNetworkManager.startNetwork();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (PeerGroupException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

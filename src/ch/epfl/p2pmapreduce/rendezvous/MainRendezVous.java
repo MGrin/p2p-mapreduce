@@ -53,7 +53,6 @@ public class MainRendezVous {
 				System.err.println("Cannot start custom peergroup");
 
 		} catch (PeerGroupException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -105,7 +104,6 @@ public class MainRendezVous {
 		try {
 			return "tcp://" + InetAddress.getLocalHost().getHostAddress() + ":" + PORT;
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}

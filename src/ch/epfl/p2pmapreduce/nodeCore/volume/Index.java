@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Set;
 /**
  * Class Index that takes care (put, remove, ..) of the files with their chunks
- * @author froelich
  *
  */
 public class Index {

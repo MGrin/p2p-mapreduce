@@ -96,7 +96,6 @@ public class PeerGroupJoiner extends Thread {
 
 					System.err.println(Ex);
 				} catch (PeerGroupException e) {
-					// TODO Auto-generated catch block
 					System.err.println("ERRR Cannot join DFS Peer Group :(");
 					e.printStackTrace();
 				}
