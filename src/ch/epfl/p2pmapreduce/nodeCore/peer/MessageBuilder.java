@@ -11,7 +11,10 @@ import ch.epfl.p2pmapreduce.nodeCore.messages.RefreshIndex;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendChunk;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendChunkfield;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendIndex;
-
+/**
+ * Interface for message builder
+ *
+ */
 public interface MessageBuilder {
 
 	GetIndex getIndex();

@@ -16,9 +16,6 @@ import net.jxta.id.ID;
 import net.jxta.id.IDFactory;
 
 /**
- * 
- * @author marguet
- *
  *Class representing an IndexAdvertisement.
  *it is broadcasted to all the neighbors in order for them to receive
  *the information of a brand new put to the DFS.

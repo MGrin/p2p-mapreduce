@@ -1,5 +1,8 @@
 package ch.epfl.p2pmapreduce.nodeCore.messages;
-
+/**
+ * Class RefreshIndex
+ *
+ */
 public class RefreshIndex implements Message {
 
 	private int senderId;

@@ -1,7 +1,10 @@
 package ch.epfl.p2pmapreduce.nodeCore.messages;
 
 import ch.epfl.p2pmapreduce.nodeCore.volume.File;
-
+/**
+ * Class implementing an object to create a message for getting a chunk
+ *
+ */
 public class GetChunk implements Message {
 
 	private int from;

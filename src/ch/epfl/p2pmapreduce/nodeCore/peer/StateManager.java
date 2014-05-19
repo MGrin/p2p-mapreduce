@@ -1,5 +1,8 @@
 package ch.epfl.p2pmapreduce.nodeCore.peer;
-
+/**
+ * Class representing the state of a peer
+ *
+ */
 public class StateManager {
 
 	private PeerState currentState = PeerState.EXITING;

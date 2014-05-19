@@ -7,7 +7,10 @@ import ch.epfl.p2pmapreduce.nodeCore.messages.IndexUpdate;
 import ch.epfl.p2pmapreduce.nodeCore.peer.Peer;
 import ch.epfl.p2pmapreduce.nodeCore.volume.File;
 
-
+/**
+ * To manage the peers
+ *
+ */
 public enum PeerManager {
 	PEERMANAGER;
 	

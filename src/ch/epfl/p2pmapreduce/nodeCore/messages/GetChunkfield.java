@@ -1,7 +1,6 @@
 package ch.epfl.p2pmapreduce.nodeCore.messages;
 
 /**
- * 
  * Message to request all chunkfields from a peer
  *
  */

@@ -1,7 +1,9 @@
 package ch.epfl.p2pmapreduce.nodeCore.messages;
 
 import ch.epfl.p2pmapreduce.nodeCore.volume.File;
-
+/**
+ * Class implementing the message SendChunk that permits to send a chunk.
+ */
 public class SendChunk implements Message, SendMessage {
 
 	private int from;

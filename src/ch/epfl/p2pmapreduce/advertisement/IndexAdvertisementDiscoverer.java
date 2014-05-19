@@ -7,7 +7,10 @@ import net.jxta.discovery.DiscoveryListener;
 import net.jxta.document.Advertisement;
 import net.jxta.protocol.DiscoveryResponseMsg;
 import net.jxta.protocol.PeerGroupAdvertisement;
-
+/**
+ * Class representing an IndexAdvertisementDiscoverer
+ *
+ */
 public class IndexAdvertisementDiscoverer implements DiscoveryListener {
 
 	@Override

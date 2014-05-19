@@ -1,5 +1,8 @@
 package ch.epfl.p2pmapreduce.nodeCore.volume;
 
+/**
+ * Class representing the chunk that we want to get
+ */
 public class ChunkToGet {
 
 	public final File container;

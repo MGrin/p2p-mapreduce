@@ -1,6 +1,9 @@
 package ch.epfl.p2pmapreduce.nodeCore.messages;
 
-
+/**
+ * Message for asking the index (up-to-date or almost) to a neighbor
+ *
+ */
 public class GetIndex implements Message {
 
 	private final int from;

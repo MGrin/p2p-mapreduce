@@ -1,6 +1,9 @@
 package ch.epfl.p2pmapreduce.nodeCore.volume;
 
-
+/**
+ * Class representing a file with the infos that we have and need about each file
+ *
+ */
 public class File {
 
 	/* TODO determine persistence of metadata of files over disconnection

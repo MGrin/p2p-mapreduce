@@ -1,7 +1,10 @@
 package ch.epfl.p2pmapreduce.nodeCore.volume;
 
 import java.util.Arrays;
-
+/**
+ * Class representing a Chunkfield
+ *
+ */
 public class Chunkfield {
 
 	private boolean[] field;

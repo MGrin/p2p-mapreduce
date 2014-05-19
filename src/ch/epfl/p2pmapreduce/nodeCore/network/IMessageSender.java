@@ -10,9 +10,7 @@ import ch.epfl.p2pmapreduce.nodeCore.messages.SendChunkfield;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendIndex;
 
 /**
- * 
- * 
- * @author valerian
+ * Interface for the message sender
  *
  */
 public interface IMessageSender {

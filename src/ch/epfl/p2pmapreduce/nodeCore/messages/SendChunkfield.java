@@ -4,7 +4,9 @@ import java.util.Map;
 
 import ch.epfl.p2pmapreduce.nodeCore.volume.Chunkfield;
 
-
+/**
+ * Class implementing the message SendChunk that permits to send a chunk.
+ */
 public class SendChunkfield implements Message, SendMessage {
 	
 	private int from;

@@ -5,7 +5,10 @@ import java.util.List;
 
 import ch.epfl.p2pmapreduce.nodeCore.messages.MessageType;
 import ch.epfl.p2pmapreduce.nodeCore.messages.SendMessage;
-
+/**
+ * To verify that we receive the excpected messages
+ *
+ */
 public enum MessageExpecter {
 
 	INSTANCE;

@@ -9,7 +9,11 @@ import java.util.Map;
 import ch.epfl.p2pmapreduce.nodeCore.peer.Peer;
 import ch.epfl.p2pmapreduce.nodeCore.utils.NetworkConstants;
 
-
+/**
+ * Class implementing the global chunkfield
+ * @author froelich
+ *
+ */
 public class GlobalChunkfield {
 
 	private Map<Integer, Chunkfield> chunkfields = new HashMap<Integer, Chunkfield>();

@@ -3,7 +3,10 @@ package ch.epfl.p2pmapreduce.nodeCore.network;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetChunk;
 import ch.epfl.p2pmapreduce.nodeCore.messages.GetIndex;
 import ch.epfl.p2pmapreduce.nodeCore.messages.Message;
-
+/**
+ * Interface for the connection manager
+ *
+ */
 public interface IConnectionManager {
 	
 	public void init();

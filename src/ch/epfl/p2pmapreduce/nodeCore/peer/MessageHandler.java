@@ -21,7 +21,10 @@ import ch.epfl.p2pmapreduce.nodeCore.network.ConnectionManager;
 import ch.epfl.p2pmapreduce.nodeCore.volume.File;
 import ch.epfl.p2pmapreduce.nodeCore.volume.FileManager;
 
-
+/**
+ * Class to handle the received messages
+ *
+ */
 public class MessageHandler implements MessageReceiver {
 	// TODO implement a list of pending request to know when answer are received
 	

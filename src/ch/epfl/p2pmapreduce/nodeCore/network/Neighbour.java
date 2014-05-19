@@ -5,7 +5,10 @@ import java.util.Map;
 
 import ch.epfl.p2pmapreduce.nodeCore.volume.Chunkfield;
 import ch.epfl.p2pmapreduce.nodeCore.volume.EmptyChunkfield;
-
+/**
+ * Class reprenting a neighbour
+ *
+ */
 public class Neighbour {
 	
 	public final int id;

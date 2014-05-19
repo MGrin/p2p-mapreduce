@@ -17,6 +17,10 @@ import ch.epfl.p2pmapreduce.nodeCore.messages.MessageDecoder;
 import ch.epfl.p2pmapreduce.nodeCore.messages.NewFile;
 import ch.epfl.p2pmapreduce.nodeCore.peer.MessageHandler;
 
+/**
+ * This class implements the way that we listen on the Jxta Network, permits to receive advertisements
+ * and messages, then they are transmit to other classes to be handle.
+ */
 public class JxtaMessageListener implements PipeMsgListener, DiscoveryListener{
 
 	private MessageHandler handler;

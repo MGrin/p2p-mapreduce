@@ -1,6 +1,9 @@
 package ch.epfl.p2pmapreduce.nodeCore.volume;
 
-
+/**
+ * Class represents an EmptyChunkfield
+ *
+ */
 public class EmptyChunkfield extends Chunkfield {
 	
 	

@@ -14,7 +14,10 @@ import net.jxta.document.StructuredDocumentFactory;
 import net.jxta.document.TextElement;
 import net.jxta.id.ID;
 import net.jxta.id.IDFactory;
-
+/**
+ * Class representing an IndexAdvertisement
+ *
+ */
 public class IndexAdvertisement extends Advertisement {
 
 	public static final String Name = "IndexAdvertisement";

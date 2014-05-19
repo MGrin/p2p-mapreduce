@@ -1,7 +1,10 @@
 package ch.epfl.p2pmapreduce.nodeCore.utils;
 
 import java.util.Random;
-
+/**
+ * The constants for the network
+ *
+ */
 public class NetworkConstants {
 
 

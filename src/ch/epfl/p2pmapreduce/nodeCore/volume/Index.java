@@ -6,7 +6,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
+/**
+ * Class Index that takes care (put, remove, ..) of the files with their chunks
+ * @author froelich
+ *
+ */
 public class Index {
 
 	private HashMap<File, Chunkfield> files = new HashMap<File, Chunkfield>();

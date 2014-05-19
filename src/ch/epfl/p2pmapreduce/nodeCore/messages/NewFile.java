@@ -5,7 +5,10 @@ import java.util.Date;
 
 import ch.epfl.p2pmapreduce.nodeCore.utils.NetworkConstants;
 
-
+/**
+ * Class NewFile instantiates a new File for updating the index
+ *
+ */
 public class NewFile extends IndexUpdate {
 
 	private String fileName;

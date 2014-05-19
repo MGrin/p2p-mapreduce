@@ -18,6 +18,10 @@ import ch.epfl.p2pmapreduce.nodeCore.volume.Chunkfield;
 import ch.epfl.p2pmapreduce.nodeCore.volume.File;
 import ch.epfl.p2pmapreduce.nodeCore.volume.Index;
 
+/**
+ * Class implementing the MessageDecoder, serves to get the messages from the Jxta Network 
+ * to decode them and to launch the followings actions
+ */
 public class MessageDecoder {
 
 	private static boolean isConnected = false;

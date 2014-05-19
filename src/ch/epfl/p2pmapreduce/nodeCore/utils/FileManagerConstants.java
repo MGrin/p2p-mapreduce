@@ -1,5 +1,8 @@
 package ch.epfl.p2pmapreduce.nodeCore.utils;
-
+/**
+ * Class implementing the constant directory of the DFS
+ *
+ */
 public class FileManagerConstants {
 
 	private FileManagerConstants() {}

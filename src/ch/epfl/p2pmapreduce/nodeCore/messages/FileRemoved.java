@@ -3,7 +3,10 @@ package ch.epfl.p2pmapreduce.nodeCore.messages;
 import ch.epfl.p2pmapreduce.nodeCore.network.IMessageSender;
 import ch.epfl.p2pmapreduce.nodeCore.network.Neighbour;
 
-
+/**
+ * Class that represents an object for the message that serve to update the index when 
+ * a file is removed from the DFS
+ */
 public class FileRemoved extends IndexUpdate {
 
 	private int fileId;

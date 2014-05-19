@@ -36,7 +36,10 @@ import ch.epfl.p2pmapreduce.nodeCore.network.Neighbour;
 import ch.epfl.p2pmapreduce.nodeCore.peer.MessageHandler;
 import ch.epfl.p2pmapreduce.nodeCore.utils.NetworkConstants;
 import ch.epfl.p2pmapreduce.nodeCore.utils.UidGenerator;
-
+/**
+ * Class implementing the creation of the connexions in order to have a Jxta Network
+ *
+ */
 public class JxtaCommunicator {
 
 	private final static int MAIN_RENDEZVOUS_PORT = 9710;
