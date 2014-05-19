@@ -251,10 +251,9 @@ public class FileManager {
 	public void addPendingGet(String fName, String osFullPath) {
 		File target = getFile(fName);
 		if (target == null) return;
+		pendingGet.put(getFile(fName), osFullPath);
 		if (index.hasAllChunks(getFile(fName))) {
 			restore(target);
-		} else {
-			pendingGet.put(getFile(fName), osFullPath);
 		}
 	}
 	
