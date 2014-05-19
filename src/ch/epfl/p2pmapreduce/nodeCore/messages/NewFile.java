@@ -35,11 +35,6 @@ public class NewFile extends IndexUpdate {
 	
 	public String getFileInfos() {
 		
-		if(fileSize == -1) {
-			System.out.println("file size for file " + fileName + " not initialized! ending.."); 
-			System.exit(-1);
-		}
-		
 		return fileName + "," + chunkCount + "," + fileCurrentDate;
 	}
 	
