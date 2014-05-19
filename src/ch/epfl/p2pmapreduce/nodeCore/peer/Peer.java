@@ -273,6 +273,7 @@ public class Peer implements Runnable, MessageBuilder{
 		putAdvertisement.setFileName(file.name);
 		putAdvertisement.setFileCreationTime(System.currentTimeMillis());
 		putAdvertisement.setFileSize(file.chunkCount * NetworkConstants.CHUNK_SIZE);
+		putAdvertisement.setChunkCount(file.chunkCount);
 		putAdvertisement.setID(ID.nullID);
 
 		cManager.send(putAdvertisement);

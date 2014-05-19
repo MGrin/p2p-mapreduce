@@ -31,12 +31,14 @@ public class PutIndexAdvertisement extends Advertisement {
 	private String fileName = "";
 	private String fileSize = "";
 	private String fileCreationTime = "";
+	private String chunkCount = "";
 
 	private final static String identifierTag = "MyIdentifierTag";
 	private final static String fileNameTag = "MyFileNameTag";
 	private final static String idTag = "MyIDTag";
 	private final static String dateTag = "MyDateTag";
 	private final static String sizeTag = "MySizeTag";
+	private final static String chunkCountTag ="chunkCountTag";
 
 	private final static String[] indexableFields = { identifierTag, idTag, dateTag };
 
@@ -96,6 +98,11 @@ public class PutIndexAdvertisement extends Advertisement {
 			return;
 		}
 		
+		if(theElementName.compareTo(chunkCountTag) == 0) {
+			chunkCount = theTextValue;
+			return;
+		}
+		
 	}
 
 	@Override
@@ -119,6 +126,9 @@ public class PutIndexAdvertisement extends Advertisement {
 		theResult.appendChild(myTempElement);
 		
 		myTempElement = theResult.createElement(identifierTag, identifier);
+		theResult.appendChild(myTempElement);
+		
+		myTempElement = theResult.createElement(chunkCountTag, chunkCount);
 		theResult.appendChild(myTempElement);
 
 		return theResult;
@@ -165,7 +175,15 @@ public class PutIndexAdvertisement extends Advertisement {
 	public void setFileName(String name) {
 		fileName = name;
 	}
+	
+	public void setChunkCount(int intChunkCount) {
+		this.chunkCount = Integer.toString(intChunkCount);
+	}
 
+	public int getChunkCount() {
+		return Integer.parseInt(this.chunkCount);
+	}
+	
 	public static class Instantiator implements
 			AdvertisementFactory.Instantiator {
 
@@ -190,6 +208,7 @@ public class PutIndexAdvertisement extends Advertisement {
 		result.fileName = this.fileName;
 		result.fileCreationTime = this.fileCreationTime;
 		result.fileSize = this.fileSize;
+		result.chunkCount = this.chunkCount;
 
 		return result;
 	}

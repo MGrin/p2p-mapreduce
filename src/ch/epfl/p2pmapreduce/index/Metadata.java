@@ -247,6 +247,7 @@ public class Metadata {
 			for (int i = 0; i < fullpaths.size(); i++) {
 				List<String> temp = tokenize(fullpaths.get(i), "/");
 				String tempo = temp.get(temp.size() - 1);
+				
 				// possible wrong value for the Integer because out-of-range
 				int chunkCount = (int) Math
 						.ceil(((double) Integer.parseInt(tokenize(tempo, ":")

@@ -28,15 +28,6 @@ public class NewFile extends IndexUpdate {
 		fileCurrentDate = getCurrentDate();
 	}
 
-	public NewFile(int from, long fileSize, String fileName) {
-		super(from);
-		this.fileSize = fileSize;
-		this.fileName = fileName;
-		this.chunkCount = (int) Math.ceil(1.0 * fileSize / NetworkConstants.CHUNK_SIZE);
-		
-		fileCurrentDate = getCurrentDate();
-	}
-
 	public String name() { return fileName; }
 	public int chunkCount() { 
 		return chunkCount;
@@ -49,7 +40,7 @@ public class NewFile extends IndexUpdate {
 			System.exit(-1);
 		}
 		
-		return fileName + "," + fileSize + "," + fileCurrentDate;
+		return fileName + "," + chunkCount + "," + fileCurrentDate;
 	}
 	
 	public long getFileSize() {

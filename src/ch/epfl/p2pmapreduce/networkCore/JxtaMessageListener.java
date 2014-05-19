@@ -84,7 +84,7 @@ public class JxtaMessageListener implements PipeMsgListener, DiscoveryListener{
 
 						System.out.println("File size is " + putAdvertisement.getFileSize());
 
-						NewFile newFileMessage = new NewFile(-1, putAdvertisement.getFileSize(), putAdvertisement.getFileName());
+						NewFile newFileMessage = new NewFile(1, putAdvertisement.getFileName(), putAdvertisement.getChunkCount());
 						handler.enqueue(newFileMessage);
 
 					} else if (adv.getClass().equals(RmIndexAdvertisement.class)) {
