@@ -129,15 +129,15 @@ public class FileStabilizedAdvertisement extends Advertisement{
 			AdvertisementFactory.Instantiator {
 
 		public String getAdvertisementType() {
-			return PutIndexAdvertisement.getAdvertisementType();
+			return FileStabilizedAdvertisement.getAdvertisementType();
 		}
 
 		public Advertisement newInstance() {
-			return new PutIndexAdvertisement();
+			return new FileStabilizedAdvertisement();
 		}
 
 		public Advertisement newInstance(net.jxta.document.Element root) {
-			return new PutIndexAdvertisement(root);
+			return new FileStabilizedAdvertisement(root);
 		}
 	}
 
@@ -152,7 +152,7 @@ public class FileStabilizedAdvertisement extends Advertisement{
 
 	@Override
 	public String getAdvType() {
-		return PutIndexAdvertisement.class.getName();
+		return FileStabilizedAdvertisement.class.getName();
 	}
 
 }
