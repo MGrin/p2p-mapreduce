@@ -47,8 +47,8 @@ public class JxtaCommunicator {
 
 	private final static String MAIN_RENDEZ_VOUS_ADDRESS = "tcp://icdatasrv2.epfl.ch:"
 			+ MAIN_RENDEZVOUS_PORT;
-	// private final static String MAIN_RENDEZ_VOUS_ADDRESS = "tcp://localhost:"
-	// + MAIN_RENDEZVOUS_PORT;
+//	 private final static String MAIN_RENDEZ_VOUS_ADDRESS = "tcp://localhost:"
+//	 + MAIN_RENDEZVOUS_PORT;
 
 	private final static int PIPE_RESOLVING_TIMEOUT = 30000;
 	private final static int DFS_JOIN_TIMEOUT = 60000;
