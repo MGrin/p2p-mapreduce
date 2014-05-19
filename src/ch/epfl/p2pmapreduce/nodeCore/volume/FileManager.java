@@ -100,8 +100,8 @@ public class FileManager {
 					}
 				}
 				// detects last unfinised chunk (smaller size)
-				if (chunkSize < NetworkConstants.CHUNK_SIZE) {
-					//chunkCount ++;
+				if (chunkSize < NetworkConstants.CHUNK_SIZE && chunkSize != -1) {
+					chunkCount ++;
 					if(out != null){
 						out.close();
 					}else{
