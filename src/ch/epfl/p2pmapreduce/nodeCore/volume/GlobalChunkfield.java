@@ -2,9 +2,8 @@ package ch.epfl.p2pmapreduce.nodeCore.volume;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import ch.epfl.p2pmapreduce.nodeCore.peer.Peer;
 import ch.epfl.p2pmapreduce.nodeCore.utils.NetworkConstants;
@@ -15,33 +14,33 @@ import ch.epfl.p2pmapreduce.nodeCore.utils.NetworkConstants;
  */
 public class GlobalChunkfield {
 
-	private Map<Integer, Chunkfield> chunkfields = new HashMap<Integer, Chunkfield>();
+	private List<Chunkfield> chunkfields = new LinkedList<Chunkfield>();
 	public final int fileSize;
 	
 	public GlobalChunkfield(int fileSize) {
 		this.fileSize = fileSize;
 	}
 	
-	public GlobalChunkfield(int peerId, Chunkfield cf, int fileSize) {
-		this(fileSize);
-		update(peerId, cf);
+//	public GlobalChunkfield(int peerId, Chunkfield cf, int fileSize) {
+//		this(fileSize);
+//		update(peerId, cf);
+//	}
+	
+//	public void update(Peer p, Chunkfield c) {
+//		chunkfields.put(p.id, c);
+//	}
+	public void update(Chunkfield c) {
+		chunkfields.add(c);
 	}
 	
-	public void update(Peer p, Chunkfield c) {
-		chunkfields.put(p.id, c);
-	}
-	public void update(int peerId, Chunkfield c) {
-		chunkfields.put(peerId, c);
-	}
-	
-	public void remove(Peer p) {
-		chunkfields.remove(p.id);
-	}
+//	public void remove(Peer p) {
+//		chunkfields.remove(p.id);
+//	}
 	
 	private int[] chunkCounts() {
 		int [] result = new int[fileSize];
 		Arrays.fill(result, 0);
-		for (Chunkfield c : chunkfields.values()) {
+		for (Chunkfield c : chunkfields) {
 			if (c != null) c.fillWithChunks(result);
 		}
 		return result;

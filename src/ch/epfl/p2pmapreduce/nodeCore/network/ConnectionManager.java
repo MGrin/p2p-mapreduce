@@ -96,9 +96,10 @@ public class ConnectionManager {
 	public GlobalChunkfield getGlobalChunkfield(File file, int peerId, Chunkfield c) {
 		GlobalChunkfield result = globalChunkfields.get(file);
 		if (globalChunkfields.get(file) == null) {
-			result = new GlobalChunkfield(peerId, c, file.chunkCount);
+			result = new GlobalChunkfield(file.chunkCount);
+			result.update(c);
 			for (Neighbour n : neighbors) {
-				result.update(n.id, neighbors.get(n.id).getChunkfield(file.name));
+				result.update(n.getChunkfield(file.name));
 			}
 		}
 		return result;

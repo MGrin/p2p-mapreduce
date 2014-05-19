@@ -340,6 +340,7 @@ public class Peer implements Runnable, MessageBuilder{
 			}
 			if (! f.isStabilized() && tempLowChunks.size() == 0) {
 				// enough duplication achieved, file can be stabilized
+				print("stabilize file and send notif");
 				f.stabilise();
 				
 				FileStabilizedAdvertisement stabAdvertisement = (FileStabilizedAdvertisement) AdvertisementFactory.newAdvertisement(FileStabilizedAdvertisement.getAdvertisementType());
