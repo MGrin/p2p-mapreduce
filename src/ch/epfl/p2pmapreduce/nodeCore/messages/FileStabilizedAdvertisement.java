@@ -14,7 +14,6 @@ import net.jxta.document.StructuredDocumentFactory;
 import net.jxta.document.TextElement;
 import net.jxta.id.ID;
 import net.jxta.id.IDFactory;
-import ch.epfl.p2pmapreduce.advertisement.PutIndexAdvertisement;
 
 public class FileStabilizedAdvertisement extends Advertisement{
 	public static final String name = "FileStabilizedAdvertisement";

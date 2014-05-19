@@ -13,6 +13,7 @@ import net.jxta.protocol.DiscoveryResponseMsg;
 import ch.epfl.p2pmapreduce.advertisement.PutIndexAdvertisement;
 import ch.epfl.p2pmapreduce.advertisement.RmIndexAdvertisement;
 import ch.epfl.p2pmapreduce.nodeCore.messages.FileRemoved;
+import ch.epfl.p2pmapreduce.nodeCore.messages.FileStabilized;
 import ch.epfl.p2pmapreduce.nodeCore.messages.FileStabilizedAdvertisement;
 import ch.epfl.p2pmapreduce.nodeCore.messages.MessageDecoder;
 import ch.epfl.p2pmapreduce.nodeCore.messages.NewFile;
@@ -84,7 +85,7 @@ public class JxtaMessageListener implements PipeMsgListener, DiscoveryListener{
 
 //						System.out.println("File size is " + putAdvertisement.getFileSize());
 
-						NewFile newFileMessage = new NewFile(1, putAdvertisement.getFileName(), putAdvertisement.getChunkCount());
+						NewFile newFileMessage = new NewFile(-1, putAdvertisement.getFileName(), putAdvertisement.getChunkCount());
 						handler.enqueue(newFileMessage);
 
 					} else if (adv.getClass().equals(RmIndexAdvertisement.class)) {
@@ -114,7 +115,11 @@ public class JxtaMessageListener implements PipeMsgListener, DiscoveryListener{
 
 					} else if(adv.getClass().equals(FileStabilizedAdvertisement.class)) {
 
-
+						FileStabilizedAdvertisement fileStabilized = (FileStabilizedAdvertisement) adv;
+						
+						FileStabilized stabilizedMessage = new FileStabilized(-1, fileStabilized.getFileName());
+						
+						handler.enqueue(stabilizedMessage);
 					}
 
 				} catch (ClassCastException Ex) {
