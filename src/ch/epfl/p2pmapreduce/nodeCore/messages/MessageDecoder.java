@@ -125,7 +125,7 @@ public class MessageDecoder {
 		
 		if(text.equals("")) return map;
 		
-		String[] elements = text.split("$");
+		String[] elements = text.split("\\$");
 
 		for (int i = 0; i < elements.length; i++) {
 			String[] keyValue = elements[i].split(":");
