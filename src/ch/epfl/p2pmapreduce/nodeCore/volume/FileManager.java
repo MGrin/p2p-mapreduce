@@ -100,8 +100,8 @@ public class FileManager {
 					}
 				}
 				// detects last unfinised chunk (smaller size)
-				if (chunkCount < NetworkConstants.CHUNK_SIZE) {
-					chunkCount ++;
+				if (chunkSize < NetworkConstants.CHUNK_SIZE) {
+					//chunkCount ++;
 					if(out != null){
 						out.close();
 					}else{
@@ -296,7 +296,7 @@ public class FileManager {
 				BufferedWriter out = new BufferedWriter(new FileWriter (destFile));
 				BufferedReader in = null;
 				for (int i = 0; i < file.chunkCount; i++) {
-					in = new BufferedReader(new FileReader(new java.io.File(file.name, i + CHUNK_EXT)));
+					in = new BufferedReader(new FileReader(new java.io.File(FileManagerConstants.DFS_DIR + java.io.File.separator + file.name, i + CHUNK_EXT)));
 					String line = null;
 					while ((line = in.readLine()) != null) {
 						out.write(line);
