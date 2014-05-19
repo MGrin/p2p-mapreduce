@@ -195,16 +195,19 @@ public class JxtaMessageSender implements IMessageSender {
 				array = new byte[(int) fileToSend.length()];
 				fis.read(array);
 			} catch (FileNotFoundException e) {
-				e.printStackTrace();
+				System.err.println("FileNotFoundException");
+//				e.printStackTrace();
 			} catch (IOException e) {
-				e.printStackTrace();
+				System.err.println("IOException");
+//				e.printStackTrace();
 			} finally {
 				try {
 					if (fis != null) {
 						fis.close();
 					}
 				} catch (IOException e) {
-					e.printStackTrace();
+					System.err.println("IOException");
+//					e.printStackTrace();
 				}
 			}
 		}

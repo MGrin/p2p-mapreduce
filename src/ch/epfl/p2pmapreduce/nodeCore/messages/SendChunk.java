@@ -17,8 +17,6 @@ public class SendChunk implements Message, SendMessage {
 		this.from = from;
 		this.fName = fName;
 		this.chunkId = chunkId;
-		
-		//TODO: Copy?
 		this.chunkData = chunkData;
 	}
 	

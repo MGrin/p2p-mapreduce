@@ -65,7 +65,7 @@ public class Edge implements RendezvousListener {
 			e.printStackTrace();
 		}
 
-		System.out.println("Rendez vous peer is : " + getMainRendezVousIP);
+		System.out.println("Rendez vous peer is: " + getMainRendezVousIP);
 	}
 
 	public void start(){
@@ -150,16 +150,16 @@ public class Edge implements RendezvousListener {
 		try {
 			discoveryService.publish(index);
 			discoveryService.remotePublish(index);
-			System.out.println("IndexAdvertiement with ID " + index.getID() + " sent.");
+			System.out.println("IndexAdvertiement with ID " + index.getID() + " sent");
 
 		} catch (IOException e) {
 
-			System.err.println("Edge " + name + " could not publish Index Advertisement! ");
+			System.err.println("Edge " + name + " could not publish Index Advertisement!");
 		}
 	}
 
 	@Override
 	public void rendezvousEvent(RendezvousEvent rdvE) {
-		System.out.println("New rendevouz id : " + rdvE.getPeerID().toString());
+		System.out.println("New rendez-vous id : " + rdvE.getPeerID().toString());
 	}
 }

@@ -106,7 +106,7 @@ public class ConnectionManager {
 
 	public void update(int peerId, File file, Chunkfield c) {
 		for (Neighbour n: neighbors) {
-			System.out.println("neighbour " + n + " has chunkfield " + c + " for file " + file);
+			System.out.println("Neighbour " + n + " has chunkfield " + c + " for file " + file);
 			if (n.id == peerId) n.setChunkfield(file.name, c);
 		}
 	}
@@ -189,9 +189,9 @@ public class ConnectionManager {
 	}
 
 	public boolean send(SendIndex sendIndex, int receiverId) {
-		System.out.println("receiver id is " + receiverId);
+		System.out.println("Receiver id is " + receiverId);
 		Neighbour receiver = new Neighbour(receiverId);
-		System.out.println("receiver for index will be " + receiver);
+		System.out.println("Receiver for index will be " + receiver);
 		if (receiver != null) {
 			return sender.send(sendIndex, receiver);
 		} else return false;
