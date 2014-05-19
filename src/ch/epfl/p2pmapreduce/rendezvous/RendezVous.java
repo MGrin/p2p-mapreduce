@@ -64,5 +64,6 @@ public class RendezVous {
 	
 	public void stop(){
 		MyNetworkManager.stopNetwork();
+		System.exit(0);
 	}
 }
