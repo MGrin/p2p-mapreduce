@@ -37,12 +37,14 @@ public class Mishell {
 	public static void main(String[] args) throws java.io.IOException {
 
 		String name = Integer.toString(new Random().nextInt());;
-		
-		if (args.length == 1) {
-			JxtaCommunicator.SERVER_ADDRESS = args[0];
-		} else {
-			System.err.println("Too many arguments! Aborting..");
-			return;
+
+		if(args.length != 0) {
+			if (args.length == 1) {
+				JxtaCommunicator.SERVER_ADDRESS = args[0];
+			} else {
+				System.err.println("Too many arguments! Aborting..");
+				return;
+			}
 		}
 
 		Scanner scanner = new Scanner(System.in);
