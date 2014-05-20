@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 import net.jxta.platform.NetworkManager;
 import ch.epfl.p2pmapreduce.index.Metadata;
+import ch.epfl.p2pmapreduce.networkCore.JxtaCommunicator;
 import ch.epfl.p2pmapreduce.nodeCore.peer.Peer;
 import ch.epfl.p2pmapreduce.nodeCore.utils.FileManagerConstants;
 import ch.epfl.p2pmapreduce.nodeCore.volume.File;
@@ -35,14 +36,12 @@ public class Mishell {
 	 */
 	public static void main(String[] args) throws java.io.IOException {
 
-		String name = null;
-
-		if (args.length == 0) {
-			name = Integer.toString(new Random().nextInt());
-		} else if (args.length == 1) {
-			name = args[0];
+		String name = Integer.toString(new Random().nextInt());;
+		
+		if (args.length == 1) {
+			JxtaCommunicator.SERVER_ADDRESS = args[0];
 		} else {
-			System.err.println("You need to specify your name! (No spaces)");
+			System.err.println("Too many arguments! Aborting..");
 			return;
 		}
 
