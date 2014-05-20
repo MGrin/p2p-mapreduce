@@ -459,21 +459,26 @@ public class JxtaCommunicator {
 
 							boolean alreadyDiscovered = false;
 
-							for(PipeAdvertisement pa : peerPipes.values()) {
-								if(pipeAdv.getName().equals(pa.getName())) {
+							int neighbourId = 0;
+							for(Integer nId : peerPipes.keySet()) {
+								PipeAdvertisement pa = peerPipes.get(nId);
+								if(pa != null && pipeAdv.getName().equals(pa.getName())) {
 									System.out.println("We know this peer already!");
 									alreadyDiscovered = true;
+									neighbourId = nId;
 								}
 							}
 
-							if(alreadyDiscovered) continue;
+							if(! alreadyDiscovered) {
 
-							int neighbourId = UidGenerator.freshId();
-
-							peerPipes.put(neighbourId, pipeAdv);
-
+								neighbourId = UidGenerator.freshId();
+	
+								peerPipes.put(neighbourId, pipeAdv);
+								
+							}
+							
 							Neighbour neighbour = new Neighbour(neighbourId);
-
+							
 							neighbours.add(neighbour);
 						}
 

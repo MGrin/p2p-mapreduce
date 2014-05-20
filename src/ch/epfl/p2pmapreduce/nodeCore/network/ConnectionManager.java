@@ -2,6 +2,7 @@ package ch.epfl.p2pmapreduce.nodeCore.network;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -124,6 +125,7 @@ public class ConnectionManager {
 	// fetches a list of fresh neighbors and replace neigbors with peerID in peerIds
 	public void replaceNeighbors(List<Integer> peerIds) {
 		List<Neighbour> freshNeighbors = nD.getNeighbors();
+		if (freshNeighbors == null) freshNeighbors = new LinkedList<Neighbour>();
 		List<Neighbour> partingNeighbors = removeNeighbors(peerIds);
 		freshNeighbors.removeAll(partingNeighbors);
 		for (Neighbour n : freshNeighbors) {

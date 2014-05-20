@@ -29,4 +29,16 @@ public class Neighbour {
 	public void setChunkfield(String fName, Chunkfield c) {
 		chunkfields.put(fName, c);
 	}
+	
+	@Override
+	public int hashCode() {
+		return id;
+	}
+	
+	@Override
+	public boolean equals(Object that) {
+		if (that != null && this.getClass().isInstance(that)) {
+			return this.id == ((Neighbour) that).id;
+		} else return false;
+	}
 }
